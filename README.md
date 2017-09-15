@@ -11,7 +11,7 @@ The initial state of your Ubuntu instance is assumed to be a minimal Ubuntu inst
 
 Lab 2 and Lab 3 deal with the ubiquitous Marbles app.  
 
-Lab 4 will be added soon and covers Hyperledger Composer. 
+Lab 4 covers Hyperledger Composer. 
 
 **Note:**  In Lab 2, Section 3, it mentions to extract the *zmarbles.tar* file.  That file is not provided here, but you can obtain it
 from [another GitHub repo of mine](https://www.github.com/silliman/zmarbles).  (That site has *zmarbles.tar.gz* which is a compressed version of *zmarbles.tar*). Go to that page and follow the four steps in the Installation instructions section there instead of 

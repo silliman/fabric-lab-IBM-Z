@@ -980,7 +980,7 @@ In this section, you will install tools that will allow you to generate a simple
 
 **Step 3:** Hyperledger Composer provides a package to work with Yeoman.  Install it using this command::
 
- bcuser@ubuntu16042:~$ npm install -g generator-hyperledger-composer
+ bcuser@ubuntu16042:~$ npm install -g generator-hyperledger-composer@0.11.3
 
 **Step 4:** Enter the following command to begin the generation of an AngularJS application based on your Hyperledger Composer Business Network::
 

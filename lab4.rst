@@ -532,7 +532,7 @@ After verifying with the Playground that your modified transaction works, you wi
  
 **Step 2:** You will see a window like this.  The *personId* field is the identifier field for a *Person* asset and it has been given a randomly assigned value by the Playground.  The other fields are left blank:
 
-.. images:: images/lab4/4_020_CreateParticipant.png
+.. image:: images/lab4/4_020_CreateParticipant.png
  
 **Step 3:** You can overtype the *personId* field with your own value or leave it as is.  You can change it to something simple for this lab, like *1111*.  You will be using this value in a moment, so whether you take what is presented to you or create your own, remember it or write it down.  Fill in the *firstName* and *lastName* with values that suit you.  Here is an example:
 

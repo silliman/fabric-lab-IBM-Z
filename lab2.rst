@@ -63,13 +63,19 @@ E.g., observe the following commands which illustrate this::
  /home/bcuser
  bcuser@ubuntu-bc:~$
  
-**Step 2:** List the file *zmarbles.tar* that is in your home directory with the *ls* command (that command starts with a 
-lowercase “ell”, not an uppercase “eye”)::
+**Step 2:** Retrieve the zmarbles compressed tarball prepared for this lab with the following command::
 
- bcuser@ubuntu16042:~$ ls -l zmarbles.tar
- -rw-r--r-- 1 bcuser bcuser 2406400 Jul 11 11:16 zmarbles.tar
- bcuser@ubuntu16042:~$ ls -lh zmarbles.tar  # h flag makes size friendlier
- -rw-r--r-- 1 bcuser bcuser 2.3M Jul 11 11:16 zmarbles.tar
+ bcuser@ubuntu16042:~$ wget https://raw.githubusercontent.com/silliman/fabric-lab-IBM-Z/master/zmarbles.tar.gz
+ --2017-10-02 08:40:14--  https://raw.githubusercontent.com/silliman/fabric-lab-IBM-Z/master/zmarbles.tar.gz
+ Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.200.133
+ Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.200.133|:443... connected.
+ HTTP request sent, awaiting response... 200 OK
+ Length: 1532078 (1.5M) [application/octet-stream]
+ Saving to: 'zmarbles.tar.gz'
+ 
+ zmarbles.tar.gz                      100%[=====================================================================>]   1.46M  --.-KB/s     in 0.1s    
+
+ 2017-10-02 08:40:15 (14.0 MB/s) - 'zmarbles.tar.gz' saved [1532078/1532078]
  
 **Step 3:**	List the *zmarbles* directory with this *ls* command::
 
@@ -78,12 +84,12 @@ lowercase “ell”, not an uppercase “eye”)::
  
 Don’t panic!  It wasn’t supposed to be there.  It will be after the next step.
 
-**Step 4:**	Extract the *zmarbles.tar* file which will create the missing directory (and lots of subdirectories).  
-If you are not giddy yet, try tucking the “*v*” switch into the options in the command below.  That is, use *-xvf* instead of *-xf*.  
-So, enter the commands highlighted below as shown, or by substituting *-xvf* for *-xf* in the tar command (the “*v*” is for “*verbose*”)
+**Step 4:**	Extract the *zmarbles.tar.gz* file which will create the missing directory (and lots of subdirectories).  
+If you are not giddy yet, try tucking the “*v*” switch into the options in the command below.  That is, use *-xzvf* instead of *-xzf*.  
+So, enter the commands highlighted below as shown, or by substituting *-xzvf* for *-xzf* in the tar command (the “*v*” is for “*verbose*”)
 ::
 
- bcuser@ubuntu16042:~$ tar -xf zmarbles.tar 
+ bcuser@ubuntu16042:~$ tar -xzf zmarbles.tar.gz 
  bcuser@ubuntu16042:~$ ls zmarbles
  base               configtx.yaml       docker-compose-template.yaml  generateArtifacts.sh  network_setup.sh
  channel-artifacts  crypto-config.yaml  examples                      marblesUI             scripts

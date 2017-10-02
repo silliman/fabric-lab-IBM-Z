@@ -149,20 +149,26 @@ to your system’s list of repositories so that you can install Docker CE. Enter
  root@ubuntu16042:~# apt-cache policy docker-ce
  docker-ce:
    Installed: (none)
-   Candidate: 17.06.0~ce-0~ubuntu
+   Candidate: 17.09.0~ce-0~ubuntu
    Version table:
+      17.09.0~ce-0~ubuntu 500
+         500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
+      17.06.2~ce-0~ubuntu 500
+         500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
+      17.06.1~ce-0~ubuntu 500
+         500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
       17.06.0~ce-0~ubuntu 500
          500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
 
 Some key takeaways from the command output:
 
 *	Docker is not currently installed *(Installed: (none))*
-*	*17.06.0~ce* is the candidate version to install
+*	*17.09.0~ce* is the candidate version to install- it is the latest version available
 *	When you install the software, you will be going out to the Internet to the *download.docker.com* domain to get the software.
 
-**Step 11:** Enter the *apt-get* command to install the software.  (Enter Y when prompted to continue)::
+**Step 11:** However, you must install version *17.06.2*. Enter this *apt-get* command to install the software.  (Enter Y when prompted to continue)::
 
- root@ubuntu16042:~# apt-get install docker-ce
+ root@ubuntu16042:~# apt-get install docker-ce=17.06.2~ce-0~ubuntu
  Reading package lists... Done
  Building dependency tree       
  Reading state information... Done
@@ -193,19 +199,19 @@ the output from your earlier *apt-cache* command::
 
  root@ubuntu16042:~# docker version
  Client:
-  Version:      17.06.0-ce
+  Version:      17.06.2-ce
   API version:  1.30
   Go version:   go1.8.3
-  Git commit:   02c1d87
-  Built:        Fri Jun 23 21:17:24 2017
+  Git commit:   cec0b72
+  Built:        Tue Sep  5 20:02:38 2017
   OS/Arch:      linux/s390x
- 
+
  Server:
-  Version:      17.06.0-ce
+  Version:      17.06.2-ce
   API version:  1.30 (minimum version 1.12)
   Go version:   go1.8.3
-  Git commit:   02c1d87
-  Built:        Fri Jun 23 21:16:38 2017
+  Git commit:   cec0b72
+  Built:        Tue Sep  5 20:00:51 2017
   OS/Arch:      linux/s390x
   Experimental: false
 
@@ -217,7 +223,7 @@ the output from your earlier *apt-cache* command::
   Paused: 0
   Stopped: 0
  Images: 0
- Server Version: 17.06.0-ce
+ Server Version: 17.06.2-ce
  Storage Driver: aufs
   Root Dir: /var/lib/docker/aufs
   Backing Filesystem: extfs
@@ -233,13 +239,13 @@ the output from your earlier *apt-cache* command::
  Runtimes: runc
  Default Runtime: runc
  Init Binary: docker-init
- containerd version: cfb82a876ecc11b5ca0977d1733adbe58599088a
- runc version: 2d41c047c83e09a6d61d464906feb2a2f3c52aa4
+ containerd version: 6e23458c129b551d5c9871e5174f6b1b7f6d1170
+ runc version: 810190ceaa507aa2727d7ae6f4790c76ec150bd2
  init version: 949e6fa
  Security Options:
   apparmor
- Kernel Version: 4.4.0-83-generic
- Operating System: Ubuntu 16.04.2 LTS
+ Kernel Version: 4.4.0-96-generic
+ Operating System: Ubuntu 16.04.3 LTS
  OSType: linux
  Architecture: s390x
  CPUs: 2

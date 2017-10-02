@@ -51,12 +51,32 @@ chances are you are in good shape.  A couple of warning messages are okay.
  Resolving deltas: 100% (384/384), done. 
  Checking connectivity... done. 
 
-**Step 4:** Change to the *composer-sample-applications/packages/digitalproperty-app* directory and do an *npm install*::
+**Step 4:** Change to the *composer-sample-applications* directory::
 
- bcuser@ubuntu16042:~$ cd composer-sample-applications/packages/digitalproperty-app
+ bcuser@ubuntu16042:~$ cd composer-sample-applications
+ 
+**Step 5:** In this lab we have hard-coded version 0.11.3 of the various Hyperledger Composer packages because subsequent versions (i.e., 0.12.x, 0.13.x) changed the Hyperledger Composer Playground user interface in ways that would make the flow of the Hyperledger Composer Playground portions of this obsolete.  Don't worry, the major concepts that you'll learn in this lab are transferable to the newer versions.  But because of this, you will need to revert to an earlier commit level of the *composer-sample-applications* repo so that the levels of the composer packages installed locally in Step 6 will be the corresponding 0.11.3 versions.  Enter this command to revert to the appropriate commit level::
+
+ bcuser@ubuntu16042:~/composer-sample-applications $ git checkout 56c6091
+ Note: checking out '56c6091'.
+
+ You are in 'detached HEAD' state. You can look around, make experimental
+ changes and commit them, and you can discard any commits you make in this
+ state without impacting any branches by performing another checkout.
+
+ If you want to create a new branch to retain commits you create, you may
+ do so (now or later) by using -b with the checkout command again. Example:
+
+   git checkout -b new_branch_name
+
+ HEAD is now at 56c6091... update versions (#80)
+
+**Step 6:** Change to the /packages/digitalproperty-app* directory and do an *npm install*::
+
+ bcuser@ubuntu16042:~/composer-sample-applications$ cd packages/digitalproperty-app
  bcuser@ubuntu16042:~/composer-sample-applications/packages/digitalproperty-app $ npm install
 
-**Step 5:** Open the *package.json* file in read-only mode by adding the *-R* argument to the *vi* command::
+**Step 7:** Open the *package.json* file in read-only mode by adding the *-R* argument to the *vi* command::
 
  bcuser@ubuntu16042:~/composer-sample-applications/packages/digitalproperty-app$ vi -R package.json 
 
@@ -82,10 +102,10 @@ When *npm install* is run, it first runs the commands listed in the *“preinsta
 the *“dependencies”* section (not shown in this document) that are not already installed.  After that it will run the command listed in 
 the *“postinstall”* name/value pair.
 
-**Step 6:** You can exit this file now by typing in ``:q!`` - if hitting the colon key does not take your cursor to the command line 
+**Step 8:** You can exit this file now by typing in ``:q!`` - if hitting the colon key does not take your cursor to the command line 
 at the bottom of your screen try hitting the **Escape key** and retrying ``:q!``.
 
-**Step 7:** The *digitalproperty-app* sample application is now all dressed up with no place to go-  you need to stand up a Hyperledger 
+**Step 9:** The *digitalproperty-app* sample application is now all dressed up with no place to go-  you need to stand up a Hyperledger 
 Fabric network in which to deploy the Composer business network provided by this app.  The tools and scripts to do this are provided in 
 a separate GitHub repo, so you will have to install it now.  Change back to your home directory and clone the necessary repo with these 
 two commands::
@@ -99,13 +119,13 @@ two commands::
  Resolving deltas: 100% (335/335), done. 
  Checking connectivity... done.
 
-**Step 8:** Change to *composer-tools/packages/fabric-dev-servers* and then do an *npm install*::
+**Step 10:** Change to *composer-tools/packages/fabric-dev-servers* and then do an *npm install*::
 
  bcuser@ubuntu16042:~$ cd composer-tools/packages/fabric-dev-servers
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ npm install
 
 
-**Step 9:** Enter the *docker images* command to see that you currently have Docker images on your system with the *s390x-1.0.1 tag*::
+**Step 11:** Enter the *docker images* command to see that you currently have Docker images on your system with the *s390x-1.0.1 tag*::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ docker images
  REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
@@ -134,14 +154,14 @@ two commands::
  hyperledger/fabric-baseimage   s390x-0.3.1         a165b6238eee        3 months ago        1.37GB
  hyperledger/fabric-baseos      s390x-0.3.1         2293f6d33733        3 months ago        171MB
 
-**Step 10:** You are about to start your Hyperledger Fabric network.  Enter this command to show that you do not currently have any 
+**Step 12:** You are about to start your Hyperledger Fabric network.  Enter this command to show that you do not currently have any 
 Docker containers running.  (You will soon)::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ docker ps -a
  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$
 
-**Step 11:** Run the script to start the Hyperledger Fabric network::
+**Step 13:** Run the script to start the Hyperledger Fabric network::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ ./startFabric.sh
  Development only script for Hyplerledger Fabric control
@@ -229,7 +249,7 @@ Docker containers running.  (You will soon)::
 
  cd ../..
 
-**Step 12:** Now enter *docker ps -a* to see if your Docker containers are running.  They should all be in the *Up* status::
+**Step 14:** Now enter *docker ps -a* to see if your Docker containers are running.  They should all be in the *Up* status::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ docker ps -a
  CONTAINER ID        IMAGE                                    COMMAND                  CREATED             STATUS              PORTS                                            NAMES
@@ -238,7 +258,7 @@ Docker containers running.  (You will soon)::
  f1b23ce3f599        hyperledger/fabric-couchdb:s390x-1.0.1   "tini -- /docker-entr"   3 minutes ago       Up 3 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
  5e9bb35f33f0        hyperledger/fabric-ca:s390x-1.0.1        "sh -c 'fabric-ca-ser"   3 minutes ago       Up 3 minutes        0.0.0.0:7054->7054/tcp                           ca.org1.example.com
 
-**Step 13:** Now you must create a Hyperledger Composer connection profile.  This is the “glue” that lets Hyperledger Composer know 
+**Step 15:** Now you must create a Hyperledger Composer connection profile.  This is the “glue” that lets Hyperledger Composer know 
 how to connect to a Hyperledger Fabric network.  A script has been provided to do this::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ ./createComposerProfile.sh
@@ -285,12 +305,12 @@ how to connect to a Hyperledger Fabric network.  A script has been provided to d
  Hyperledger Composer profile has been created for the Hyperledger Fabric v1.0 instance
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$
 
-**Step 14:** Go back to the sample application that you downloaded.  Change to this directory::
+**Step 16:** Go back to the sample application that you downloaded.  Change to this directory::
 
  bcuser@ubuntu16042:~/composer-tools/packages/fabric-dev-servers$ cd ~/composer-sample-applications/packages/digitalproperty-app/
  bcuser@ubuntu16042:~/composer-sample-applications/packages/digitalproperty-app$
 
-**Step 15:** Run the *npm* command to deploy the *digitalproperty-network* Hyperledger Composer business network onto the Hyperledger 
+**Step 17:** Run the *npm* command to deploy the *digitalproperty-network* Hyperledger Composer business network onto the Hyperledger 
 Fabric network that you just created::
 
  bcuser@ubuntu16042:~/composer-sample-applications/packages/digitalproperty-app$ npm run deployNetwork
@@ -350,7 +370,7 @@ Fabric network that you just created::
 
  Command succeeded
 
-**Step 16:** Run the Docker commands to show your Docker images and containers and you will see that a new Docker image was created for 
+**Step 18:** Run the Docker commands to show your Docker images and containers and you will see that a new Docker image was created for 
 the Hyperledger Composer business network that you just deployed, and then a Docker container based on this image was created::
 
  bcuser@ubuntu16042:~/composer-sample-applications/packages/digitalproperty-app$ docker images dev-*
@@ -364,7 +384,7 @@ the Hyperledger Composer business network that you just deployed, and then a Doc
  237f5f511214        hyperledger/fabric-ca:s390x-1.0.1                                                                                            "sh -c 'fabric-ca-..."   14 minutes ago      Up 14 minutes       0.0.0.0:7054->7054/tcp                           ca.org1.example.com
  589663c107fc        hyperledger/fabric-couchdb:s390x-1.0.1                                                                                       "tini -- /docker-e..."   14 minutes ago      Up 14 minutes       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
 
-**Step 17:** At this point you have deployed a Hyperledger Composer Business Network on a Hyperledger Fabric v1.0.1 network, but you 
+**Step 19:** At this point you have deployed a Hyperledger Composer Business Network on a Hyperledger Fabric v1.0.1 network, but you 
 have not actually created any participants or assets on the network.  Run this command and you will see that you will not have 
 any “Land Titles” listed (if there had been any they would have been under the column headings surrounded by boxes at the bottom of 
 this output)::
@@ -386,7 +406,7 @@ this output)::
  └─────────┴─────────┴────────────┴─────────┴─────────────┴─────────┘
  info: [DigitalProperty-App] Command completed successfully.
 
-**Step 18:** Run the following *npm test* command which will define two assets owned by Fred Bloggs, list them, set one for sale, and 
+**Step 20:** Run the following *npm test* command which will define two assets owned by Fred Bloggs, list them, set one for sale, and 
 list them again.  Everything below the *npm test* command that you will enter is output.  Look carefully at the tables and you will see 
 that Fred Bloggs’ nice house in the country was initially listed as not for sale but then was made available for sale as the result of 
 a Business Network transaction::
@@ -839,7 +859,7 @@ The Composer REST Server reads a Business Network definition and exposes public 
 
 **Step 3:** Use *npm* to install the Composer REST server (output not shown)::
 
- bcuser@ubuntu16042:~$ npm install -g composer-rest-server
+ bcuser@ubuntu16042:~$ npm install -g composer-rest-server@0.11.3
 
 **Step 4:** Upon completion, verify that it is installed::
 

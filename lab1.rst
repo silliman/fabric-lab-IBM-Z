@@ -291,7 +291,7 @@ called Pip.  But first you will install Pip itself!  You will do this as root, s
 
 **Step 2.19** Install the *python-pip* package which will provide a tool named *Pip* which is used to install Python packages from a public repository::
 
- root@ubuntu16042:~# apt-get -y install python-pip apt-get -y install python-pip 
+ root@ubuntu16042:~# apt-get -y install python-pip
 
 This will bring in a lot of prerequisites and will produce a lot of output which is not shown here.
 

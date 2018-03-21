@@ -1,4 +1,8 @@
-# Hyperledger Fabric v1.0.x labs for IBM Z
+# Hyperledger Fabric v1.1.x labs for IBM Z
+
+## March 20, 2018 status update
+Lab1 and Lab2 have just been updated to work with the latest Hyperledger Fabric release, v1.1.0.
+Lab3 and Lab4 will be updated soon.
 
 These labs are designed to be run consecutively (lab1, lab2, lab3 and then lab4). 
 

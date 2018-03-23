@@ -429,6 +429,7 @@ check for the version again now that you are no longer root::
 **Step 2.29:** Use *wget* to get the compressed file that contains the Golang compiler and tools.  And now is a good time to tell you 
 that from here on out I will just call Golang what everybody else usually calls it-  *Go*.  Go figure.
 ::
+ bcuser@ubuntu16044:/tmp$ wget --no-check-certificate https://storage.googleapis.com/golang/go1.9.3.linux-s390x.tar.gz
  --2018-03-19 18:38:40--  https://storage.googleapis.com/golang/go1.9.3.linux-s390x.tar.gz
  Resolving storage.googleapis.com (storage.googleapis.com)... 172.217.2.48, 2607:f8b0:4002:808::2010
  Connecting to storage.googleapis.com (storage.googleapis.com)|172.217.2.48|:443... connected.

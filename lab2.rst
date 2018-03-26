@@ -43,8 +43,7 @@ Section 3 -	Extract the artifacts necessary to run the lab
 ==========================================================
 
 **Step 3.1:**	Navigate to the home directory by entering *cd ~* (the “tilde” character, i.e., ‘*~*’, represents the user’s home directory in Linux).  
-This directory is also usually set in the $HOME environment variable, so *cd $HOME* will also usually get you to your home directory.  
-E.g., observe the following commands which illustrate this::
+This directory is also usually set in the $HOME environment variable, so *cd $HOME* will also usually get you to your home directory::
 
  bcuser@ubuntu16044:~/git/src/github.com/hyperledger/fabric-sdk-node$ cd ~
  bcuser@ubuntu16044:~$ 
@@ -76,7 +75,7 @@ Don’t panic!  It wasn’t supposed to be there.  It will be after the next ste
 
 **Step 3.4:**	Extract the *zmarbles.tar.gz* file which will create the missing directory (and lots of subdirectories).  
 If you are not giddy yet, try tucking the “*v*” switch into the options in the command below.  That is, use *-xzvf* instead of *-xzf*.  
-So, enter the commands highlighted below as shown, or by substituting *-xzvf* for *-xzf* in the tar command (the “*v*” is for “*verbose*”)
+So, enter the command below as shown, or feel free to substitute *-xzvf* for *-xzf* in the tar command (the “*v*” is for “*verbose*”)
 ::
 
  bcuser@ubuntu16044:~$ tar -xzf zmarbles.tar.gz 
@@ -97,7 +96,7 @@ So, enter the commands highlighted below as shown, or by substituting *-xzvf* fo
  drwxr-xr-x 12 bcuser bcuser 4096 Sep  6  2017 marblesUI
  drwxr-xr-x  2 bcuser bcuser 4096 Sep  6  2017 scripts
 
-An explanation of each of the purpose of each of these files and directories is given here:
+An explanation of the purpose of each of these files and directories is given here:
 
 The *base* directory contains Docker Compose files that are included in the *docker-compose-template.yaml* file with the *extends* directive.
 
@@ -185,15 +184,15 @@ So, if you see me place comments after any commands you do not have to enter the
 This script calls two Hyperledger Fabric utilites- *cryptogen*, which creates security material (certificates and keys) 
 and *configtxgen* (Configuration Transaction Generator), which is called four times, to create four things::
 
-1.	An **orderer genesis block** – this will be the first block on the orderer’s system channel. The location of this block is 
-specified to the Orderer when it is started up via the ORDERER_GENERAL_GENESISFILE environment variable.
+ 1.	An **orderer genesis block** – this will be the first block on the orderer’s system channel. The location of this block is 
+ specified to the Orderer when it is started up via the ORDERER_GENERAL_GENESISFILE environment variable.
 
-2.	A **channel transaction** – later in the lab, this is sent to the orderer and will cause a new channel to be created when you run the **peer channel create** command.
+ 2.	A **channel transaction** – later in the lab, this is sent to the orderer and will cause a new channel to be created when you run the **peer channel create** command.
 
-3.	An **anchor peer update** for Org0MSP.  An anchor peer is a peer that is set up so that peers from other organizations may 
-communicate with it.  The concept of anchor peers allows an organization to create multiple peers, perhaps to provide extra capacity or throughput or resilience (or all the above) but not have to advertise this to outside organizations.
+ 3.	An **anchor peer update** for Org0MSP.  An anchor peer is a peer that is set up so that peers from other organizations may 
+ communicate with it.  The concept of anchor peers allows an organization to create multiple peers, perhaps to provide extra capacity or throughput or resilience (or all the above) but not have to advertise this to outside organizations.
 
-4.	An anchor peer update for Org1MSP.   You will perform the anchor peer updates for both Org0MSP and Org1MSP later in the lab via **peer channel create** commands.
+ 4.	An anchor peer update for Org1MSP.   You will perform the anchor peer updates for both Org0MSP and Org1MSP later in the lab via **peer channel create** commands.
 
 **Step 4.3:**	Issue the following command which will show you all files that were created by the *configtxgen* utility when it was called from inside *generateArtifacts.sh*::
 
@@ -204,20 +203,20 @@ communicate with it.  The concept of anchor peers allows an organization to crea
  -rw-r--r-- 1 bcuser bcuser  285 Mar 20 13:57 Org0MSPanchors.tx
  -rw-r--r-- 1 bcuser bcuser  282 Mar 20 13:57 Org1MSPanchors.tx
 
-*genesis.block* will be passed to the *orderer* at startup, and will be used to configure the orderer's *system channel*.  This file contains the x.509 signing certificates for every organization defined within the consortia that were specified within the *configtx.yaml* file when *configtxgen* was run.  The *system channel* contains other values such as parameters defining when a block of transactions is cut- e.g., based on time, number of transactions, or block size- and these values serve as a template, that is, as defaults, for any additional channels that might be created, if a new channel creation request to provide its own custom values.
+*genesis.block* will be passed to the *orderer* at startup, and will be used to configure the orderer's *system channel*.  This file contains the x.509 signing certificates for every organization defined within the consortia that were specified within the *configtx.yaml* file when *configtxgen* was run.  The *system channel* contains other values such as parameters defining when a block of transactions is cut- e.g., based on time, number of transactions, or block size- and these values serve as a template, that is, as defaults, for any additional channels that might be created, if a new channel creation request does not provide its own custom values.
 
 *channel.tx* is the input for a configuration transaction that will create a channel.  You will use this as input to a *peer channel create* request in *Section 5*.
 
 *Org0MSPanchors.tx* and *Org1MSPanchors.tx* are inputs for configuration transactions that will define an anchor peer for *Org0* and *Org1* respectively.  You will use these inputs in *Section 7*.
 
-**Step 4.4:** Issue the following command which will show you all files that were created by the *cryptogen* utility when it was called from inside *generateArtifacts.sh*.  This command will shown one screen at a time and pause-  press the *Enter* key to scroll to the end, that is, until you get your command prompt back::
+**Step 4.4:** Issue the following command which will show you all files that were created by the *cryptogen* utility when it was called from inside *generateArtifacts.sh*.  This command will show one screen at a time and pause-  press the *Enter* key to scroll to the end, that is, until you get your command prompt back::
 
  bcuser@ubuntu16044:~/zmarbles$ ls -ltrR crypto-config | more
    .
    .  (output not shown here)
    .
  
-Actually, these files are created *before* the files from the prior step, *Step 4.3*, are created, because, among the many cryptographic artifacts created are the x.509 signing certificates for the organizations, which are baked into the *genesis.block* discussed in the prior step.
+Actually, these files were created *before* the files listed in the prior step, *Step 4.3*, were created, because, among the many cryptographic artifacts created are the x.509 signing certificates for the organizations, which are baked into the *genesis.block* discussed in the prior step.
 
 You can see that there is a dizzying set of directories and files, containing things like CA root certificates, signing certificates, TLS certificates, corresponding private keys, and public keys, for certificate authorities, organizations, administrative and general users.  A thorough discussion of them is beyond the scope of this lab, but at some point in a glorious future the author hopes to document, perhaps in an appendix somewhere, the purpose of each file. The author wants world peace, too.  Shall we proceed?
 
@@ -1093,7 +1092,7 @@ In this section, you will enter *scripts/setpeer* and *peer chaincode commands* 
  
 **Step 10.1:** Switch to peer0 of Org0MSP::
 
- root@acd1f96d8807:/opt/gopath/src/github.com/hyperledger/fabric/peer# scripts/setpeer 0 0
+ root@acd1f96d8807:/opt/gopath/src/github.com/hyperledger/fabric/peer# source scripts/setpeer 0 0
  CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/unitedmarbles.com/peers/peer0.unitedmarbles.com/tls/ca.crt
  CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/unitedmarbles.com/peers/peer0.unitedmarbles.com/tls/server.key
  CORE_PEER_LOCALMSPID=Org0MSP

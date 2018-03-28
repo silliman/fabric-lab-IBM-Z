@@ -444,70 +444,70 @@ a Business Network transaction::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ npm test
  
-> digitalproperty-app@0.0.7 test /home/bcuser/composer-sample-applications/packages/digitalproperty-app
-> npm run bootstrapAssets && npm run listAssets && npm run submitTransaction
+ > digitalproperty-app@0.0.7 test /home/bcuser/composer-sample-applications/packages/digitalproperty-app
+ > npm run bootstrapAssets && npm run listAssets && npm run submitTransaction
 
 
-> digitalproperty-app@0.0.7 bootstrapAssets /home/bcuser/composer-sample-applications/packages/digitalproperty-app
-> node cli.js landregistry bootstrap
+ > digitalproperty-app@0.0.7 bootstrapAssets /home/bcuser/composer-sample-applications/packages/digitalproperty-app
+ > node cli.js landregistry bootstrap
 
- info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] Adding default land titles to the asset registry
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles getting asset registry for "net.biz.digitalPropertyNetwork.LandTitle"
- info: [DigitalProperty-App] about to get asset registry
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles got asset registry
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles getting factory and adding assets
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a person
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a land title#1
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a land title#2
- info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Adding these to the registry
- info: [DigitalProperty-App] Default titles added
- info: [DigitalProperty-App] Command completed successfully.
+  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
+  info: [DigitalProperty-App] Adding default land titles to the asset registry
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles getting asset registry for "net.biz.digitalPropertyNetwork.LandTitle"
+  info: [DigitalProperty-App] about to get asset registry
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles got asset registry
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles getting factory and adding assets
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a person
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a land title#1
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Creating a land title#2
+  info: [DigitalProperty-App] LandRegistry:_bootstrapTitles Adding these to the registry
+  info: [DigitalProperty-App] Default titles added
+  info: [DigitalProperty-App] Command completed successfully.
 
- > digitalproperty-app@0.0.7 listAssets /home/bcuser/composer-sample-applications/packages/digitalproperty-app
- > node cli.js landregistry list
+  > digitalproperty-app@0.0.7 listAssets /home/bcuser/composer-sample-applications/packages/digitalproperty-app
+  > node cli.js landregistry list
 
- info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
- info: [DigitalProperty-App] listTitles Getting the asset registry
- info: [DigitalProperty-App] listTitles Getting all assest from the registry.
- info: [DigitalProperty-App] listTitles Current Land Titles
- info: [DigitalProperty-App] Titles listed
- info: [DigitalProperty-App] 
- ┌──────────┬────────────────┬────────────┬─────────┬─────────────────────────────┬─────────┐
- │ TitleID  │ OwnerID        │ First Name │ Surname │ Description                 │ ForSale │
- ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
- │ LID:1148 │ PID:1234567890 │ Fred       │ Bloggs  │ A nice house in the country │ No      │
- ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
- │ LID:6789 │ PID:1234567890 │ Fred       │ Bloggs  │ A small flat in the city    │ No      │
- └──────────┴────────────────┴────────────┴─────────┴─────────────────────────────┴─────────┘
- info: [DigitalProperty-App] Command completed successfully.
+  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] listTitles Getting the asset registry
+  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
+  info: [DigitalProperty-App] listTitles Current Land Titles
+  info: [DigitalProperty-App] Titles listed
+  info: [DigitalProperty-App] 
+  ┌──────────┬────────────────┬────────────┬─────────┬─────────────────────────────┬─────────┐
+  │ TitleID  │ OwnerID        │ First Name │ Surname │ Description                 │ ForSale │
+  ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
+  │ LID:1148 │ PID:1234567890 │ Fred       │ Bloggs  │ A nice house in the country │ No      │
+  ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
+  │ LID:6789 │ PID:1234567890 │ Fred       │ Bloggs  │ A small flat in the city    │ No      │
+  └──────────┴────────────────┴────────────┴─────────┴─────────────────────────────┴─────────┘
+  info: [DigitalProperty-App] Command completed successfully.
 
- > digitalproperty-app@0.0.7 submitTransaction /home/bcuser/composer-sample-applications/packages/digitalproperty-app
- > node cli.js landregistry submit && node cli.js landregistry list
+  > digitalproperty-app@0.0.7 submitTransaction /home/bcuser/composer-sample-applications/packages/digitalproperty-app
+  > node cli.js landregistry submit && node cli.js landregistry list
 
- info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
- info: [DigitalProperty-App] updateForSale Getting assest from the registry.
- info: [DigitalProperty-App] updateForSale Submitting transaction
- info: [DigitalProperty-App] Transaction Submitted
- info: [DigitalProperty-App] Command completed successfully.
- info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
- info: [DigitalProperty-App] listTitles Getting the asset registry
- info: [DigitalProperty-App] listTitles Getting all assest from the registry.
- info: [DigitalProperty-App] listTitles Current Land Titles
- info: [DigitalProperty-App] Titles listed
- info: [DigitalProperty-App] 
- ┌──────────┬────────────────┬────────────┬─────────┬─────────────────────────────┬─────────┐
- │ TitleID  │ OwnerID        │ First Name │ Surname │ Description                 │ ForSale │
- ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
- │ LID:1148 │ PID:1234567890 │ Fred       │ Bloggs  │ A nice house in the country │ Yes     │
- ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
- │ LID:6789 │ PID:1234567890 │ Fred       │ Bloggs  │ A small flat in the city    │ No      │
- └──────────┴────────────────┴────────────┴─────────┴─────────────────────────────┴─────────┘
- info: [DigitalProperty-App] Command completed successfully.
+  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] updateForSale Getting assest from the registry.
+  info: [DigitalProperty-App] updateForSale Submitting transaction
+  info: [DigitalProperty-App] Transaction Submitted
+  info: [DigitalProperty-App] Command completed successfully.
+  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] listTitles Getting the asset registry
+  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
+  info: [DigitalProperty-App] listTitles Current Land Titles
+  info: [DigitalProperty-App] Titles listed
+  info: [DigitalProperty-App] 
+  ┌──────────┬────────────────┬────────────┬─────────┬─────────────────────────────┬─────────┐
+  │ TitleID  │ OwnerID        │ First Name │ Surname │ Description                 │ ForSale │
+  ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
+  │ LID:1148 │ PID:1234567890 │ Fred       │ Bloggs  │ A nice house in the country │ Yes     │
+  ├──────────┼────────────────┼────────────┼─────────┼─────────────────────────────┼─────────┤
+  │ LID:6789 │ PID:1234567890 │ Fred       │ Bloggs  │ A small flat in the city    │ No      │
+  └──────────┴────────────────┴────────────┴─────────┴─────────────────────────────┴─────────┘
+  info: [DigitalProperty-App] Command completed successfully.
 
 
 Section 3: Install Hyperledger Composer Playground
@@ -515,7 +515,7 @@ Section 3: Install Hyperledger Composer Playground
 
 In this section, you will install Hyperledger Composer Playground on your Ubuntu IBM on Z instance, and run the Playground on this instance.
 
-You will then load into the Playground, the same DigitalProperty Network that you just used in the prior section of this lab, but, you will be working in Web Browser mode-  the changes you make with the Playground will be within your web browser storage only, and will not be reflected in the Hyperledger Fabric network until near the end of *Section 4*, when you will take specific steps to export your changes from the Playground and update your Hyperledger Fabric network to use them.
+You will then load into the Playground the same DigitalProperty Network that you just used in the prior section of this lab, but, you will be working in Web Browser mode-  the changes you make with the Playground will be within your web browser storage only, and will not be reflected in the Hyperledger Fabric network until near the end of *Section 4*, when you will take specific steps to export your changes from the Playground and update your Hyperledger Fabric network to use them.
 
 Later in this lab, in *Section 7*, you will connect the Playground directly to the Hyperledger Fabric network and the changes you make in that section will be immediately available there.  That sounds simpler, and it is, so why am I asking you to do it the "hard way" where you are working in the web browser storage only to export it to the real Fabric later?  I can think of a few reasons:
 

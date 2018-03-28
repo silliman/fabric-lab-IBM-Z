@@ -37,7 +37,7 @@ This will take a few minutes to run, and will produce a lot of output.  If you d
  bcuser@ubuntu16044:~$ which composer
  /home/bcuser/bin/composer
 
-Notice that now, the location within your environment's PATH where the *composer* program was found, is listed.
+Notice that now the location within your environment's PATH where the *composer* program was found is listed.
 
 **Step 2.4** Check the Hyperledger Composer version that you just installed::
 
@@ -69,9 +69,9 @@ Notice that now, the location within your environment's PATH where the *composer
 Network* that you will be working with throughout the lab.  This is just one of many sample applications provided by
 the Hyperledger Composer project.  
 
-Ideally right now you could set this application up for use without further ado; however, at this point in time you need to make a slight change to a file named *package.json*. The reason is that within this lab you will be using the latest and greatest versions of Hyperledger Composer and Hyperledger Fabric- you will be using Hyperledger Composer v0.17.4 and Hyperledger Fabric v1.1.0-alpha.
+Ideally right now you could set this application up for use without further ado; however, at this point in time you need to make a slight change to a file named *package.json*. The reason is that within this lab you will be using specific versions of Hyperledger Composer and Hyperledger Fabric- you will be using Hyperledger Composer v0.18.2 and Hyperledger Fabric v1.1.0.
 
-Within the *package.json* file for the *Digital Property Network* sample application, requests are being made to install some Hyperledger Composer components at an older version, v0.16.3.  (At some point in time this will get updated, but for now you will have to change the *package.json* file to ask for v0.17.4 instead of v0.16.3. The next several steps will guide you through that process.
+Within the *package.json* file for the *Digital Property Network* sample application, requests are being made to install some Hyperledger Composer components at an older version, v0.16.3.  (At some point in time this will get updated, but for now you will have to change the *package.json* file to ask for v0.18.2 instead of v0.16.3. The next several steps will guide you through that process.
 
 First, issue this *grep* command to find the occurrences of the string *0.16.3* within *package.json*::
 
@@ -81,7 +81,7 @@ First, issue this *grep* command to find the occurrences of the string *0.16.3* 
 
 **Note:** The backslashes in the previous command tell *grep* to look for the period character *('.')*.  Without the backslash the *grep* command would interpret the period character to mean "any single character", so, e.g., if you specified ``0.16.3`` instead of ``0\.16\.3`` *grep* would match that against *0.16.3* but also against things like *0a16b3* which is not what we want here.  In this particular file, you probably would not find any unwanted matches even if you did leave the backslashes out, but you may not be so fortunate in future searches.  
 
-**Step 2.9:** This *sed* command will replace the occurrences of *^0.16.3* with *0.17.4* for the two npm packages listed in the output from the previous *grep* command.::
+**Step 2.9:** This *sed* command will replace the occurrences of *^0.16.3* with *0.18.2* for the two npm packages listed in the output from the previous *grep* command.::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ sed -i "s/\^0\.16\.3/0.18.2/" package.json
  
@@ -164,30 +164,11 @@ Take advantage of the convenience that the Hyperledger Composer team has provide
 
 You just see column headings.  You do not yet have any Docker images on your system.  You will soon and then you will issue this command again and see those images.
 
-**Step 2.19:** As mentioned already, you are are going to use Hyperledger Composer 0.18.2 which runs on top of Hyperledger Fabric v1.1.0.  You need to set an environment variable to let the tools you will be working with know that you want to use Hyperledger Fabric v1.1.0.  If this variable is not set the tools would try to use Hyperledger Fabric v1.0.4 instead.
-
-Enter the *echo* command below to see that the environement variable *FABRIC_VERSION* is currently not set- that is, not output is returned to you except a blank line::
-
- bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ echo $FABRIC_VERSION
-
- bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ 
-
-**Step 2.20:** The scripts are set to ask for Hyperledger v1.0.4 - not what you want- if *FABRIC_VERSION* is not set. Use
-*export* to set the environment variable::
-
- bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ export FABRIC_VERSION=hlfv11
- 
-**Step 2.21:** Now, issue the *echo* command again and this time you should see *hlfv11* produced as output::
-
- bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ echo $FABRIC_VERSION
- hlfv11
- bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ 
-
-**Step 2.22:** Run the *downloadFabric.sh* script in order to pull the necessary Hyperledger Fabric v1.1.0 images from the Hyperledger project's public Docker Hub repositories::
+**Step 2.19:** Run the *downloadFabric.sh* script in order to pull the necessary Hyperledger Fabric v1.1.0 images from the Hyperledger project's public Docker Hub repositories::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ ./downloadFabric.sh
  
-**Step 2.23:** Enter the *docker images* command again and this time you should see that several Hyperledger Fabric v1.1.0 Docker images are available on your system::
+**Step 2.20:** Enter the *docker images* command again and this time you should see that several Hyperledger Fabric v1.1.0 Docker images are available on your system::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ docker images
  REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
@@ -199,13 +180,13 @@ Enter the *echo* command below to see that the environement variable *FABRIC_VER
 
 **Note:** I mentioned that this is a simple Hyperledger Fabric network.  There are several other Hyperledger Fabric Docker images that are necessary in a more complicated network.
 
-**Step 2.24:** You are about to start your Hyperledger Fabric network.  But before you do that, enter this command to show that you do not currently have any Docker containers running::
+**Step 2.21:** You are about to start your Hyperledger Fabric network.  But before you do that, enter this command to show that you do not currently have any Docker containers running::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ docker ps -a
  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
  bcuser@ubuntu16043:~/composer-tools/packages/fabric-dev-servers$
 
-**Step 2.25:** Run the script to start the Hyperledger Fabric network::
+**Step 2.22:** Run the script to start the Hyperledger Fabric network::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ ./startFabric.sh
  Development only script for Hyperledger Fabric control
@@ -261,7 +242,7 @@ Enter the *echo* command below to see that the environement variable *FABRIC_VER
  2018-03-22 17:58:05.076 UTC [channelCmd] executeJoin -> INFO 006 Successfully submitted proposal to join channel
  2018-03-22 17:58:05.076 UTC [main] main -> INFO 007 Exiting.....
 
-**Step 2.26:** Now enter *docker ps -a* to see if your Docker containers are running.  They should all be in the *Up* status::
+**Step 2.23:** Now enter *docker ps -a* to see if your Docker containers are running.  They should all be in the *Up* status::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ docker ps -a
  CONTAINER ID        IMAGE                                    COMMAND                  CREATED             STATUS              PORTS                                            NAMES
@@ -272,7 +253,7 @@ Enter the *echo* command below to see that the environement variable *FABRIC_VER
 
 **Important:** All four containers listed should be in the *Up* status.  If any of them say *Exited*, ask an instructor for help.
 
-**Step 2.27:** Now you must create a Hyperledger Composer Peer Admin business network card. A business network card is the “glue” that lets Hyperledger Composer know how a particular user is going to connect to a Hyperledger Fabric network.  The *Peer Admin* is a special user that has administrative authority on the Hyperledger Fabric peer node and thus has the ability to install Hyperledger Composer business networks on the Hyperledger Fabric peer. 
+**Step 2.24:** Now you must create a Hyperledger Composer Peer Admin business network card. A business network card is the “glue” that lets Hyperledger Composer know how a particular user is going to connect to a Hyperledger Fabric network.  The *Peer Admin* is a special user that has administrative authority on the Hyperledger Fabric peer node and thus has the ability to install Hyperledger Composer business networks on the Hyperledger Fabric peer. 
 
 A script has been provided to do this. Run the *createPeerAdminCard* script::
 
@@ -316,12 +297,12 @@ A script has been provided to do this. Run the *createPeerAdminCard* script::
  
 **Note:** Notice from the above output that the "Card Name" *PeerAdmin@hlfv1*, associated with the "UserId" *PeerAdmin* does not have any information listed under the "Business Network".  The *PeerAdmin* user has authority to install Hyperledger Composer business networks, but it does not have authority to connect to and use them.  When a Hyperledger Composer business network is installed under PeerAdmin's authority, a separate business network administrator is created for that specific business network that does have authority to connect and use just that one business network.  
 
-**Step 2.28:** Go back to the sample application that you downloaded by changing back to this directory::
+**Step 2.25:** Go back to the sample application that you downloaded by changing back to this directory::
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ cd ~/composer-sample-applications/packages/digitalproperty-app/
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$
 
-**Step 2.29:** Run the *npm* command to deploy the *digitalproperty-network* Hyperledger Composer business network onto the Hyperledger 
+**Step 2.26:** Run the *npm* command to deploy the *digitalproperty-network* Hyperledger Composer business network onto the Hyperledger 
 Fabric network that you just created::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ npm run deployNetwork
@@ -398,14 +379,14 @@ Fabric network that you just created::
 
 **Note:** You can see from the end of this output that this sample network has two Asset types, *LandTitle* and *SalesAgreement*, and one Participant type, *Person*.
 
-**Step 2.30:** Run this Docker command and you will see that a new Docker image was created for 
+**Step 2.27:** Run this Docker command and you will see that a new Docker image was created for 
 the Hyperledger Composer business network that you just deployed::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker images dev-*
  REPOSITORY                                                                                                                   TAG                 IMAGE ID            CREATED              SIZE
  dev-peer0.org1.example.com-digitalproperty-network-0.18.2-8eb8214bbd3977ac522750fde0f2ed8d133fe4782f7f82a37a8793fd9ca6659e   latest              cc4c174c984e        5 minutes ago       1.45GB
  
-**Step 2.31:** Run the Docker command to show your Docker containers and you will see that a Docker container based on your new Docker image has been created (it should be the first container listed in the output)::
+**Step 2.28:** Run the Docker command to show your Docker containers and you will see that a Docker container based on your new Docker image has been created (it should be the first container listed in the output)::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker ps
  CONTAINER ID        IMAGE                                                                                                                        COMMAND                  CREATED             STATUS              PORTS                                            NAMES
@@ -415,7 +396,7 @@ the Hyperledger Composer business network that you just deployed::
  e9476fcec230        hyperledger/fabric-couchdb:s390x-0.4.6                                                                                       "tini -- /docker-e..."   44 minutes ago      Up 44 minutes       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
  104b8a355a46        hyperledger/fabric-ca:s390x-1.1.0                                                                                            "sh -c 'fabric-ca-..."   44 minutes ago      Up 44 minutes       0.0.0.0:7054->7054/tcp                           ca.org1.example.com
 
-**Step 2.32:** A few steps ago I mentioned in the notes that when the *PeerAdmin* deploys a Hyperledger Composer business network, it creates a business network administrator for that network.  Run this command to see that this new business network administrator, named *admin@digitalproperty-network*, has been created::
+**Step 2.29:** A few steps ago I mentioned in the notes that when the *PeerAdmin* deploys a Hyperledger Composer business network, it creates a business network administrator for that network.  Run this command to see that this new business network administrator, named *admin@digitalproperty-network*, has been created::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ composer card list 
  The following Business Network Cards are available:
@@ -434,7 +415,7 @@ the Hyperledger Composer business network that you just deployed::
 
  Command succeeded
 
-**Step 2.33:** At this point you have deployed a Hyperledger Composer Business Network on a Hyperledger Fabric v1.1.0 network, but you 
+**Step 2.30:** At this point you have deployed a Hyperledger Composer Business Network on a Hyperledger Fabric v1.1.0 network, but you 
 have not actually created any participants or assets on the network.  Run this command and you will see that you will not have 
 any “Land Titles” listed (if there had been any they would have been under the column headings surrounded by boxes at the bottom of 
 this output)::
@@ -456,7 +437,7 @@ this output)::
  └─────────┴─────────┴────────────┴─────────┴─────────────┴─────────┘
  info: [DigitalProperty-App] Command completed successfully.
 
-**Step 2.34:** Run the following *npm test* command which will define two assets owned by Fred Bloggs, list them, set one for sale, and 
+**Step 2.31:** Run the following *npm test* command which will define two assets owned by Fred Bloggs, list them, set one for sale, and 
 list them again.  Everything below the *npm test* command that you will enter is output.  Look carefully at the tables and you will see 
 that Fred Bloggs’ nice house in the country was initially listed as not for sale but then was made available for sale as the result of 
 a Business Network transaction::

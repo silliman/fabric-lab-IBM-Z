@@ -28,7 +28,7 @@ Observe that there is no output from the command- you are simply presented with 
 
 **Step 2.2:** Install Hyperledger Composer using *npm*.  Enter this command::
 
- bcuser@ubuntu16044:~$ npm install -g composer-cli@0.18.2
+ bcuser@ubuntu16044:~$ npm install -g composer-cli@0.19.0
 
 This will take a few minutes to run, and will produce a lot of output.  If you do not see any error messages at the end of the output, chances are you are in good shape.  Warning messages are okay.
 
@@ -42,7 +42,7 @@ Notice that now the location within your environment's PATH where the *composer*
 **Step 2.4** Check the Hyperledger Composer version that you just installed::
 
  bcuser@ubuntu16044:~$ composer --version
- v0.18.2
+ v0.19.0
 
 **Step 2.5:** Go to your home directory::
 
@@ -53,11 +53,11 @@ Notice that now the location within your environment's PATH where the *composer*
 
  bcuser@ubuntu16044:~$ git clone https://github.com/hyperledger/composer-sample-applications
  Cloning into 'composer-sample-applications'...
- remote: Counting objects: 1751, done.
- remote: Compressing objects: 100% (105/105), done.
- remote: Total 1751 (delta 58), reused 109 (delta 52), pack-reused 1591
- Receiving objects: 100% (1751/1751), 34.86 MiB | 46.00 KiB/s, done.
- Resolving deltas: 100% (763/763), done.
+ remote: Counting objects: 1766, done.
+ remote: Compressing objects: 100% (116/116), done.
+ remote: Total 1766 (delta 64), reused 135 (delta 56), pack-reused 1591
+ Receiving objects: 100% (1766/1766), 34.86 MiB | 37.27 MiB/s, done.
+ Resolving deltas: 100% (769/769), done.
  Checking connectivity... done.
 
 **Step 2.7:** Change to the *composer-sample-applications/packages/digitialproperty-app* directory::
@@ -69,31 +69,31 @@ Notice that now the location within your environment's PATH where the *composer*
 Network* that you will be working with throughout the lab.  This is just one of many sample applications provided by
 the Hyperledger Composer project.  
 
-Ideally right now you could set this application up for use without further ado; however, at this point in time you need to make a slight change to a file named *package.json*. The reason is that within this lab you will be using specific versions of Hyperledger Composer and Hyperledger Fabric- you will be using Hyperledger Composer v0.18.2 and Hyperledger Fabric v1.1.0.
+Ideally right now you could set this application up for use without further ado; however, at this point in time you will make a slight change to a file named *package.json*. The reason is that within this lab you will be using specific versions of Hyperledger Composer and Hyperledger Fabric- you will be using Hyperledger Composer v0.19.0 and Hyperledger Fabric v1.1.0.
 
-Within the *package.json* file for the *Digital Property Network* sample application, requests are being made to install some Hyperledger Composer components at an older version, v0.16.3.  (At some point in time this will get updated, but for now you will have to change the *package.json* file to ask for v0.18.2 instead of v0.16.3. The next several steps will guide you through that process.
+Within the *package.json* file for the *Digital Property Network* sample application, requests are being made to install some Hyperledger Composer components at any level of 0.19.*.  While not likely, it's possible that a future upgrade, say 0.19.1 or 0.19.2 might accidentally break this lab.  So in order to eliminate that possibility, you will make a change to ensure that 0.19.0, and only 0.19.0, will be installed.  The next several steps will guide you through that process.
 
-First, issue this *grep* command to find the occurrences of the string *0.16.3* within *package.json*::
+First, issue this *grep* command to find the occurrences of the string *0.19.0* within *package.json*::
 
- bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ grep 0\.16\.3 package.json
-     "composer-cli": "^0.16.3",
-     "composer-client": "^0.16.3",
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ grep 0\.19\.0 package.json
+     "composer-cli": "^0.19.0",
+     "composer-client": "^0.19.0",
+    
+It is the caret ('^') character that directs *npm* to install newer levels of 0.19.* when they become available.  In order to ensure that only 0.19.0 is installed, you will remove that caret in the next step.
 
-**Note:** The backslashes in the previous command tell *grep* to look for the period character *('.')*.  Without the backslash the *grep* command would interpret the period character to mean "any single character", so, e.g., if you specified ``0.16.3`` instead of ``0\.16\.3`` *grep* would match that against *0.16.3* but also against things like *0a16b3* which is not what we want here.  In this particular file, you probably would not find any unwanted matches even if you did leave the backslashes out, but you may not be so fortunate in future searches.  
+**Note:** The backslashes in the previous command tell *grep* to look for the period character *('.')*.  Without the backslash the *grep* command would interpret the period character to mean "any single character", so, e.g., if you specified ``0.19.0`` instead of ``0\.19\.0`` *grep* would match that against *0.19.3* but also against things like *0a19b0* which is not what we want here.  In this particular file, you probably would not find any unwanted matches even if you did leave the backslashes out, but you may not be so fortunate in future searches.  
 
-**Step 2.9:** This *sed* command will replace the occurrences of *^0.16.3* with *0.18.2* for the two npm packages listed in the output from the previous *grep* command.::
+**Step 2.9:** This *sed* command will replace the occurrences of *^0.19.0* with *0.19.0* for the two npm packages listed in the output from the previous *grep* command.::
 
- bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ sed -i "s/\^0\.16\.3/0.18.2/" package.json
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ sed -i "s/\^0\.19\.0/0.19.0/" package.json
  
-**Note:** That brutal command listed above also *intentionally* removed the caret ('^') symbol from the line as we need to ensure that we get exactly the *0.18.2* version of these packages.  Leaving the caret there could cause a newer version to be installed, which may or may not cause issues.  So, for this lab, better safe than sorry.
- 
-Note that, in accordance with the note from the prior step, you are specifying the backslashes in the first part of the *-i* argument to the *sed* command - *\^0\.16\.3*- where you specify what to look for, but not for the second part- *0.18.2* where you are specifying what you wish to replace the string in the first part with.  That is, the command you issued follows this general pattern:  *sed -i "s/<string_to_search_for>/<string_to_replace_it_with>/" file_to_change*.  Note that this particular form of the command changed the file in place-  fair enough for this lab, but in a more critical environment I'd recommend you make a backup of your file first.
+Note that, in accordance with the note from the prior step, you are specifying the backslashes in the first part of the *-i* argument to the *sed* command - *\^0\.19\.0*- where you specify what to look for, but not for the second part- *0.19.0* where you are specifying what you wish to replace the string in the first part with.  That is, the command you issued follows this general pattern:  *sed -i "s/<string_to_search_for>/<string_to_replace_it_with>/" file_to_change*.  Note that this particular form of the command changed the file in place-  fair enough for this lab, but in a more critical environment I'd recommend you make a backup of your file first.
 
 **Step 2.10** Enter this *grep* command now to verify that the changes you intended to make in the prior step were made successfully::
 
- bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ grep 0\.18\.2 package.json 
-     "composer-cli": "0.18.2",
-     "composer-client": "0.18.2",
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ grep 0\.19\.0 package.json 
+     "composer-cli": "0.19.0",
+     "composer-client": "0.19.0",
 
 **Important:** If you do not see the output as shown above, now would be a really good time to ask an instructor for help, because if you don't get this step right, things will get, shall we say, "challenging" for you later.
 
@@ -111,18 +111,19 @@ scripts::
     "submitTransaction": "node cli.js landregistry submit && node cli.js landregistry list",
     "listAssets": "node cli.js landregistry list",
     "bootstrapAssets": "node cli.js landregistry bootstrap",
-    "deployNetwork": "composer archive create --sourceName digitalproperty-network --sourceType module --archiveFile digitalPropertyNetwork.bna && composer network deploy --archiveFile ./digitalPropertyNetwork.bna --card PeerAdmin@hlfv1 -A admin -S adminpw -l INFO && composer card import --file ./admin@digitalproperty-network.card && composer network list --card admin@digitalproperty-network",
-    "updateNetwork": "composer archive create --sourceName digitalproperty-network --sourceType module --archiveFile digitalPropertyNetwork.bna && composer network update --archiveFile ./digitalPropertyNetwork.bna --card admin@digitalproperty-network && composer network list --card admin@digitalproperty-network"
+    "deployNetwork": "./deployNetwork.sh",
+    "updateNetwork": "./updateNetwork.sh"
   },
 
+
 When *npm install* is run, it first runs the commands listed in the *“preinstall”* name/value pair.  Then, it installs any packages in 
-the *“dependencies”* section (not shown in this document) that are not already installed.  After that it will run the command listed in 
+the *“dependencies”* section (not shown in this output snippet) that are not already installed.  After that it will run the command listed in 
 the *“postinstall”* name/value pair.
 
 **Step 2.12:** You can exit this file now by typing in ``:q!`` - if hitting the colon key does not take your cursor to the command line 
 at the bottom of your screen try hitting the **Escape key** and retrying ``:q!``.
 
-**Step 2.13:** Now that you've changed *package.json* to ask for v0.18.2 packages instead of v0.16.3 packages for Hyperledger Composer, and peeked a bit at the inside of that file, go ahead and run the *npm install* command::
+**Step 2.13:** Now that you've changed *package.json* to ask for 0.19.0 packages instead of ^0.19.0 packages for Hyperledger Composer, and peeked a bit at the inside of that file, go ahead and run the *npm install* command::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ npm install
  
@@ -141,11 +142,11 @@ Take advantage of the convenience that the Hyperledger Composer team has provide
 
  bcuser@ubuntu16044:~$ git clone https://github.com/hyperledger/composer-tools
  Cloning into 'composer-tools'...
- remote: Counting objects: 1254, done.
- remote: Compressing objects: 100% (2/2), done.
- remote: Total 1254 (delta 0), reused 0 (delta 0), pack-reused 1252
- Receiving objects: 100% (1254/1254), 8.24 MiB | 950.00 KiB/s, done.
- Resolving deltas: 100% (638/638), done.
+ remote: Counting objects: 1275, done.
+ remote: Compressing objects: 100% (19/19), done.
+ remote: Total 1275 (delta 6), reused 13 (delta 4), pack-reused 1252
+ Receiving objects: 100% (1275/1275), 8.33 MiB | 0 bytes/s, done.
+ Resolving deltas: 100% (644/644), done.
  Checking connectivity... done.
 
 **Step 2.16:** Change to the *composer-tools/packages/fabric-dev-servers* directory::
@@ -184,7 +185,7 @@ You just see column headings.  You do not yet have any Docker images on your sys
 
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ docker ps -a
  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
- bcuser@ubuntu16043:~/composer-tools/packages/fabric-dev-servers$
+ bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$
 
 **Step 2.22:** Run the script to start the Hyperledger Fabric network::
 
@@ -260,18 +261,18 @@ A script has been provided to do this. Run the *createPeerAdminCard* script::
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$ ./createPeerAdminCard.sh
  Development only script for Hyperledger Fabric control
  Running 'createPeerAdminCard.sh'
- FABRIC_VERSION is set to 'hlfv11'
+ FABRIC_VERSION is unset, assuming hlfv11
  FABRIC_START_TIMEOUT is unset, assuming 15 (seconds)
 
- Using composer-cli at v0.18.2
+ Using composer-cli at v0.19.0
 
  Successfully created business network card file to 
-	 Output file: /tmp/PeerAdmin@hlfv1.card
+ 	Output file: /tmp/PeerAdmin@hlfv1.card
 
  Command succeeded
 
 
- Successfully imported business network card
+ Successfully imported business network card 
  	Card file: /tmp/PeerAdmin@hlfv1.card
  	Card name: PeerAdmin@hlfv1
 
@@ -286,13 +287,11 @@ A script has been provided to do this. Run the *createPeerAdminCard* script::
  │ PeerAdmin@hlfv1 │ PeerAdmin │                  │
  └─────────────────┴───────────┴──────────────────┘
 
-
- Issue composer card list --name <Card Name> to get details a specific card
+ Issue composer card list --card <Card Name> to get details a specific card
 
  Command succeeded
 
  Hyperledger Composer PeerAdmin card has been imported, host of fabric specified as 'localhost'
-
  bcuser@ubuntu16044:~/composer-tools/packages/fabric-dev-servers$
  
 **Note:** Notice from the above output that the "Card Name" *PeerAdmin@hlfv1*, associated with the "UserId" *PeerAdmin* does not have any information listed under the "Business Network".  The *PeerAdmin* user has authority to install Hyperledger Composer business networks, but it does not have authority to connect to and use them.  When a Hyperledger Composer business network is installed under PeerAdmin's authority, a separate business network administrator is created for that specific business network that does have authority to connect and use just that one business network.  
@@ -308,8 +307,11 @@ Fabric network that you just created::
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ npm run deployNetwork
 
  > digitalproperty-app@0.0.7 deployNetwork /home/bcuser/composer-sample-applications/packages/digitalproperty-app
- > composer archive create --sourceName digitalproperty-network --sourceType module --archiveFile digitalPropertyNetwork.bna && composer network deploy --archiveFile ./digitalPropertyNetwork.bna --card PeerAdmin@hlfv1 -A admin -S adminpw -l INFO && composer card import --file ./admin@digitalproperty-network.card && composer network list --card admin@digitalproperty-network
+ > ./deployNetwork.sh
 
+ VERSION=$(node -e 'console.log(require("digitalproperty-network/package.json").version)')
+ node -e 'console.log(require("digitalproperty-network/package.json").version)'
+ composer archive create --sourceName digitalproperty-network --sourceType module --archiveFile digitalPropertyNetwork.bna
  Creating Business Network Archive
 
 
@@ -319,27 +321,24 @@ Fabric network that you just created::
  Found:
  	Description: Digital Property Network
  	Name: digitalproperty-network
- 	Identifier: digitalproperty-network@0.1.13
+ 	Identifier: digitalproperty-network@0.2.2
 
- Written Business Network Definition Archive file to 
-	 Output file: digitalPropertyNetwork.bna
+ Written Business Network Definition Archive file to  
+	Output file: digitalPropertyNetwork.bna
 
  Command succeeded
 
- Deploying business network from archive: ./digitalPropertyNetwork.bna
- Business network definition:
- 	Identifier: digitalproperty-network
- 	Description: Digital Property Network
+ composer network install --archiveFile ./digitalPropertyNetwork.bna --card PeerAdmin@hlfv1
+ ✔ Installing business network. This may take a minute...
+ Successfully installed business network digitalproperty-network, version 0.2.2
 
- ✔ Installing runtime for business network undefined. This may take a minute...
+ Command succeeded
 
- Starting business network from archive: ./digitalPropertyNetwork.bna
- Business network definition:
-	 Identifier: digitalproperty-network@0.1.13
-	 Description: Digital Property Network
+ composer network start --networkName digitalproperty-network --networkVersion ${VERSION} --card PeerAdmin@hlfv1 -A admin -S adminpw -l INFO
+ Starting business network digitalproperty-network at version 0.2.2
 
  Processing these Network Admins: 
-	 userName: admin
+ 	userName: admin
 
  ✔ Starting business network definition. This may take a minute...
  Successfully created business network card:
@@ -347,6 +346,7 @@ Fabric network that you just created::
 
  Command succeeded
 
+ composer card import --file ./admin@digitalproperty-network.card
 
  Successfully imported business network card
  	Card file: ./admin@digitalproperty-network.card
@@ -354,6 +354,7 @@ Fabric network that you just created::
 
  Command succeeded
 
+ composer network list --card admin@digitalproperty-network
  ✔ List business network from card admin@digitalproperty-network
  models: 
    - org.hyperledger.composer.system
@@ -376,7 +377,6 @@ Fabric network that you just created::
 
  Command succeeded
 
-
 **Note:** You can see from the end of this output that this sample network has two Asset types, *LandTitle* and *SalesAgreement*, and one Participant type, *Person*.
 
 **Step 2.27:** Run this Docker command and you will see that a new Docker image was created for 
@@ -384,13 +384,13 @@ the Hyperledger Composer business network that you just deployed::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker images dev-*
  REPOSITORY                                                                                                                   TAG                 IMAGE ID            CREATED              SIZE
- dev-peer0.org1.example.com-digitalproperty-network-0.18.2-8eb8214bbd3977ac522750fde0f2ed8d133fe4782f7f82a37a8793fd9ca6659e   latest              cc4c174c984e        5 minutes ago       1.45GB
+ dev-peer0.org1.example.com-digitalproperty-network-0.2.2-8eb8214bbd3977ac522750fde0f2ed8d133fe4782f7f82a37a8793fd9ca6659e   latest              cc4c174c984e        5 minutes ago       1.45GB
  
 **Step 2.28:** Run the Docker command to show your Docker containers and you will see that a Docker container based on your new Docker image has been created (it should be the first container listed in the output)::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker ps
  CONTAINER ID        IMAGE                                                                                                                        COMMAND                  CREATED             STATUS              PORTS                                            NAMES
- 0bf9d5d41681        dev-peer0.org1.example.com-digitalproperty-network-0.18.2-8eb8214bbd3977ac522750fde0f2ed8d133fe4782f7f82a37a8793fd9ca6659e   "/bin/sh -c 'cd /u..."   6 minutes ago       Up 6 minutes                                                         dev-peer0.org1.example.com-digitalproperty-network-0.18.2
+ 0bf9d5d41681        dev-peer0.org1.example.com-digitalproperty-network-0.2.2-8eb8214bbd3977ac522750fde0f2ed8d133fe4782f7f82a37a8793fd9ca6659e   "/bin/sh -c 'cd /u..."   6 minutes ago       Up 6 minutes                                                         dev-peer0.org1.example.com-digitalproperty-network-0.2.2
  ebd165b8249a        hyperledger/fabric-peer:s390x-1.1.0                                                                                          "peer node start"        44 minutes ago      Up 44 minutes       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
  fda8a4161ab6        hyperledger/fabric-orderer:s390x-1.1.0                                                                                       "orderer"                44 minutes ago      Up 44 minutes       0.0.0.0:7050->7050/tcp                           orderer.example.com
  e9476fcec230        hyperledger/fabric-couchdb:s390x-0.4.6                                                                                       "tini -- /docker-e..."   44 minutes ago      Up 44 minutes       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
@@ -426,7 +426,7 @@ this output)::
  > node cli.js landregistry list
 
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
  info: [DigitalProperty-App] listTitles Getting the asset registry
  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
  info: [DigitalProperty-App] listTitles Current Land Titles
@@ -453,7 +453,7 @@ a Business Network transaction::
 
   info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
   info: [DigitalProperty-App] Adding default land titles to the asset registry
-  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
   info: [DigitalProperty-App] LandRegistry:_bootstrapTitles getting asset registry for "net.biz.digitalPropertyNetwork.LandTitle"
   info: [DigitalProperty-App] about to get asset registry
   info: [DigitalProperty-App] LandRegistry:_bootstrapTitles got asset registry
@@ -469,7 +469,7 @@ a Business Network transaction::
   > node cli.js landregistry list
 
   info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
-  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
   info: [DigitalProperty-App] listTitles Getting the asset registry
   info: [DigitalProperty-App] listTitles Getting all assest from the registry.
   info: [DigitalProperty-App] listTitles Current Land Titles
@@ -488,13 +488,13 @@ a Business Network transaction::
   > node cli.js landregistry submit && node cli.js landregistry list
 
   info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
-  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
   info: [DigitalProperty-App] updateForSale Getting assest from the registry.
   info: [DigitalProperty-App] updateForSale Submitting transaction
   info: [DigitalProperty-App] Transaction Submitted
   info: [DigitalProperty-App] Command completed successfully.
   info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
-  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+  info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
   info: [DigitalProperty-App] listTitles Getting the asset registry
   info: [DigitalProperty-App] listTitles Getting all assest from the registry.
   info: [DigitalProperty-App] listTitles Current Land Titles
@@ -539,23 +539,14 @@ I think I may have confused you enough for now.  Let's get started.
 
 **Step 3.3:** Install it with *npm*::
 
- bcuser@ubuntu16044:~$ npm install -g composer-playground@0.18.2
+ bcuser@ubuntu16044:~$ npm install -g composer-playground@0.19.0
 
 **Step 3.4:** Start composer-playground by simply entering *composer-playground* without any arguments.  Notice that Composer Playground is listening on port 8080::
 
  bcuser@ubuntu16044:~$ composer-playground
- Composer                :main()                   > 
- PlaygroundAPI           :createServer()           > 8080, false
- LoadModule              :loadModule()             composer-wallet-filesystem -- /home/bcuser/lib/node_modules,/home/bcuser/node_modules,/usr/lib/node_modules,/home/node_modules,/node_modules,/home/bcuser/lib/node_modules/composer-playground/node_modules -- /home/bcuser/lib/node_modules/composer-playground/node_modules 
- LoadModule              :loadModule()             checking path /home/bcuser/lib/node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             checking path /home/bcuser/node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             checking path /usr/lib/node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             checking path /home/node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             checking path /node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             checking path /home/bcuser/lib/node_modules/composer-playground/node_modules/composer-wallet-filesystem 
- LoadModule              :loadModule()             Loading composer-wallet-filesystem from /home/bcuser/lib/node_modules/composer-playground/node_modules/composer-wallet-filesystem 
- PlaygroundAPI           :createServer()           Playground API started on port 8080 
- PlaygroundAPI           :createServer()           < 
+ info: [Hyperledger-Composer] undefined:LoadModule               :loadModule()              Loading composer-wallet-filesystem from /home/bcuser/lib/node_modules/composer-playground/node_modules/composer-wallet-filesystem
+ info: [Hyperledger-Composer] undefined:PlaygroundAPI            :createServer()            Playground API started on port 8080
+
 
 **Step 3.5:** Open Chrome or Firefox and go to the *URL http://<your_hostname_or_IP>:8080* and you should first see a browser frame pop up that looks like this:
  
@@ -577,7 +568,7 @@ Do not click on this!  This would connect you to the Hyperledger Fabric.  That c
 
 .. image:: images/lab4/3.08_digitalpropertynetwork.png
 
-**Note:** This will load the same *Digital Property Network* sample application that you worked with in the prior section of this lab.  However, it is not loading it from your Ubuntu on IBM Z instance.  It is getting it from the Internet- but since you did not make any changes to the network definition in section 2, what you are getting here is the same as what you worked with in section 2.  I could have you download the Business Network Archive file from your Ubuntu instance to your classroom laptop and then upload that file to the Hyperledger Composer Playground.  But to save you the tedium of having to do that now, I just had you load it from the Internet.  You only have the luxury of doing that because you are working with Hyperledger Composer-provided sample applications, so the Hyperledger Composer Playground GUI is aware of them.
+**Note:** This will load the same *Digital Property Network* sample application that you worked with in the prior section of this lab.  However, it is not loading it from your Ubuntu on IBM Z instance.  It is getting it from the Internet- but since you did not make any changes to the network definition in section 2, what you are getting here is the same as what you worked with in section 2.  I could have had you download the Business Network Archive file from your Ubuntu instance to your classroom laptop and then upload that file to the Hyperledger Composer Playground.  But to save you the tedium of having to do that now, I just had you load it from the Internet.  You only have the luxury of doing that because you are working with Hyperledger Composer-provided sample applications, so the Hyperledger Composer Playground GUI is aware of them.
 
 **Step 3.9:** Scroll up in your browser window and in the upper right you should see some information about the digitalproperty-network:
 
@@ -668,7 +659,7 @@ After verifying that your modified transaction works, you will export the Busine
  
 **Step 4.9:** These random values given to you for *seller* and *title* do not match anything that you entered in the previous steps in this lab.  (If they do, end this lab immediately and go buy some lottery tickets).  Do not change anything, and click the **Submit** button.  You will probably see an error message between the JSON Data and the Submit button that looks like this::
 
- Error: Object with ID 'titleId:9715' in collection with ID 'Asset:net.biz.digitalPropertyNetwork.LandTitle' does not exist
+ Error: Object with ID 'titleId:3603' in collection with ID 'Asset:net.biz.digitalPropertyNetwork.LandTitle' does not exist
 
 **Step 4.10:** For the *seller*, now put in the actual *personID* for the *Person* you created in *Step 4.4*.  Leave the *title* field with the random value.  Click **Submit** again.  Now it is probably complaining still about the *LandTitle* not existing, e.g.:
 
@@ -710,9 +701,9 @@ so that your screen looks like this:
 
 .. image:: images/lab4/4_140_ModifiedTransaction.png
  
-**Step 4.18:** For your changes to take effect within the Playground, you must click the **Update** button on the left side of the screen.	
+**Step 4.18:** For your changes to take effect within the Playground, you must click the **Deploy changes** button on the left side of the screen.	
 
-**Step 4.19:** After clicking *Update*, click the **Test** link at the top and then the **LandTitle** link on the left.  Your asset has a value of *true* for *forSale*.  Change it to *false* by **clicking on the little icon shaped like a pencil** to the right of the asset information:
+**Step 4.19:** After clicking *Deploy changes*, click the **Test** link at the top and then the **LandTitle** link on the left.  Your asset has a value of *true* for *forSale*.  Change it to *false* by **clicking on the little icon shaped like a pencil** to the right of the asset information:
 
 .. image:: images/lab4/4_150_AssetInformation.png
  
@@ -745,7 +736,7 @@ so that your screen looks like this:
 
 .. image:: images/lab4/4_190_newAsset.png
  
-**Step 4.27:** Make sure to click the **Update** button after you have made these changes.
+**Step 4.27:** Make sure to click the **Deploy changes** button after you have made these changes.
 
 **Step 4.28:** Click the **Test** button and you should see that *GoldNuggets* is now listed as an *Asset* type on the left:
 
@@ -830,13 +821,13 @@ In this step, the command is performed on your laptop or workstation. The above 
  > node cli.js landregistry submit && node cli.js landregistry list
 
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
  info: [DigitalProperty-App] updateForSale Getting assest from the registry.
  info: [DigitalProperty-App] updateForSale Submitting transaction
  info: [DigitalProperty-App] Transaction Submitted
  info: [DigitalProperty-App] Command completed successfully.
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.1.13
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.2
  info: [DigitalProperty-App] listTitles Getting the asset registry
  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
  info: [DigitalProperty-App] listTitles Current Land Titles
@@ -851,22 +842,44 @@ In this step, the command is performed on your laptop or workstation. The above 
  └──────────┴────────────────┴────────────┴─────────┴─────────────────────────────┴─────────┘
  info: [DigitalProperty-App] Command completed successfully.
 
-**Step 4.35:** Now you will update the Business Network running on your Hyperledger Fabric network with the Business Network Archive (*.bna) file that you exported from Hyperledger Composer Playground::
+**Step 4.35:** In order to get the changes you made in the last section, which are in the Business Network Archive (BNA) that you exported, two steps are required- a *composer network install* which reads the exported BNA and installs its definitions onto the Fabric peer, and then a *composer network upgrade* which will create a new chaincode image containing these updates, and then start a container based on this image.  Perform the first step::
 
- bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ composer network update -a ~/modified-digitalproperty-network.bna --card admin@digitalproperty-network
-
- composer network update -a ~/modified-digitalproperty-network.bna --card admin@digitalproperty-network
- Updating business network from archive: /home/bcuser/modified-digitalproperty-network.bna
- Business network definition:
- 	Identifier: digitalproperty-network@0.2.3-20180314171154
- 	Description: Digital Property Network
-
- ✔ Updating business network definition. This may take a few seconds...
- Successfully updated business network
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ composer network install -a ~/modified-digitalproperty-network.bna --card PeerAdmin@hlfv1
+ ✔ Installing business network. This may take a minute...
+ Successfully installed business network digitalproperty-network, version 0.2.3-deploy.2
 
  Command succeeded
 
-**Step 4.36:** Run the same *composer network list* command that you ran in *Step 4.33* and you will see that the asset type of *goldNuggets* that you defined in the Playground is now present::
+**Note:** Make a note of the *version* that is listed in the output from this command- *0.2.3-deploy.2* in this example.  Yours may differ.  You will use this value in the next command.  
+
+**Step 4.36:** Now run the *composer network upgrade* command.  If your version differs from *0.2.3-deploy.2* use the value shown on your system in place of *0.2.3-deploy.2* in the command::
+
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ composer network upgrade -n digitalproperty-network -V 0.2.3-deploy.2 -c PeerAdmin@hlfv1
+ Upgrading business network digitalproperty-network to version 0.2.3-deploy.2
+
+ ✔ Upgrading business network definition. This may take a minute...
+
+ Command succeeded
+
+**Step 4.37:** You can see that a new Docker image was created for the updated business network-  observe the first image listed in the output and see that its version name, *0.2.3-deploy.2* is part of the image name::
+
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker images dev-*
+ REPOSITORY                                                                                                                           TAG                 IMAGE ID            CREATED             SIZE
+ dev-peer0.org1.example.com-digitalproperty-network-0.2.3-deploy.2-984c792fce91c8d9872ca52995b51f556036a784cfa2e52040869798993995bb   latest              04533811ec75        52 seconds ago      1.45GB
+ dev-peer0.org1.example.com-digitalproperty-network-0.2.2-b4853a73a04169a94401b06c47bb7cc1dcf40ca03ab324668fa7666ee09e40bd            latest              c9800079c1ea        About an hour ago   1.45GB
+
+**Step 4.38:** Similary, you can see that a new Docker container has been created for the updated business network::
+
+ bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ docker ps -a
+ CONTAINER ID        IMAGE                                                                                                                                COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+ 724d541aab2c        dev-peer0.org1.example.com-digitalproperty-network-0.2.3-deploy.2-984c792fce91c8d9872ca52995b51f556036a784cfa2e52040869798993995bb   "/bin/sh -c 'cd /u..."   2 minutes ago       Up 2 minutes                                                         dev-peer0.org1.example.com-digitalproperty-network-0.2.3-deploy.2
+ 3eb4b8b9e639        dev-peer0.org1.example.com-digitalproperty-network-0.2.2-b4853a73a04169a94401b06c47bb7cc1dcf40ca03ab324668fa7666ee09e40bd            "/bin/sh -c 'cd /u..."   2 hours ago         Up 2 hours                                                           dev-peer0.org1.example.com-digitalproperty-network-0.2.2
+ 15d5f88b2668        hyperledger/fabric-peer:s390x-1.1.0                                                                                                  "peer node start"        2 hours ago         Up 2 hours          0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
+ 7a5105496bc5        hyperledger/fabric-orderer:s390x-1.1.0                                                                                               "orderer"                2 hours ago         Up 2 hours          0.0.0.0:7050->7050/tcp                           orderer.example.com
+ 66c68fca593f        hyperledger/fabric-couchdb:s390x-0.4.6                                                                                               "tini -- /docker-e..."   2 hours ago         Up 2 hours          4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
+ 9c3255ab704e        hyperledger/fabric-ca:s390x-1.1.0                                                                                                    "sh -c 'fabric-ca-..."   2 hours ago         Up 2 hours          0.0.0.0:7054->7054/tcp                           ca.org1.example.com
+
+**Step 4.39:** Run the same *composer network list* command that you ran in *Step 4.33* and you will see that the asset type of *GoldNuggets* that you defined in the Playground is now present::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ composer network list --card admin@digitalproperty-network
 
@@ -914,7 +927,7 @@ In this step, the command is performed on your laptop or workstation. The above 
 
  Command succeeded
 
-**Step 4.37:** Now rerun the *npm* command from *Step 4.34* and you will see that your modified transaction processor function was used.  The *LandTitle* information has been modified with your changes::
+**Step 4.40:** Now rerun the *npm* command from *Step 4.34* and you will see that your modified transaction processor function was used.  The *LandTitle* information has been modified with your changes::
 
  bcuser@ubuntu16044:~/composer-sample-applications/packages/digitalproperty-app$ npm run submitTransaction
 
@@ -922,13 +935,13 @@ In this step, the command is performed on your laptop or workstation. The above 
  > node cli.js landregistry submit && node cli.js landregistry list
 
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-20180314171154
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-deploy.2
  info: [DigitalProperty-App] updateForSale Getting assest from the registry.
  info: [DigitalProperty-App] updateForSale Submitting transaction
  info: [DigitalProperty-App] Transaction Submitted
  info: [DigitalProperty-App] Command completed successfully.
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-20180314171154
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-deploy.2
  info: [DigitalProperty-App] listTitles Getting the asset registry
  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
  info: [DigitalProperty-App] listTitles Current Land Titles
@@ -945,12 +958,12 @@ In this step, the command is performed on your laptop or workstation. The above 
 
 An interesting thing to note is that you added an array of *GoldNuggets* to your definition of a *LandTitle* but did not make any changes to the JavaScript code in this sample application to deal with it, yet it did not impact your ability to continue working with the assets.  The reason this was so seamless is because you made it an optional field.  In general, if you are updating an existing asset or participant, you will want to make any new fields optional.
 
-**Step 4.38:** Minimize it if you wish to reduce clutter, but leave your Hyperledger Composer Playground web browser window open. Similarly, please keep Hyperledger Composer Playground running in the PuTTY or SSH session where you started it. You will be coming back to it later in the lab, but next you will explore some more Hyperledger Composer tools.
+**Step 4.41:** Minimize it if you wish to reduce clutter, but leave your Hyperledger Composer Playground web browser window open. Similarly, please keep Hyperledger Composer Playground running in the PuTTY or SSH session where you started it. You will be coming back to it later in the lab, but next you will explore some more Hyperledger Composer tools.
 
 Section 5: Install Hyperledger Composer REST Server
 ===================================================
 
-The Hyperledger Composer REST Server reads a Business Network definition and exposes public APIs based on the model defined within the Business Network.  This allows any programs written in any programming language that supports making HTTP calls- and almost all languages do-  to interface with a Hyperledger Composer Business Network.
+The Hyperledger Composer REST Server reads a Business Network definition and exposes public APIs based on the model defined within the Business Network.  This allows programs written in any programming language that supports making HTTP calls- and almost all languages do-  to interface with a Hyperledger Composer Business Network.
 
 **Step 5.1:** Navigate to your home directory.  Strictly speaking, this is not required, but it will shorten the command prompt which will be less of a distraction in the output snippets in this section that show commands and their output::
 
@@ -964,7 +977,7 @@ The Hyperledger Composer REST Server reads a Business Network definition and exp
 
 **Step 5.3:** Use *npm* to install the Hyperledger Composer REST server (output not shown)::
 
- bcuser@ubuntu16044:~$ npm install -g composer-rest-server@0.18.2
+ bcuser@ubuntu16044:~$ npm install -g composer-rest-server@0.19.0
 
 **Step 5.4:** Upon completion, verify that it is installed::
 
@@ -1049,7 +1062,7 @@ The line you clicked on to expand and show the APIs for *LandTitle* acts like a 
 
 **Hint:** You can grab the data box at its lower right corner and resize the data box if you do not see all of the data you have pasted.
 
-**Step 5.19:** I highlighted two fields in the above screenshot.  You will need to take the value of the *titleId*, which is **LID:6789**, and repeat that in the *id* field just above the *data* box.  This is required for the API call to work.   The other change to make is to change the part of the *owner* value that is to the right of the '*#*' character to match the *personID* of the person you created in *Step 5.13* (**“1111”** in my example).  Your *data* box should look like this, with the changes discussed in this step highlighted:
+**Step 5.19:** I highlighted two fields in the above screenshot.  You will need to take the value of the *titleId*, which is **LID:6789**, and repeat that in the *id* field just above the *data* box. (In the *id* field, do not put in the double-quotes). This is required for the API call to work.   The other change to make is to change the part of the *owner* value that is to the right of the '*#*' character to match the *personID* of the person you created in *Step 5.13* (**“1111”** in my example).  Your *data* box should look like this, with the changes discussed in this step highlighted:
 
 .. image:: images/lab4/5.19_LandTitle3.png
 
@@ -1070,7 +1083,7 @@ The line you clicked on to expand and show the APIs for *LandTitle* acts like a 
  > node cli.js landregistry list
 
  info: [DigitalProperty-App] Hyperledger Composer: Digital Property console application
- info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-20180314171154
+ info: [DigitalProperty-App] LandRegistry:<init> businessNetworkDefinition obtained digitalproperty-network@0.2.3-deploy.2
  info: [DigitalProperty-App] listTitles Getting the asset registry
  info: [DigitalProperty-App] listTitles Getting all assest from the registry.
  info: [DigitalProperty-App] listTitles Current Land Titles
@@ -1105,7 +1118,7 @@ In this section, you will install tools that will allow you to generate a simple
 
 **Step 6.3:** Hyperledger Composer provides a package to work with Yeoman.  Install it using this command::
 
- bcuser@ubuntu16044:~$ npm install -g generator-hyperledger-composer@0.18.2
+ bcuser@ubuntu16044:~$ npm install -g generator-hyperledger-composer@0.19.0
 
 **Step 6.4:** Enter the following command to begin the generation of an AngularJS application based on your Hyperledger Composer Business Network::
 
@@ -1193,15 +1206,15 @@ Get started by running this *grep* command to find the line in *package.json* th
 
 .. image:: images/lab4/6_010_initialScreen.png
  
-**Step 6.15:** If you hover over the **Assets** tab you should see a dropdown listing the asset types defined in the model-  *LandTitle* and *SalesAgreement* came with the sample application supplied by the Hyperledger Composer team, and *GoldNuggets* was added by you if you followed all the previous sections of this lab.  If you did not add *GoldNuggets* earlier, that’s okay, but you should at least see *LandTitle* and *SalesAgreement*:
+**Step 6.15:** If you hover over the **Assets** tab or the **Participants** tab or the **Transactions** tab you should see a dropdown listing the types defined in the model for that particular tab-  for example, under *Assets*, *LandTitle* and *SalesAgreement* came with the sample application supplied by the Hyperledger Composer team, and *GoldNuggets* was added by you if you followed all the previous sections of this lab.  If you did not add *GoldNuggets* earlier, that’s okay, but you should at least see *LandTitle* and *SalesAgreement*:
  
 .. image:: images/lab4/6_020_dropdown.png
 
-**Step 6.16:** Feel free to experiment with the assets.  Feel free to create, update or delete assets.  Here are some things you could try:
+**Step 6.16:** Feel free to experiment with the tabs.  Feel free to create, update or delete assets or participants.  For transactions, however, you can only see information about the transaction- you cannot invoke it from here. Here are some things you could try:
 
-*	Try creating some assets using this AngularJS application and then looking for them with the REST server using the GET API.
-*	Try creating or updating assets with the Hyperledger Composer REST server using the POST or PUT API and see if this AngularJS application picks up the changes.  (**Note**: you may need to go to the home page for the app and back into an asset type, it does not seem to auto-refresh)
-*	Try running the *composer network list* to see if assets you created with this AngularJS application (or the Composer REST Server) are listed.  The full command, which will work from any directory, is ``composer network list --card admin@digitalproperty-network`` 
+*	Try creating some assets or participants using this AngularJS application and then looking for them with the REST server using the GET API.
+*	Try creating or updating assets or participants with the Hyperledger Composer REST server using the POST or PUT API and see if this AngularJS application picks up the changes.  (**Note**: you may need to go to the home page for the app and back into an asset or participant type, it does not seem to auto-refresh.)
+*	Try running the *composer network list* to see if assets or participants you created with this AngularJS application (or the Composer REST Server) are listed.  The full command, which will work from any directory, is ``composer network list --card admin@digitalproperty-network`` 
 *	Try running the *npm run listAssets* command to see if assets you created with this AngularJS application (or the Composer REST server) are listed.  That command must be run from */home/bcuser/composer-sample-applications/packages/digitalproperty-app* and is ``npm run listAssets``  (**Note:** If you add assets with incomplete or missing relationships, e.g. you define a property and assign it to a non-existent person, the *npm run listAssets* command will fail. If this happens, see if you can figure out the source of the error and update or delete the incorrect item)
 
 When you are finished experimenting and ready to continue to the next section, leave your browser sessions running for the AngularJS app and the Hyperledger Composer REST Server, and leave their processes that you started in your PuTTY or SSH sessions running as well.

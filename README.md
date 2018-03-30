@@ -1,12 +1,11 @@
 # Hyperledger Fabric v1.1.0 labs for IBM Z
 
-## March 22, 2018 status update
-Lab1, Lab2 and Lab3 have just been updated to work with the latest Hyperledger Fabric release, v1.1.0.
-Lab4 will be updated soon.
+## March 30, 2018 status update
+These labs have been updated to work with Hyperledger Fabric v1.1.0 and Hyperledger Composer v0.19.0.
 
-These labs are designed to be run consecutively (lab1, lab2, lab3 and then lab4). 
+These labs are designed to be run consecutively (lab1, lab2, lab3 and then lab4).
 
-They were designed to run on Ubuntu 16.04 on IBM Z but should be transferable to Ubuntu 16.04 running on x86_64, as long as you can replace the specific commands in lab1 that get *s390x*-specific artifacts for Docker, Node.js/npm and Golang.
+They were designed to run on Ubuntu 16.04 on IBM Z but should be transferable to Ubuntu 16.04 running on x86_64, as long as you can replace the specific commands in lab1 that get *s390x*-specific files for Docker, Node.js/npm and Golang.
 
 You are reponsible for providing your own Ubuntu 16.04 instance running on an IBM Z mainframe server. These labs were originally written for a structured, classroom environment, where these instances were provided to the students.  Any statements in the labs implying that such systems are already available, are an artifact of these labs' original purpose. Similary, any statements that may imply instructor availability do not constitute a promise of support.
 

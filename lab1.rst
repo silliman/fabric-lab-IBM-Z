@@ -896,8 +896,8 @@ Then you will download the Hyperledger Fabric Node.js SDK and install npm packag
 run *npm list* to see that you are starting with a blank slate::
 
  bcuser@ubuntu16044:~/git/src/github.com/hyperledger/fabric-sdk-node$ npm list
-fabric-sdk-node@1.1.0 /home/bcuser/git/src/github.com/hyperledger/fabric-sdk-node
-`-- (empty)
+ fabric-sdk-node@1.1.0 /home/bcuser/git/src/github.com/hyperledger/fabric-sdk-node
+ `-- (empty)
 
  bcuser@ubuntu16044: ~/git/src/github.com/hyperledger/fabric-sdk-node$
 

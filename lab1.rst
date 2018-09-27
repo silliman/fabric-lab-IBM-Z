@@ -920,7 +920,7 @@ Think of these *tags* as nicknames, or aliases.
 In our case the *make* process first gave the Docker image it created a descriptive tag, *s390x-1.3.0-rc1*, and then it also ‘tagged’ it with a new tag, *latest*.  
 It did that for a reason.  
 When you are working with Docker images, if you specify an image without specifying a tag, the tag defaults to the name *latest*. 
-So, for example, using the above output, you can specify either *hyperledger/fabric-ca*, *hyperledger/fabric-ca:latest*, or *hyperledger/fabric-ca:s390x-1.3.0-rc1*, and in all three cases you are asking for the same image, the image with ID *2ac752a91a56*.
+So, for example, using the above output, you can specify either *hyperledger/fabric-ca*, *hyperledger/fabric-ca:latest*, or *hyperledger/fabric-ca:s390x-1.3.0-rc1*, and in all three cases you are asking for the same image, the image with ID *91082da5dc41*.
 
 **Recap:** In this section, you downloaded the source code for the Hyperledger Fabric Certificate Authority and built it.  That was easy.
  

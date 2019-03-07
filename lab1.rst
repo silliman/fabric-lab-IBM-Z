@@ -33,15 +33,15 @@ You will install:
 
 **Step 2.1:** Log in to your assigned Ubuntu 16.04.5 Linux on IBM Z instance using the PuTTY icon on your workstation using the IP address assigned to your team.  You will be greeted with a message like this::
 
- Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-135-generic s390x)
+ Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-139-generic s390x)
 
   * Documentation:  https://help.ubuntu.com
   * Management:     https://landscape.canonical.com
   * Support:        https://ubuntu.com/advantage
- New release '18.04.1 LTS' available.
+ New release '18.04.2 LTS' available.
  Run 'do-release-upgrade' to upgrade to it.
 
- Last login: Wed Sep 26 21:30:02 2018 from 192.168.22.64
+ Last login: Thu Mar  7 11:24:35 2019 from 192.168.215.249
  bcuser@ubuntu16045:~$ 
 
 **Step 2.2:** This system is a relatively “clean” Ubuntu 16.04.5 instance- “clean” in the sense that after this instance was created, no additional software was installed.  
@@ -81,12 +81,21 @@ Enter this command to update the *apt* package index::
  root@ubuntu16045:~# apt-get update
  Hit:1 http://us.ports.ubuntu.com/ubuntu-ports xenial InRelease
  Get:2 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates InRelease [109 kB]                    
- Get:3 http://us.ports.ubuntu.com/ubuntu-ports xenial-backports InRelease [107 kB]                             
- Get:4 http://ports.ubuntu.com/ubuntu-ports xenial-security InRelease [107 kB]      
- Get:5 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x Packages [633 kB]   
- Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/universe s390x Packages [562 kB]
- Fetched 1518 kB in 0s (2643 kB/s)                                                        
- Reading package lists... Done
+ Get:3 http://us.ports.ubuntu.com/ubuntu-ports xenial-backports InRelease [107 kB]                           
+ Get:4 http://ports.ubuntu.com/ubuntu-ports xenial-security InRelease [109 kB]    
+ Get:5 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x Packages [664 kB]
+ Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main Translation-en [370 kB]   
+ Get:7 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/universe s390x Packages [605 kB]
+ Get:8 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/universe Translation-en [305 kB]
+ Get:9 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/multiverse s390x Packages [11.0 kB]
+ Get:10 http://us.ports.ubuntu.com/ubuntu-ports xenial-backports/main s390x Packages [7280 B]
+ Get:11 http://ports.ubuntu.com/ubuntu-ports xenial-security/main s390x Packages [426 kB]
+ Get:12 http://ports.ubuntu.com/ubuntu-ports xenial-security/main Translation-en [256 kB]
+ Get:13 http://ports.ubuntu.com/ubuntu-ports xenial-security/universe s390x Packages [336 kB]
+ Get:14 http://ports.ubuntu.com/ubuntu-ports xenial-security/universe Translation-en [172 kB]
+ Get:15 http://ports.ubuntu.com/ubuntu-ports xenial-security/multiverse s390x Packages [1716 B]
+ Get:16 http://ports.ubuntu.com/ubuntu-ports xenial-security/multiverse Translation-en [2676 B]
+ Fetched 3481 kB in 1s (3328 kB/s)   
  root@ubuntu16045:~#     
  
 **Step 2.5:** Install packages to allow *apt* to use a repository over HTTPS::
@@ -95,65 +104,80 @@ Enter this command to update the *apt* package index::
  Reading package lists... Done
  Building dependency tree       
  Reading state information... Done
- apt-transport-https is already the newest version (1.2.27).
- ca-certificates is already the newest version (20170717~16.04.1).
- The following packages were automatically installed and are no longer required:
-   linux-headers-4.4.0-112 linux-headers-4.4.0-112-generic linux-headers-4.4.0-96 linux-headers-4.4.0-96-generic linux-image-4.4.0-112-generic
-   linux-image-4.4.0-96-generic linux-image-extra-4.4.0-112-generic linux-image-extra-4.4.0-96-generic
- Use 'apt autoremove' to remove them.
  The following additional packages will be installed:
-   python3-pycurl python3-software-properties unattended-upgrades xz-utils
+   libcurl3-gnutls python3-pycurl python3-software-properties unattended-upgrades xz-utils
  Suggested packages:
    libcurl4-gnutls-dev python-pycurl-doc python3-pycurl-dbg bsd-mailx mail-transport-agent
  The following NEW packages will be installed:
    curl python3-pycurl python3-software-properties software-properties-common unattended-upgrades xz-utils
- 0 upgraded, 6 newly installed, 0 to remove and 0 not upgraded.
- Need to get 317 kB of archives.
+ The following packages will be upgraded:
+   apt-transport-https ca-certificates libcurl3-gnutls
+ 3 upgraded, 6 newly installed, 0 to remove and 55 not upgraded.
+ Need to get 684 kB of archives.
  After this operation, 1552 kB of additional disk space will be used.
- Get:1 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x curl s390x 7.47.0-1ubuntu2.9 [137 kB]
- Get:2 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x python3-pycurl s390x 7.43.0-1ubuntu1 [39.9 kB]
- Get:3 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x python3-software-properties all 0.96.20.7 [20.3 kB]
- Get:4 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x software-properties-common all 0.96.20.7 [9452 B]
- Get:5 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x xz-utils s390x 5.1.1alpha+20120614-2ubuntu2 [78.4 kB]
- Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x unattended-upgrades all 0.90ubuntu0.9 [32.3 kB]
- Fetched 317 kB in 0s (1777 kB/s)              
+ Get:1 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x libcurl3-gnutls s390x 7.47.0-1ubuntu2.12 [175 kB]
+ Get:2 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x apt-transport-https s390x 1.2.29ubuntu0.1 [25.0 kB]
+ Get:3 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x ca-certificates all 20170717~16.04.2 [167 kB]
+ Get:4 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x curl s390x 7.47.0-1ubuntu2.12 [137 kB]
+ Get:5 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x python3-pycurl s390x 7.43.0-1ubuntu1 [39.9 kB]
+ Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x python3-software-properties all 0.96.20.8 [20.2 kB]
+ Get:7 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x software-properties-common all 0.96.20.8 [9440 B]
+ Get:8 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x xz-utils s390x 5.1.1alpha+20120614-2ubuntu2 [78.4 kB]
+ Get:9 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x unattended-upgrades all 0.90ubuntu0.10 [32.3 kB]
+ Fetched 684 kB in 0s (3250 kB/s)               
  Preconfiguring packages ...
+ (Reading database ... 64431 files and directories currently installed.)
+ Preparing to unpack .../libcurl3-gnutls_7.47.0-1ubuntu2.12_s390x.deb ...
+ Unpacking libcurl3-gnutls:s390x (7.47.0-1ubuntu2.12) over (7.47.0-1ubuntu2.11) ...
+ Preparing to unpack .../apt-transport-https_1.2.29ubuntu0.1_s390x.deb ...
+ Unpacking apt-transport-https (1.2.29ubuntu0.1) over (1.2.29) ...
+ Preparing to unpack .../ca-certificates_20170717~16.04.2_all.deb ...
+ Unpacking ca-certificates (20170717~16.04.2) over (20170717~16.04.1) ...
  Selecting previously unselected package curl.
- (Reading database ... 106428 files and directories currently installed.)
- Preparing to unpack .../curl_7.47.0-1ubuntu2.9_s390x.deb ...
- Unpacking curl (7.47.0-1ubuntu2.9) ...
+ Preparing to unpack .../curl_7.47.0-1ubuntu2.12_s390x.deb ...
+ Unpacking curl (7.47.0-1ubuntu2.12) ...
  Selecting previously unselected package python3-pycurl.
  Preparing to unpack .../python3-pycurl_7.43.0-1ubuntu1_s390x.deb ...
  Unpacking python3-pycurl (7.43.0-1ubuntu1) ...
  Selecting previously unselected package python3-software-properties.
- Preparing to unpack .../python3-software-properties_0.96.20.7_all.deb ...
- Unpacking python3-software-properties (0.96.20.7) ...
+ Preparing to unpack .../python3-software-properties_0.96.20.8_all.deb ...
+ Unpacking python3-software-properties (0.96.20.8) ...
  Selecting previously unselected package software-properties-common.
- Preparing to unpack .../software-properties-common_0.96.20.7_all.deb ...
- Unpacking software-properties-common (0.96.20.7) ...
+ Preparing to unpack .../software-properties-common_0.96.20.8_all.deb ...
+ Unpacking software-properties-common (0.96.20.8) ...
  Selecting previously unselected package xz-utils.
  Preparing to unpack .../xz-utils_5.1.1alpha+20120614-2ubuntu2_s390x.deb ...
  Unpacking xz-utils (5.1.1alpha+20120614-2ubuntu2) ...
  Selecting previously unselected package unattended-upgrades.
- Preparing to unpack .../unattended-upgrades_0.90ubuntu0.9_all.deb ...
- Unpacking unattended-upgrades (0.90ubuntu0.9) ...
+ Preparing to unpack .../unattended-upgrades_0.90ubuntu0.10_all.deb ...
+ Unpacking unattended-upgrades (0.90ubuntu0.10) ...
+ Processing triggers for libc-bin (2.23-0ubuntu10) ...
  Processing triggers for man-db (2.7.5-1) ...
  Processing triggers for dbus (1.10.6-1ubuntu3.3) ...
- Processing triggers for systemd (229-4ubuntu21.4) ...
+ Processing triggers for systemd (229-4ubuntu21.10) ...
  Processing triggers for ureadahead (0.100.0-19) ...
- Setting up curl (7.47.0-1ubuntu2.9) ...
+ Setting up libcurl3-gnutls:s390x (7.47.0-1ubuntu2.12) ...
+ Setting up apt-transport-https (1.2.29ubuntu0.1) ...
+ Setting up ca-certificates (20170717~16.04.2) ...
+ Setting up curl (7.47.0-1ubuntu2.12) ...
  Setting up python3-pycurl (7.43.0-1ubuntu1) ...
- Setting up python3-software-properties (0.96.20.7) ...
- Setting up software-properties-common (0.96.20.7) ...
+ Setting up python3-software-properties (0.96.20.8) ...
+ Setting up software-properties-common (0.96.20.8) ...
  Setting up xz-utils (5.1.1alpha+20120614-2ubuntu2) ...
  update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
- Setting up unattended-upgrades (0.90ubuntu0.9) ...
+ Setting up unattended-upgrades (0.90ubuntu0.10) ...
 
  Creating config file /etc/apt/apt.conf.d/50unattended-upgrades with new version
  Synchronizing state of unattended-upgrades.service with SysV init with /lib/systemd/systemd-sysv-install...
  Executing /lib/systemd/systemd-sysv-install enable unattended-upgrades
+ Processing triggers for libc-bin (2.23-0ubuntu10) ...
+ Processing triggers for ca-certificates (20170717~16.04.2) ...
+ Updating certificates in /etc/ssl/certs...
+ 0 added, 0 removed; done.
+ Running hooks in /etc/ca-certificates/update.d...
+ done.
  Processing triggers for dbus (1.10.6-1ubuntu3.3) ...
- Processing triggers for systemd (229-4ubuntu21.4) ...
+ Processing triggers for systemd (229-4ubuntu21.10) ...
  Processing triggers for ureadahead (0.100.0-19) ...
  root@ubuntu16045:~# 
 
@@ -184,10 +208,10 @@ Enter this command to update the *apt* package index::
  Hit:1 http://us.ports.ubuntu.com/ubuntu-ports xenial InRelease
  Hit:2 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates InRelease                             
  Hit:3 http://us.ports.ubuntu.com/ubuntu-ports xenial-backports InRelease                           
- Get:4 https://download.docker.com/linux/ubuntu xenial InRelease [66.2 kB]    
- Hit:5 http://ports.ubuntu.com/ubuntu-ports xenial-security InRelease           
- Get:6 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages [3581 B]
- Fetched 69.8 kB in 0s (193 kB/s)    
+ Hit:4 http://ports.ubuntu.com/ubuntu-ports xenial-security InRelease                               
+ Get:5 https://download.docker.com/linux/ubuntu xenial InRelease [66.2 kB]
+ Get:6 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages [3880 B]
+ Fetched 70.1 kB in 0s (200 kB/s)    
  Reading package lists... Done
  root@ubuntu16045:~# )     
 
@@ -196,8 +220,12 @@ Enter this command to update the *apt* package index::
  root@ubuntu16045:~# apt-cache policy docker-ce
  docker-ce:
    Installed: (none)
-   Candidate: 18.06.1~ce~3-0~ubuntu
+   Candidate: 18.06.3~ce~3-0~ubuntu
    Version table:
+      18.06.3~ce~3-0~ubuntu 500
+         500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
+      18.06.2~ce~3-0~ubuntu 500
+         500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
       18.06.1~ce~3-0~ubuntu 500
          500 https://download.docker.com/linux/ubuntu xenial/stable s390x Packages
       18.06.0~ce~3-0~ubuntu 500
@@ -225,23 +253,24 @@ Enter this command to update the *apt* package index::
 Some key takeaways from the command output:
 
 *	Docker is not currently installed *(Installed: (none))*
-*	*18.06.1~ce~3-0~ubuntu* is the candidate version to install- it is the latest version available
+*	*18.06.3~ce~3-0~ubuntu* is the candidate version to install- it is the latest version available
 *	When you install the software, you will be going out to the Internet to the *download.docker.com* domain to get the software.
 
 **Step 2.11:** Enter this *apt-get* command to install the candidate version.  (Enter Y when prompted to continue)::
 
- root@ubuntu16045:~# apt-get install docker-ce=18.06.1~ce~3-0~ubuntu
+ root@ubuntu16045:~# apt-get install docker-ce=18.06.3~ce~3-0~ubuntu
  Reading package lists... Done
  Building dependency tree       
  Reading state information... Done
  The following additional packages will be installed:
    aufs-tools cgroupfs-mount git git-man liberror-perl libltdl7 patch pigz
  Suggested packages:
-   mountall git-daemon-run | git-daemon-sysvinit git-doc git-el git-email git-gui gitk gitweb git-arch git-cvs git-mediawiki  git-svn diffutils-doc
+   mountall git-daemon-run | git-daemon-sysvinit git-doc git-el git-email git-gui gitk gitweb git-arch git-cvs git-mediawiki
+   git-svn diffutils-doc
  The following NEW packages will be installed:
    aufs-tools cgroupfs-mount docker-ce git git-man liberror-perl libltdl7 patch pigz
- 0 upgraded, 9 newly installed, 0 to remove and 0 not upgraded.
- Need to get 33.4 MB of archives.
+ 0 upgraded, 9 newly installed, 0 to remove and 55 not upgraded.
+ Need to get 33.8 MB of archives.
  After this operation, 202 MB of additional disk space will be used.
  Do you want to continue? [Y/n] Y
  Get:1 http://us.ports.ubuntu.com/ubuntu-ports xenial/universe s390x pigz s390x 2.3.1-2 [56.4 kB]
@@ -249,13 +278,13 @@ Some key takeaways from the command output:
  Get:3 http://us.ports.ubuntu.com/ubuntu-ports xenial/universe s390x cgroupfs-mount all 1.2 [4970 B]
  Get:4 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x libltdl7 s390x 2.4.6-0.1 [37.6 kB]
  Get:5 http://us.ports.ubuntu.com/ubuntu-ports xenial/main s390x liberror-perl all 0.17-1.2 [19.6 kB]
- Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x git-man all 1:2.7.4-0ubuntu1.4 [736 kB]
- Get:7 https://download.docker.com/linux/ubuntu xenial/stable s390x docker-ce s390x 18.06.1~ce~3-0~ubuntu [29.8 MB]
- Get:8 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x git s390x 1:2.7.4-0ubuntu1.4 [2576 kB]
+ Get:6 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x git-man all 1:2.7.4-0ubuntu1.6 [736 kB]
+ Get:7 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x git s390x 1:2.7.4-0ubuntu1.6 [3008 kB]
+ Get:8 https://download.docker.com/linux/ubuntu xenial/stable s390x docker-ce s390x 18.06.3~ce~3-0~ubuntu [29.8 MB]
  Get:9 http://us.ports.ubuntu.com/ubuntu-ports xenial-updates/main s390x patch s390x 2.7.5-1ubuntu0.16.04.1 [92.5 kB]
- Fetched 33.4 MB in 1s (31.2 MB/s)                                  
+ Fetched 33.8 MB in 1s (20.7 MB/s)                           
  Selecting previously unselected package pigz.
- (Reading database ... 106533 files and directories currently installed.)
+ (Reading database ... 64536 files and directories currently installed.)
  Preparing to unpack .../pigz_2.3.1-2_s390x.deb ...
  Unpacking pigz (2.3.1-2) ...
  Selecting previously unselected package aufs-tools.
@@ -268,40 +297,40 @@ Some key takeaways from the command output:
  Preparing to unpack .../libltdl7_2.4.6-0.1_s390x.deb ...
  Unpacking libltdl7:s390x (2.4.6-0.1) ...
  Selecting previously unselected package docker-ce.
- Preparing to unpack .../docker-ce_18.06.1~ce~3-0~ubuntu_s390x.deb ...
- Unpacking docker-ce (18.06.1~ce~3-0~ubuntu) ...
+ Preparing to unpack .../docker-ce_18.06.3~ce~3-0~ubuntu_s390x.deb ...
+ Unpacking docker-ce (18.06.3~ce~3-0~ubuntu) ...
  Selecting previously unselected package liberror-perl.
  Preparing to unpack .../liberror-perl_0.17-1.2_all.deb ...
  Unpacking liberror-perl (0.17-1.2) ...
  Selecting previously unselected package git-man.
- Preparing to unpack .../git-man_1%3a2.7.4-0ubuntu1.4_all.deb ...
- Unpacking git-man (1:2.7.4-0ubuntu1.4) ...
+ Preparing to unpack .../git-man_1%3a2.7.4-0ubuntu1.6_all.deb ...
+ Unpacking git-man (1:2.7.4-0ubuntu1.6) ...
  Selecting previously unselected package git.
- Preparing to unpack .../git_1%3a2.7.4-0ubuntu1.4_s390x.deb ...
- Unpacking git (1:2.7.4-0ubuntu1.4) ...
+ Preparing to unpack .../git_1%3a2.7.4-0ubuntu1.6_s390x.deb ...
+ Unpacking git (1:2.7.4-0ubuntu1.6) ...
  Selecting previously unselected package patch.
  Preparing to unpack .../patch_2.7.5-1ubuntu0.16.04.1_s390x.deb ...
  Unpacking patch (2.7.5-1ubuntu0.16.04.1) ...
  Processing triggers for man-db (2.7.5-1) ...
  Processing triggers for libc-bin (2.23-0ubuntu10) ...
  Processing triggers for ureadahead (0.100.0-19) ...
- Processing triggers for systemd (229-4ubuntu21.4) ...
+ Processing triggers for systemd (229-4ubuntu21.10) ...
  Setting up pigz (2.3.1-2) ...
  Setting up aufs-tools (1:3.2+20130722-1.1ubuntu1) ...
  Setting up cgroupfs-mount (1.2) ...
  Setting up libltdl7:s390x (2.4.6-0.1) ...
- Setting up docker-ce (18.06.1~ce~3-0~ubuntu) ...
+ Setting up docker-ce (18.06.3~ce~3-0~ubuntu) ...
  Setting up liberror-perl (0.17-1.2) ...
- Setting up git-man (1:2.7.4-0ubuntu1.4) ...
- Setting up git (1:2.7.4-0ubuntu1.4) ...
+ Setting up git-man (1:2.7.4-0ubuntu1.6) ...
+ Setting up git (1:2.7.4-0ubuntu1.6) ...
  Setting up patch (2.7.5-1ubuntu0.16.04.1) ...
  Processing triggers for libc-bin (2.23-0ubuntu10) ...
- Processing triggers for systemd (229-4ubuntu21.4) ...
+ Processing triggers for systemd (229-4ubuntu21.10) ...
  Processing triggers for ureadahead (0.100.0-19) ...
 
 Observe that not only was Docker installed, but so were its prerequisites that were not already installed.
 
-**NOTE:** The *=18.06.1~ce~3-0~ubuntu* part of the above install command was not necessary in this case because this is the candidate version that would have been installed by default.  But I wanted to show you the syntax you would use if for some reason you wanted to install a version that was not the candidate version.
+**NOTE:** The *=18.06.3~ce~3-0~ubuntu* part of the above install command was not necessary in this case because this is the candidate version that would have been installed by default.  But I wanted to show you the syntax you would use if for some reason you wanted to install a version that was not the candidate version.
 
 **Step 2.12:** Issue the *which* command again and this time it will tell you where it found the just-installed docker program::
 
@@ -312,21 +341,21 @@ Observe that not only was Docker installed, but so were its prerequisites that w
 
  root@ubuntu16045:~# docker version
  Client:
-  Version:           18.06.1-ce
+  Version:           18.06.3-ce
   API version:       1.38
   Go version:        go1.10.3
-  Git commit:        e68fc7a
-  Built:             Tue Aug 21 17:24:34 2018
+  Git commit:        d7080c1
+  Built:             Wed Feb 20 02:27:09 2019
   OS/Arch:           linux/s390x
   Experimental:      false
 
  Server:
   Engine:
-   Version:          18.06.1-ce
+   Version:          18.06.3-ce
    API version:      1.38 (minimum version 1.12)
    Go version:       go1.10.3
-   Git commit:       e68fc7a
-   Built:            Tue Aug 21 17:23:34 2018
+   Git commit:       d7080c1
+   Built:            Wed Feb 20 02:26:03 2019
    OS/Arch:          linux/s390x
    Experimental:     false
 
@@ -338,7 +367,7 @@ Observe that not only was Docker installed, but so were its prerequisites that w
   Paused: 0
   Stopped: 0
  Images: 0
- Server Version: 18.06.1-ce
+ Server Version: 18.06.3-ce
  Storage Driver: overlay2
   Backing Filesystem: extfs
   Supports d_type: true
@@ -354,20 +383,20 @@ Observe that not only was Docker installed, but so were its prerequisites that w
  Default Runtime: runc
  Init Binary: docker-init
  containerd version: 468a545b9edcd5932818eb9de8e72413e616e86e
- runc version: 69663f0bd4b60df09991c08812a60108003fa340
+ runc version: a592beb5bc4c4092b1b1bac971afed27687340c5
  init version: fec3683
  Security Options:
   apparmor
   seccomp
    Profile: default
- Kernel Version: 4.4.0-135-generic
+ Kernel Version: 4.4.0-139-generic
  Operating System: Ubuntu 16.04.5 LTS
  OSType: linux
  Architecture: s390x
  CPUs: 2
  Total Memory: 3.733GiB
  Name: ubuntu16045
- ID: WVTU:PT7U:KWA3:CVT7:CPIB:RARI:5JE7:2DLT:QS62:L66U:HIYU:ZGDP
+ ID: 5PYQ:47LO:VPA6:6PFY:XXF4:PFOK:2APP:K27S:VMFQ:F2UB:2RI5:7W6K
  Docker Root Dir: /var/lib/docker
  Debug Mode (client): false
  Debug Mode (server): false
@@ -394,8 +423,8 @@ add the *bcuser* userid to the group *docker*::
  logout
  bcuser@ubuntu16045:~$
  
-**Step 2.17:** Even though *bcuser* was just added to the *docker* group, you will have to log out and then log back in again for this 
-change to take effect.  To prove this, before you log out, enter the *docker info* command and you will receive a permissions error::
+**Step 2.17:** Even though *bcuser* was just added to the *docker* group, you will have to log out and then log back in again for this change to take effect.  
+To prove this, before you log out, enter the *docker info* command and you will receive a permissions error::
 
  bcuser@ubuntu16045:~$ docker info
  Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.38/info: dial unix /var/run/docker.sock: connect: permission denied
@@ -404,24 +433,18 @@ change to take effect.  To prove this, before you log out, enter the *docker inf
 
  bcuser@ubuntu16045:~$ exit
  logout
- Connection to 192.168.22.100 closed.
+ Connection to 192.168.22.118 closed.
 
 **Step 2.19:** Log in again.  (These instructions show logging in again using *ssh* from a command shell.  If you are using PuTTY you may need to start a new PuTTY session and log in)::
 
- $ ssh bcuser@192.168.22.100
- Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-135-generic s390x)
+ $ ssh bcuser@192.168.22.108
+ Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-139-generic s390x)
 
   * Documentation:  https://help.ubuntu.com
   * Management:     https://landscape.canonical.com
   * Support:        https://ubuntu.com/advantage
- New release '18.04.1 LTS' available.
- Run 'do-release-upgrade' to upgrade to it.
-
- Last login: Thu Sep 27 14:01:00 2018 from 192.168.22.64
+ Last login: Wed Jan 30 14:46:41 2019 from 192.168.215.31
  bcuser@ubuntu16045:~$ 
-
-before you log out and then again after you log in.  (You will 
-need to start a new PuTTY session after you logged out so that you can get back in).
 
 **Step 2.20:** Now try *docker info* and this time it should work from your non-root userid::
 
@@ -431,7 +454,7 @@ need to start a new PuTTY session after you logged out so that you can get back 
   Paused: 0
   Stopped: 0
  Images: 0
- Server Version: 18.06.1-ce
+ Server Version: 18.06.3-ce
  Storage Driver: overlay2
   Backing Filesystem: extfs
   Supports d_type: true
@@ -447,20 +470,20 @@ need to start a new PuTTY session after you logged out so that you can get back 
  Default Runtime: runc
  Init Binary: docker-init
  containerd version: 468a545b9edcd5932818eb9de8e72413e616e86e
- runc version: 69663f0bd4b60df09991c08812a60108003fa340
+ runc version: a592beb5bc4c4092b1b1bac971afed27687340c5
  init version: fec3683
  Security Options:
   apparmor
   seccomp
    Profile: default
- Kernel Version: 4.4.0-135-generic
+ Kernel Version: 4.4.0-139-generic
  Operating System: Ubuntu 16.04.5 LTS
  OSType: linux
  Architecture: s390x
  CPUs: 2
  Total Memory: 3.733GiB
  Name: ubuntu16045
- ID: WVTU:PT7U:KWA3:CVT7:CPIB:RARI:5JE7:2DLT:QS62:L66U:HIYU:ZGDP
+ ID: 5PYQ:47LO:VPA6:6PFY:XXF4:PFOK:2APP:K27S:VMFQ:F2UB:2RI5:7W6K
  Docker Root Dir: /var/lib/docker
  Debug Mode (client): false
  Debug Mode (server): false
@@ -503,9 +526,9 @@ You can ignore the suggestion at the end of the output of this command to consid
 **Step 2.25:** There was a bunch of output from the prior step I didn’t show, but if your install works, you should feel pretty good about the output from this command::
 
  root@ubuntu16045:~# docker-compose --version
-docker-compose version 1.22.0, build f46880f
+ docker-compose version 1.23.2, build 1110ad0
 
-**Note:** If the version of Docker Compose shown in your output differs from what is shown here, that's okay.
+**Note:** If the version of Docker Compose shown in your output differs from what is shown here, that's okay, as long as it is at least 1.13 or higher.
 
 **Step 2.26:** Leave root behind and become a normal user again::
 
@@ -516,10 +539,10 @@ docker-compose version 1.22.0, build f46880f
 **Step 2.27:** You won’t have to log out and log back in, like you did with Docker, in order to use Docker Compose, and to prove it, check for the version again now that you are no longer root::
 
  bcuser@ubuntu16045:~$ docker-compose --version
- docker-compose version 1.22.0, build f46880f
+ docker-compose version 1.23.2, build 1110ad0
 
 **Step 2.28:** The next thing you are going to install is the *Golang* programming language. 
-You are going to install Golang version 1.10.4.  
+You are going to install Golang version 1.11.1.  
 Go to the /tmp directory::
 
  bcuser@ubuntu16045:~$ cd /tmp
@@ -528,23 +551,22 @@ Go to the /tmp directory::
 **Step 2.29:** Use *wget* to get the compressed file that contains the Golang compiler and tools.  
 And now is a good time to tell you that from here on out I will just call Golang what everybody else usually calls it-  *Go*.  Go figure.
 ::
- bcuser@ubuntu16044:/tmp$ wget --no-check-certificate https://storage.googleapis.com/golang/go1.10.4.linux-s390x.tar.gz
- --2018-09-27 14:51:12--  https://storage.googleapis.com/golang/go1.10.4.linux-s390x.tar.gz
- Resolving storage.googleapis.com (storage.googleapis.com)... 216.58.217.80, 2607:f8b0:4004:80b::2010
- Connecting to storage.googleapis.com (storage.googleapis.com)|216.58.217.80|:443... connected.
+ bcuser@ubuntu16044:/tmp$ wget --no-check-certificate https://storage.googleapis.com/golang/go1.11.1.linux-s390x.tar.gz
+ --2019-03-07 12:28:05--  https://storage.googleapis.com/golang/go1.11.1.linux-s390x.tar.gz
+ Resolving storage.googleapis.com (storage.googleapis.com)... 172.217.164.144, 2607:f8b0:4004:814::2010
+ Connecting to storage.googleapis.com (storage.googleapis.com)|172.217.164.144|:443... connected.
  HTTP request sent, awaiting response... 200 OK
- Length: 73506312 (70M) [application/octet-stream]
- Saving to: 'go1.10.4.linux-s390x.tar.gz'
+ Length: 100474359 (96M) [application/octet-stream]
+ Saving to: 'go1.11.1.linux-s390x.tar.gz'
 
- go1.10.4.linux-s390x.tar.gz                 100%[=====================================================================================>]  70.10M  64.1MB/s    in 1.1s    
+ go1.11.1.linux-s390x.tar.gz      100%[=======================================================>]  95.82M  79.7MB/s    in 1.2s    
 
- 2018-09-27 14:51:13 (64.1 MB/s) - 'go1.10.4.linux-s390x.tar.gz' saved [73506312/73506312]
-
+ 2019-03-07 12:28:07 (79.7 MB/s) - 'go1.11.1.linux-s390x.tar.gz' saved [100474359/100474359]
 
 **Step 2.30:** Enter the following command which will extract the files into the /tmp directory, and provide lots and lots of output.
 (It’s the *‘v’* in *-xvf* which got all chatty, or *verbose*, on you)::
 
- bcuser@ubuntu16045:/tmp$ tar -xvf go1.10.4.linux-s390x.tar.gz 
+ bcuser@ubuntu16045:/tmp$ tar -xvf go1.11.1.linux-s390x.tar.gz 
    .
    .  (output not shown here)
    .
@@ -645,7 +667,7 @@ If *head* prints the top of the file, guess what command prints the bottom of th
 **Step 2.44:**  Then try this::
 
  bcuser@ubuntu16045:~$ go version
-go version go1.10.4 linux/s390x
+go version go1.11.1 linux/s390x
 
 **Recap:** Before you move on, here is a summary of the major tasks you performed in this section.
 

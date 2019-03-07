@@ -683,10 +683,11 @@ Section 3: Download, build and test the Hyperledger Fabric CLI
 
 In this section, you will:
 
-*	Install some support packages using the Ubuntu package manager, *apt-get*
-*	Download the source code repository containing the core Hyperledger Fabric functionality
-*	Use the source code to build Docker images that contain the core Hyperledger Fabric functionality
-*	Test for success by running the comprehensive end-to-end CLI test.
+* Download the source code repository containing the core Hyperledger Fabric functionality
+* Use the source code to build Docker images that contain the core Hyperledger Fabric functionality
+* Use the source code to build native executable binaries that provide Hyperledger Fabric utilities and that also provide an alternative to using Docker images.
+* Download a repository containing Hyperledger Fabric samples
+* Test for success by running one of the samples called "Build Your First Network", which will provide a test of core Hyperledger Fabric functionality.
 
 **Step 3.1:** There are some software packages necessary to be able to successfully build the Hyperledger Fabric source code.  Install them with this command. 
 Observe the output, not shown here, to see the different packages installed::
@@ -795,84 +796,271 @@ Your output should look similar to that shown here, although the tags will be di
  hyperledger/fabric-baseimage   s390x-0.4.14                   6e4e09df1428        4 months ago         1.38GB
  hyperledger/fabric-baseos      s390x-0.4.14                   4834a1e3ce1c        4 months ago         120MB
 
-**Step 3.9:** Navigate to the directory where the “end-to-end” test lives::
+**Step 3.9:** Navigate to up one directory level::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ cd examples/e2e_cli/
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ cd ..
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$
 
-**Step 3.10:** The end-to-end test that you are about to run will create several Docker containers.  
-A Docker container is what runs a process, and it is based on a Docker image.  
-Run this command, which shows all Docker containers, however right now there will be no output other than column headings, which indicates no Docker containers are currently running::
+**Step 3.10:** Download the *fabric-samples* repository, which, if I told you it contains Hyperledger Fabric samples, would you believe me?::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ docker ps -a
- CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ git clone -b v1.4.0 --depth 1 https://gerrit.hyperledger.org/r/fabric-samples
+ Cloning into 'fabric-samples'...
+ remote: Counting objects: 570, done
+ remote: Finding sources: 100% (570/570)
+ remote: Total 570 (delta 49), reused 498 (delta 49)
+ Receiving objects: 100% (570/570), 382.69 KiB | 0 bytes/s, done.
+ Resolving deltas: 100% (49/49), done.
+ Checking connectivity... done.
+ Note: checking out 'bb39b6ed0947aa6f5d23d64b8ad65b1a64384bbb'.
 
-**Step 3.11:** Run the end-to-end test with this command::
+ You are in 'detached HEAD' state. You can look around, make experimental
+ changes and commit them, and you can discard any commits you make in this
+ state without impacting any branches by performing another checkout.
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ ./network_setup.sh up mychannel 10 couchdb
-   .
-   . (output not shown here)
-   .
- ===================== Query successful on peer1.org3 on channel 'mychannel' ===================== 
+ If you want to create a new branch to retain commits you create, you may
+ do so (now or later) by using -b with the checkout command again. Example:
 
- ===================== All GOOD, End-2-End execution completed ===================== 
+   git checkout -b <new-branch-name>
 
+**Step 3.11:** Navigate to the *fabric-samples* directory which contains the repository you just cloned::
 
-  _____   _   _   ____            _____   ____    _____ 
- | ____| | \ | | |  _ \          | ____| |___ \  | ____|
- |  _|   |  \| | | | | |  _____  |  _|     __) | |  _|  
- | |___  | |\  | | |_| | |_____| | |___   / __/  | |___ 
- |_____| |_| \_| |____/          |_____| |_____| |_____|
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ cd fabric-samples/
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples$ 
+
+**Step 3.12:** Back in *Step 3.7* the *release* argument to the *make* command created some binary executables for you.
+THh next few steps will copy these files from where the *make* command put them into the directory where the sample you are about to run expects to find them.
+Create a directory named *bin* with this command::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples$ mkdir bin
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples$ 
+
+**Step 3.13:** The sample script you will run soon expects to find a program named *cryptogen*, a program named *configtxgen* , and a program named *configtxglator* in the *fabric-samples/bin* directory.
+Let's oblige it by copying these three programs from the directory where there were placed courtesy of the *release* argument of the *make docker release* command from *Step 3.7*::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples$ cp -ipv ../fabric/release/linux-s390x/bin/c* bin/.
+ '../fabric/release/linux-s390x/bin/configtxgen' -> 'bin/./configtxgen'
+ '../fabric/release/linux-s390x/bin/configtxlator' -> 'bin/./configtxlator'
+ '../fabric/release/linux-s390x/bin/cryptogen' -> 'bin/./cryptogen'
+
+**Step 3.14:** Navigate to the *first-network* directory because this is the sample that you will use in this lab::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples$ cd first-network/
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$
+
+**Step 3.15:** You will run the test using a script named *byfn.sh* in this directory. There are several arguments to this script. Invoke the script with the *-h* argument in order to display some help text::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ ./byfn.sh -h
+ Usage: 
+   byfn.sh <mode> [-c <channel name>] [-t <timeout>] [-d <delay>] [-f <docker-compose-file>] [-s <dbtype>] [-l <language>] [-o <consensus-type>] [-i <imagetag>] [-v]
+     <mode> - one of 'up', 'down', 'restart', 'generate' or 'upgrade'
+       - 'up' - bring up the network with docker-compose up
+       - 'down' - clear the network with docker-compose down
+       - 'restart' - restart the network
+       - 'generate' - generate required certificates and genesis block
+       - 'upgrade'  - upgrade the network from version 1.3.x to 1.4.0
+     -c <channel name> - channel name to use (defaults to "mychannel")
+     -t <timeout> - CLI timeout duration in seconds (defaults to 10)
+     -d <delay> - delay duration in seconds (defaults to 3)
+     -f <docker-compose-file> - specify which docker-compose file use (defaults to docker-compose-cli.yaml)
+     -s <dbtype> - the database backend to use: goleveldb (default) or couchdb
+     -l <language> - the chaincode language: golang (default) or node
+     -o <consensus-type> - the consensus-type of the ordering service: solo (default) or kafka
+     -i <imagetag> - the tag to be used to launch the network (defaults to "latest")
+     -v - verbose mode
+   byfn.sh -h (print this message)
+
+ Typically, one would first generate the required certificates and 
+ genesis block, then bring up the network. e.g.:
+
+	byfn.sh generate -c mychannel
+	byfn.sh up -c mychannel -s couchdb
+ byfn.sh up -c mychannel -s couchdb -i 1.4.0
+	byfn.sh up -l node
+	byfn.sh down -c mychannel
+ byfn.sh upgrade -c mychannel
+
+ Taking all defaults:
+ 	byfn.sh generate
+ 	byfn.sh up
+ 	byfn.sh down
+
+The last three lines of the output from the help shows the simplest way to perform this test.
+If you took all defaults, you would be generating artifacts to create a channel named *mychannel*, using chaincode written in the *Go* language, an orderering consensus type of *solo*, and using *levelDB* as the state database.
+
+**Step 3.16:** Run *byfn.sh* with the *generate* argument in order to generate the necessary cryptographic material and channel configuration for a channel named *mychannel*.  If you wish to use a different channel name, maybe named after your favorite child or pet or car or football team or spouse, use the *-c* argument as well, but be aware that channel names must start with a lowercase character, and contain only lowercase characters, numbers, and a small number of punctuation characters such as a dash (*-*) and a couple others I can't remember right now.  You'll also have to use this channel name on other inovcations of *byfn.sh* in subsequent steps.  Just don't use uppercase letters, okay?  (You can use uppercase numbers if that makes you feel better).  The below examples show creating a channel named *tim*. Use *tim* or create your own name or leave the *-c* argument off altogether to use the default of *mychannel*.  You decide.  I trust your judgement. So go ahead and issue this command or your customized version ::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ ./byfn.sh generate -c tim
+ Generating certs and genesis block for channel 'tim' with CLI timeout of '10' seconds and CLI delay of '3' seconds
+ Continue? [Y/n] Y
+ proceeding ...
+ /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/../bin/cryptogen
+
+ ##########################################################
+ ##### Generate certificates using cryptogen tool #########
+ ##########################################################
+ + cryptogen generate --config=./crypto-config.yaml
+ org1.example.com
+ org2.example.com
+ + res=0
+ + set +x
+
+ /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/../bin/configtxgen
+ ##########################################################
+ #########  Generating Orderer Genesis block ##############
+ ##########################################################
+ CONSENSUS_TYPE=solo
+ + '[' solo == solo ']'
+ + configtxgen -profile TwoOrgsOrdererGenesis -channelID byfn-sys-channel -outputBlock ./channel-artifacts/genesis.block
+ 2019-01-15 11:35:34.252 EST [common.tools.configtxgen] main -> INFO 001 Loading configuration
+ 2019-01-15 11:35:34.284 EST [common.tools.configtxgen.localconfig] completeInitialization -> INFO 002 orderer type: solo
+ 2019-01-15 11:35:34.284 EST [common.tools.configtxgen.localconfig] Load -> INFO 003 Loaded configuration: /home/bcuser /git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.317 EST [common.tools.configtxgen.localconfig] completeInitialization -> INFO 004 orderer type: solo
+ 2019-01-15 11:35:34.317 EST [common.tools.configtxgen.localconfig] LoadTopLevel -> INFO 005 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.319 EST [common.tools.configtxgen] doOutputBlock -> INFO 006 Generating genesis block
+ 2019-01-15 11:35:34.319 EST [common.tools.configtxgen] doOutputBlock -> INFO 007 Writing genesis block
+ + res=0
+ + set +x
+
+ #################################################################
+ ### Generating channel configuration transaction 'channel.tx' ###
+ #################################################################
+ + configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID tim
+ 2019-01-15 11:35:34.390 EST [common.tools.configtxgen] main -> INFO 001 Loading configuration
+ 2019-01-15 11:35:34.422 EST [common.tools.configtxgen.localconfig] Load -> INFO 002 Loaded configuration: /home/bcuser /git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.452 EST [common.tools.configtxgen.localconfig] completeInitialization -> INFO 003 orderer type: solo
+ 2019-01-15 11:35:34.452 EST [common.tools.configtxgen.localconfig] LoadTopLevel -> INFO 004 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.452 EST [common.tools.configtxgen] doOutputChannelCreateTx -> INFO 005 Generating new channel configtx
+ 2019-01-15 11:35:34.453 EST [common.tools.configtxgen] doOutputChannelCreateTx -> INFO 006 Writing new channel tx
+ + res=0
+ + set +x
+
+ #################################################################
+ #######    Generating anchor peer update for Org1MSP   ##########
+ #################################################################
+ + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID tim -asOrg Org1MSP
+ 2019-01-15 11:35:34.518 EST [common.tools.configtxgen] main -> INFO 001 Loading configuration
+ 2019-01-15 11:35:34.548 EST [common.tools.configtxgen.localconfig] Load -> INFO 002 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.579 EST [common.tools.configtxgen.localconfig] completeInitialization -> INFO 003 orderer type: solo
+ 2019-01-15 11:35:34.579 EST [common.tools.configtxgen.localconfig] LoadTopLevel -> INFO 004 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.579 EST [common.tools.configtxgen] doOutputAnchorPeersUpdate -> INFO 005 Generating anchor peer update
+ 2019-01-15 11:35:34.579 EST [common.tools.configtxgen] doOutputAnchorPeersUpdate -> INFO 006 Writing anchor peer update
+ + res=0
+ + set +x
+
+ #################################################################
+ #######    Generating anchor peer update for Org2MSP   ##########
+ #################################################################
+ + configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID tim -asOrg Org2MSP
+ 2019-01-15 11:35:34.656 EST [common.tools.configtxgen] main -> INFO 001 Loading configuration
+ 2019-01-15 11:35:34.703 EST [common.tools.configtxgen.localconfig] Load -> INFO 002 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml
+ 2019-01-15 11:35:34.737 EST [common.tools.configtxgen.localconfig] completeInitialization -> INFO 003 orderer type: solo
+ 2019-01-15 11:35:34.737 EST [common.tools.configtxgen.localconfig] LoadTopLevel -> INFO 004 Loaded configuration: /home/bcuser/git/src/github.com/hyperledger/fabric-samples/first-network/configtx.yaml 
+ 2019-01-15 11:35:34.737 EST [common.tools.configtxgen] doOutputAnchorPeersUpdate -> INFO 005 Generating anchor peer update
+ 2019-01-15 11:35:34.737 EST [common.tools.configtxgen] doOutputAnchorPeersUpdate -> INFO 006 Writing anchor peer update
+ + res=0
+ + set +x
+
+**Step 3.17:** Issue the following command to start the Hyperledger Fabric network using Node.js chaincode (the *-l node* argument and value), using CouchDB as the state database (the *-s couchdb* argument and value), the Kafka orderer consensus algorithm (the *-o kafka* argument and value, and the channel named *tim* (the *-c tim* argument and value).
+If your channel is not named *tim* use your correct channel name instead.
+If you want to try one of the other options for chaincode language, state database, or consensus algorithm, I applaud your curiosity and leave the determination of which options to choose as an exercise for the reader::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ ./byfn.sh up -l node -s couchdb -o kafka -c tim 
+ Starting for channel 'tim' with CLI timeout of '10' seconds and CLI delay of '3' seconds and using database 'couchdb'
+ Continue? [Y/n] Y
+  .
+  . (output not shown)
+  .
+ ========= All GOOD, BYFN execution completed =========== 
+
+  _____   _   _   ____   
+ | ____| | \ | | |  _ \  
+ |  _|   |  \| | | | | | 
+ | |___  | |\  | | |_| | 
+ |_____| |_| \_| |____/  
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ 
+
+**Step 3.18:** If you were following the output closely you may have noticed a few spots where the output paused for a little bit. 
+This occurred at the point where a peer was building a new Docker image for chaincode.
+This occurs three times during the script.
+Additionally, Node.js chaincode takes longer for its Docker images to be built than does Go chaincode, so if you chose *-l node* the pause may have been long enough for you to worry a bit.
+But it's all good.
+
+Run this command to see the three Docker images created for the chaincode.
+These images will start with *dev* because this is the default name of a Hyperledger Fabric network and this script does not override the default::
  
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ docker images dev-*
+ REPOSITORY                                                                                             TAG                  IMAGE ID            CREATED             SIZE
+ dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   latest              a8774579a9fc        2 minutes ago       1.55GB
+ dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   latest              4f27f3f88bdb        4 minutes ago       1.55GB
+ dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   latest              01039107ff4d        6 minutes ago       1.55GB
 
-**Step 3.12:** Run the *docker ps* command to see the Docker containers that the test created::
+The second part of the Docker images name is the name of the peer for which the chaincode was created.
+This sample uses chaincode in three peers.
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ docker ps -a
- CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS                      PORTS                                                                       NAMES
- 6a1350f8d3fd        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "chaincode -peer.add…"   21 minutes ago      Up 21 minutes                                                                                           dev-peer1.org2.example.com-mycc-1.0
- 57bae165121a        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "chaincode -peer.add…"   21 minutes ago      Up 21 minutes                                                                                           dev-peer0.org1.example.com-mycc-1.0
- 9f071a6558c2        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "chaincode -peer.add…"   21 minutes ago      Up 21 minutes                                                                                           dev-peer0.org2.example.com-mycc-1.0
- c1dd7f2df91e        hyperledger/fabric-tools                                                                               "/bin/bash -c './scr…"   22 minutes ago      Exited (0) 20 minutes ago                                                                               cli
- 172e7018dd53        hyperledger/fabric-orderer                                                                             "orderer"                22 minutes ago      Up 22 minutes               0.0.0.0:7050->7050/tcp                                                      orderer.example.com
- f4c1d6ec0cc4        hyperledger/fabric-kafka                                                                               "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               9093/tcp, 0.0.0.0:32780->9092/tcp                                           kafka0
- f87c6bf5b897        hyperledger/fabric-kafka                                                                               "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               9093/tcp, 0.0.0.0:32779->9092/tcp                                           kafka1
- 0680fa8796e6        hyperledger/fabric-kafka                                                                               "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               9093/tcp, 0.0.0.0:32778->9092/tcp                                           kafka2
- 54a9ac2eafae        hyperledger/fabric-kafka                                                                               "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               9093/tcp, 0.0.0.0:32777->9092/tcp                                           kafka3
- 041818b299a7        hyperledger/fabric-peer                                                                                "peer node start"        22 minutes ago      Up 22 minutes               0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.org1.example.com
- c3a81826abc7        hyperledger/fabric-peer                                                                                "peer node start"        22 minutes ago      Up 22 minutes               0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
- bd0573a44fee        hyperledger/fabric-peer                                                                                "peer node start"        22 minutes ago      Up 22 minutes               0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.org1.example.com
- dd5d6c1098cc        hyperledger/fabric-peer                                                                                "peer node start"        22 minutes ago      Up 22 minutes               0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.org2.example.com
- 38d6aa5ebcf9        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   22 minutes ago      Up 22 minutes               4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp                                  couchdb2
- c6c56a4470d0        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   22 minutes ago      Up 22 minutes               4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp                                  couchdb1
- d451ac89c06c        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   22 minutes ago      Up 22 minutes               4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp                                  couchdb3
- 37fc75c38e2a        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   22 minutes ago      Up 22 minutes               4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp                                  couchdb0
- c92df8e70239        hyperledger/fabric-zookeeper                                                                           "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               0.0.0.0:32776->2181/tcp, 0.0.0.0:32775->2888/tcp, 0.0.0.0:32774->3888/tcp   zookeeper2
- 7137c400130f        hyperledger/fabric-zookeeper                                                                           "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               0.0.0.0:32773->2181/tcp, 0.0.0.0:32772->2888/tcp, 0.0.0.0:32771->3888/tcp   zookeeper0
- b796be98b5cc        hyperledger/fabric-zookeeper                                                                           "/docker-entrypoint.…"   22 minutes ago      Up 22 minutes               0.0.0.0:32770->2181/tcp, 0.0.0.0:32769->2888/tcp, 0.0.0.0:32768->3888/tcp   zookeeper1
+**Step 3.19:** List the Docker containers that are running as part of this sample with this command::
 
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ docker ps --all
+ CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+ 5187acd227a1        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "/bin/sh -c 'cd /usr…"   3 minutes ago       Up 3 minutes                                                           dev-peer1.org2.example.com-mycc-1.0
+ 2799f7a78fed        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "/bin/sh -c 'cd /usr…"   5 minutes ago       Up 5 minutes                                                           dev-peer0.org1.example.com-mycc-1.0
+ 90932096a694        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "/bin/sh -c 'cd /usr…"   7 minutes ago       Up 7 minutes                                                           dev-peer0.org2.example.com-mycc-1.0
+ bc7c4fc1a6d4        hyperledger/fabric-tools:latest                                                                        "/bin/bash"              9 minutes ago       Up 9 minutes                                                           cli
+ 3eb36dabb079        hyperledger/fabric-kafka:latest                                                                        "/docker-entrypoint.…"   9 minutes ago       Up 9 minutes        9092-9093/tcp                                      kafka.example.com
+ 08fa1f55c4fd        hyperledger/fabric-peer:latest                                                                         "peer node start"        9 minutes ago       Up 9 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp     peer0.org1.example.com
+ b88117066a91        hyperledger/fabric-peer:latest                                                                         "peer node start"        9 minutes ago       Up 9 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9053->7053/tcp     peer0.org2.example.com
+ 1090c22396bc        hyperledger/fabric-peer:latest                                                                         "peer node start"        9 minutes ago       Up 9 minutes        0.0.0.0:10051->7051/tcp, 0.0.0.0:10053->7053/tcp   peer1.org2.example.com
+ 15b622c0141e        hyperledger/fabric-peer:latest                                                                         "peer node start"        9 minutes ago       Up 9 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
+ f6b983c81454        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   9 minutes ago       Up 9 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp         couchdb0
+ 65b3f6f4c73b        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   9 minutes ago       Up 9 minutes        4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp         couchdb2
+ 677e9ecf4cdd        hyperledger/fabric-zookeeper:latest                                                                    "/docker-entrypoint.…"   9 minutes ago       Up 9 minutes        2181/tcp, 2888/tcp, 3888/tcp                       zookeeper.example.com
+ 0d370344a2b6        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   9 minutes ago       Up 9 minutes        4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp         couchdb3
+ 807ff8200896        hyperledger/fabric-couchdb                                                                             "tini -- /docker-ent…"   9 minutes ago       Up 9 minutes        4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp         couchdb1
+ a13a43f5a97e        hyperledger/fabric-orderer:latest                                                                      "orderer"                9 minutes ago       Up 9 minutes        0.0.0.0:7050->7050/tcp                             orderer.example.com
 
+You may have a different number of containers running depending on what options you chose for your *byfn up* command.
+If you did not choose *couchdb* as your state databse with the *-s* argument then you will not see the four *couchdb* containers (one for each peer).
+If you did not choose the *Kafka* orderer consensus algorithm with the *-o* argument then you will not see the *kafka* and *zookeeper* containers.
 
-The first three Docker containers listed are chaincode containers-  the chaincode was run on three of the four peers, so they each had a Docker image and container created.  
-There were also four peer containers created, each with a couchdb container, and one orderer container. 
-The orderer service uses *Kafka* for consensus, and so is supported by four Kafka containers and three Zookeeper containers. There was a container created to run the CLI itself, and that container stopped running ten seconds after the test ended.  (That was what the value *10* was for in the *./network_setup.sh* command you ran).
+**Step 3.20:** Run the following command pipe to show a more verbose output of the *docker ps* command which comes courtesy of the *--no-trunc* argument and then pipes the output through *grep* with a judicious string, *dev-peer* to filter the output such that you only see the output for the three chaincode containers::
 
-You have successfully run the CLI end-to-end test.  You will clean things up now.
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ docker ps --no-trunc | grep dev-peer
+ 5187acd227a16d6aac4db1e83b5e2a0e1887bcac385f176a96533644d1406e2d   dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   "/bin/sh -c 'cd /usr/local/src; npm start -- --peer.address peer1.org2.example.com:7052'"   4 minutes ago       Up 4 minutes                                                           dev-peer1.org2.example.com-mycc-1.0
+ 2799f7a78fedee73a688ba207ca8e0e498c3fdc0e2fbf641b76ff678fcac8ba7   dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   "/bin/sh -c 'cd /usr/local/src; npm start -- --peer.address peer0.org1.example.com:7052'"   6 minutes ago       Up 6 minutes                                                           dev-peer0.org1.example.com-mycc-1.0
+ 90932096a6941374e751b35b0aaf8bc3fb55e080c001eac3cc4fb5d9c370ab5f   dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   "/bin/sh -c 'cd /usr/local/src; npm start -- --peer.address peer0.org2.example.com:7052'"   8 minutes ago       Up 8 minutes                                                           dev-peer0.org2.example.com-mycc-1.0
 
-**Step 3.13:** Run the *network_setup.sh* script with different arguments to bring the Docker containers down::
+In the above output you'll see the command used to start the container-  e.g., *"/bin/sh -c 'cd /usr/local/src; npm start -- --peer.address peer1.org2.example.com:7052'"* for the first container listed.
+The *npm start* command is your clue that this is a Node.js container- *npm* is the de facto Node.js package manage, despite the authors of *npm* claiming that *npm* is not an acronym.  (I'm pretty sure this is true, and if not I'll modify this when the npm lawyers deliver the cease-and-desist letter to me).
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ ./network_setup.sh down
+**Step 3.21:** Run this command to stop the Hyperledger Network stood up in *Step 3.17*::
 
-**Step 3.14:** Try the *docker ps* command again and you should see that there are no longer any Docker containers running::
-
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ docker ps -a
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ ./byfn.sh down 
+ Stopping for channel 'mychannel' with CLI timeout of '10' seconds and CLI delay of '3' seconds
+ Continue? [Y/n] Y
+  .
+  . (output not shown)
+  .
+  
+**Step 3.22:** Run this command to see if there are any running Docker containers::
+  
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ docker ps --all                     
  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+ 
+There ain't no Docker containers no more.
+
+**Step 3.23:** Run this command to see if there are any Docker images for the chaincode::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-samples/first-network$ docker images dev-*
+ REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ 
+There are no Docker chaincode images remaining as well-  the *byfn.sh down* command cleaned up nicer than a debonair dandy getting ready for a night on the town!
 
 **Recap:** In this section, you:
 
 *	Downloaded the main Hyperledger Fabric source code repository
-*	Installed prerequisite tools required to build the Hyperledger Fabric project
-*	Ran *make* to build the project’s Docker images
-*	Ran the Hyperledger Fabric command line interface (CLI) end-to-end test
+*	Ran *make* to build the project’s Docker images and native binaries
+* Downloaded the Hyperledger Fabric *fabric-samples* respository
+*	Ran the *first-network* sample to verify core Hyperledger functionality
 *	Cleaned up afterwards
  
 Section 4: Install the Hyperledger Fabric Certificate Authority

@@ -708,17 +708,17 @@ If you strayed away from your home directory, I'm assuming you're smart enough t
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger$
  
 **Step 3.4:** Use the software tool *git* to download the source code of the Hyperledger Fabric core package from the official place where it lives.  
-The *-b v1.3.0-rc1* argument specifies that you want the v1.3.0 release candidate 1 level::
+The *-b v1.4.0* argument specifies that you want Hyperledger Fabric v1.4.0, the most recent release at the time of this writing::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ git clone -b v1.3.0-rc1 https://gerrit.hyperledger.org/r/fabric
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ git clone -b v1.4.0 https://gerrit.hyperledger.org/r/fabric
  Cloning into 'fabric'...
- remote: Counting objects: 6293, done
- remote: Finding sources: 100% (52/52)
- remote: Total 76548 (delta 2), reused 76522 (delta 2)
- Receiving objects: 100% (76548/76548), 94.09 MiB | 26.01 MiB/s, done.
- Resolving deltas: 100% (34182/34182), done.
+ remote: Counting objects: 5893, done
+ remote: Finding sources: 100% (19/19)
+ remote: Total 94844 (delta 0), reused 94831 (delta 0)
+ Receiving objects: 100% (94844/94844), 114.78 MiB | 28.56 MiB/s, done.
+ Resolving deltas: 100% (41532/41532), done.
  Checking connectivity... done.
- Note: checking out 'd5c1514db1755de3755cebb1f77081068464b275'.
+ Note: checking out 'd700b43476e803c864c48021e63a78543b60e17e'.
 
  You are in 'detached HEAD' state. You can look around, make experimental
  changes and commit them, and you can discard any commits you make in this
@@ -750,7 +750,7 @@ You can ‘wrap’ the *make* command, which is what will do all the work, in a 
 (See how it took several minutes on my system.  
 It will probably take you a similar amount of time, so either check your email, fiddle with your smartphone, watch the output scroll by, or go to the bathroom really really quick)::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ time make docker
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ time make docker release
    .
    .  (output not shown here)
    .
@@ -758,6 +758,14 @@ It will probably take you a similar amount of time, so either check your email, 
  user	0m13.729s
  sys	0m1.255s
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ 
+
+The *docker* argument to the *make* command will make several Docker images for you.
+Docker images are often based on other, pre-existing Docker images, and you will observe that some Docker images
+are downloaded for you from Hyperledger's public Docker Hub account.
+This is expected behavior.
+
+The *release* argument to the *make* command will compile Hyperledger Fabric binary executable files that can be run natively on Linux, outside of a Docker container.  
+You will use some of those programs later in this lab so I am having you build them now.
 
 **Step 3.8:** Run *docker images* again and you will see several Docker images that were just created. 
 You will notice that many of the Docker images at the top of the output were created in the last few minutes.  
@@ -768,27 +776,24 @@ Your output should look similar to that shown here, although the tags will be di
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric$ docker images
  REPOSITORY                     TAG                 IMAGE ID            CREATED              SIZE
- hyperledger/fabric-tools       latest                             2f932afc62cf        About a minute ago   1.48GB
- hyperledger/fabric-tools       s390x-1.3.0-rc1-snapshot-d5c1514   2f932afc62cf        About a minute ago   1.48GB
- hyperledger/fabric-tools       s390x-latest                       2f932afc62cf        About a minute ago   1.48GB
- <none>                         <none>                             d5a0e21e6752        About a minute ago   1.61GB
- hyperledger/fabric-testenv     latest                             94f5cf342fd1        3 minutes ago        1.53GB
- hyperledger/fabric-testenv     s390x-1.3.0-rc1-snapshot-d5c1514   94f5cf342fd1        3 minutes ago        1.53GB
- hyperledger/fabric-testenv     s390x-latest                       94f5cf342fd1        3 minutes ago        1.53GB
- hyperledger/fabric-buildenv    latest                             811f6744c029        3 minutes ago        1.44GB
- hyperledger/fabric-buildenv    s390x-1.3.0-rc1-snapshot-d5c1514   811f6744c029        3 minutes ago        1.44GB
- hyperledger/fabric-buildenv    s390x-latest                       811f6744c029        3 minutes ago        1.44GB
- hyperledger/fabric-ccenv       latest                             446ba9534733        4 minutes ago        1.39GB
- hyperledger/fabric-ccenv       s390x-1.3.0-rc1-snapshot-d5c1514   446ba9534733        4 minutes ago        1.39GB
- hyperledger/fabric-ccenv       s390x-latest                       446ba9534733        4 minutes ago        1.39GB
- hyperledger/fabric-orderer     latest                             402795f7129d        4 minutes ago        142MB
- hyperledger/fabric-orderer     s390x-1.3.0-rc1-snapshot-d5c1514   402795f7129d        4 minutes ago        142MB
- hyperledger/fabric-orderer     s390x-latest                       402795f7129d        4 minutes ago        142MB
- hyperledger/fabric-peer        latest                             f28d66c114d4        4 minutes ago        149MB
- hyperledger/fabric-peer        s390x-1.3.0-rc1-snapshot-d5c1514   f28d66c114d4        4 minutes ago        149MB
- hyperledger/fabric-peer        s390x-latest                       f28d66c114d4        4 minutes ago        149MB
- hyperledger/fabric-baseimage   s390x-0.4.12                       a2d3919231fa        9 days ago           1.35GB
- hyperledger/fabric-baseos      s390x-0.4.12                       54e371e1a6ee        9 days ago           120MB
+ hyperledger/fabric-tools       latest                         d08700aec890        About a minute ago   1.52GB
+ hyperledger/fabric-tools       s390x-1.4.0-snapshot-d700b43   d08700aec890        About a minute ago   1.52GB
+ hyperledger/fabric-tools       s390x-latest                   d08700aec890        About a minute ago   1.52GB
+ <none>                         <none>                         fbbfa64f6939        About a minute ago   1.68GB
+ hyperledger/fabric-buildenv    latest                         c869d419df0e        2 minutes ago        1.47GB
+ hyperledger/fabric-buildenv    s390x-1.4.0-snapshot-d700b43   c869d419df0e        2 minutes ago        1.47GB
+ hyperledger/fabric-buildenv    s390x-latest                   c869d419df0e        2 minutes ago        1.47GB
+ hyperledger/fabric-ccenv       latest                         609d68d7d5cb        3 minutes ago        1.41GB
+ hyperledger/fabric-ccenv       s390x-1.4.0-snapshot-d700b43   609d68d7d5cb        3 minutes ago        1.41GB
+ hyperledger/fabric-ccenv       s390x-latest                   609d68d7d5cb        3 minutes ago        1.41GB
+ hyperledger/fabric-orderer     latest                         3943ef06d94c        3 minutes ago        147MB
+ hyperledger/fabric-orderer     s390x-1.4.0-snapshot-d700b43   3943ef06d94c        3 minutes ago        147MB
+ hyperledger/fabric-orderer     s390x-latest                   3943ef06d94c        3 minutes ago        147MB
+ hyperledger/fabric-peer        latest                         cf05de3480f5        4 minutes ago        153MB
+ hyperledger/fabric-peer        s390x-1.4.0-snapshot-d700b43   cf05de3480f5        4 minutes ago        153MB
+ hyperledger/fabric-peer        s390x-latest                   cf05de3480f5        4 minutes ago        153MB
+ hyperledger/fabric-baseimage   s390x-0.4.14                   6e4e09df1428        4 months ago         1.38GB
+ hyperledger/fabric-baseos      s390x-0.4.14                   4834a1e3ce1c        4 months ago         120MB
 
 **Step 3.9:** Navigate to the directory where the “end-to-end” test lives::
 

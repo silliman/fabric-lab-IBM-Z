@@ -1070,28 +1070,29 @@ In the prior section, the end-to-end test that you ran supplied its own security
 Therefore it did not need the services of a Certificate Authority.
 
 Almost all "real world" Hyperledger Fabric networks will not be this static-  new users, peers and organizations will probably join the network.  
-They will need PKI x.509 certificates in order to participate.  
+They will need Public Key Infrastructure (PKI) x.509 certificates in order to participate.  
 The Hyperledger Fabric Certificate Authority (CA) is provided by the Hyperledger Fabric project in order to issue these certificates.
 
 The next major goal in this lab is to run the Hyperledger Fabric Node.js SDK’s end-to-end test.  
 This test makes calls to the Hyperledger Fabric Certificate Authority (CA). 
-Therefore, before we can run that test, you will get started by downloading and building the Hyperledger Fabric CA.
+Therefore, in order to get ready for that test, you will download and build the Hyperledger Fabric CA.
 
 **Step 4.1:** Use *cd* to navigate three directory levels up, to the *hyperledger* directory::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric/examples/e2e_cli$ cd ~/git/src/github.com/hyperledger
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ 
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$
 
-**Step 4.2:** Get the source code for the v1.3.0-rc1 release of the Fabric CA using *git*::
+**Step 4.2:** Get the source code for the Fabric CA using *git*::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ git clone -b v1.3.0-rc1 https://gerrit.hyperledger.org/r/fabric-ca
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ git clone -b v1.4.0 --depth 1 https://gerrit.hyperledger.org/r/fabric-ca
  Cloning into 'fabric-ca'...
- remote: Counting objects: 18, done
- remote: Total 11768 (delta 0), reused 11768 (delta 0)
- Receiving objects: 100% (11768/11768), 26.70 MiB | 16.76 MiB/s, done.
- Resolving deltas: 100% (4132/4132), done.
+ remote: Counting objects: 2089, done
+ remote: Finding sources: 100% (2089/2089)
+ remote: Total 2089 (delta 188), reused 1860 (delta 188)
+ Receiving objects: 100% (2089/2089), 6.04 MiB | 0 bytes/s, done.
+ Resolving deltas: 100% (188/188), done.
  Checking connectivity... done.
- Note: checking out 'edb0015bcbe2a8add8f5c50f14b917cb4ddf9cb7'.
+ Note: checking out '27fbd69ab2d0f07212b382eb04aa85c904d2c300'.
 
  You are in 'detached HEAD' state. You can look around, make experimental
  changes and commit them, and you can discard any commits you make in this
@@ -1102,40 +1103,52 @@ Therefore, before we can run that test, you will get started by downloading and 
 
    git checkout -b <new-branch-name>
 
+
 **Step 4.3:** Navigate to the *fabric-ca* directory, which is the top directory of where the *git* command put the code it just downloaded::
 
- bcuser@ubuntu16044:~/git/src/github.com/hyperledger$ cd fabric-ca
- bcuser@ubuntu16044:~/git/src/github.com/hyperledger/fabric-ca$
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger$ cd fabric-ca
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-ca$
 
-**Step 4.4:** Enter the following command, which will build the Hyperledger Fabric CA image.  
-Just like you did with the *fabric* repo, ‘wrap’ the *make* command, which is what will do all the work, in a *time* command, which will give you a measure of the time, including ‘wall clock’ time, required to build the image::
+**Step 4.4:** Enter the following command, which will build the Hyperledger Fabric CA image.  Just like you did with the *fabric* repo, ‘wrap’ the *make* command, which is what will do all the work, in a *time* command, which will give you a measure of the time, including ‘wall clock’ time, required to build the image::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-ca $ time make docker
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-ca $ time FABRIC_CA_DYNAMIC_LINK=true make docker
    .
    .  (output not shown here)
    .
- real	1m22.338s
- user	0m0.320s
- sys	0m0.152s
+ real	1m29.510s
+ user	0m0.313s
+ sys	0m0.160s
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-ca$
 
-**Step 4.5:** Enter the *docker images* command and you will see at the top of the output the Docker image that were just created for the Fabric Certificate Authority::
+**Step 4.5:** Enter the *docker images* command and you will see at the top of the output the Docker image that was just created for the Fabric Certificate Authority::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-ca$ docker images
  REPOSITORY                      TAG                 IMAGE ID            CREATED              SIZE
- hyperledger/fabric-ca          latest                             91082da5dc41        43 seconds ago      218MB
- hyperledger/fabric-ca          s390x-1.3.0-rc1                    91082da5dc41        43 seconds ago      218MB
-   .
-   . (remaining output not shown here)
-   .
+ hyperledger/fabric-ca          latest                         e40a18deb6d6        6 seconds ago       329MB
+ hyperledger/fabric-ca          s390x-1.4.0                    e40a18deb6d6        6 seconds ago       329MB
+ hyperledger/fabric-tools       latest                         d08700aec890        About an hour ago   1.52GB
+ hyperledger/fabric-tools       s390x-1.4.0-snapshot-d700b43   d08700aec890        About an hour ago   1.52GB
+ hyperledger/fabric-tools       s390x-latest                   d08700aec890        About an hour ago   1.52GB
+ <none>                         <none>                         fbbfa64f6939        About an hour ago   1.68GB
+ hyperledger/fabric-buildenv    latest                         c869d419df0e        About an hour ago   1.47GB
+ hyperledger/fabric-buildenv    s390x-1.4.0-snapshot-d700b43   c869d419df0e        About an hour ago   1.47GB
+ hyperledger/fabric-buildenv    s390x-latest                   c869d419df0e        About an hour ago   1.47GB
+ hyperledger/fabric-ccenv       latest                         609d68d7d5cb        About an hour ago   1.41GB
+ hyperledger/fabric-ccenv       s390x-1.4.0-snapshot-d700b43   609d68d7d5cb        About an hour ago   1.41GB
+ hyperledger/fabric-ccenv       s390x-latest                   609d68d7d5cb        About an hour ago   1.41GB
+ hyperledger/fabric-orderer     latest                         3943ef06d94c        About an hour ago   147MB
+ hyperledger/fabric-orderer     s390x-1.4.0-snapshot-d700b43   3943ef06d94c        About an hour ago   147MB
+ hyperledger/fabric-orderer     s390x-latest                   3943ef06d94c        About an hour ago   147MB
+ hyperledger/fabric-peer        latest                         cf05de3480f5        About an hour ago   153MB
+ hyperledger/fabric-peer        s390x-1.4.0-snapshot-d700b43   cf05de3480f5        About an hour ago   153MB
+ hyperledger/fabric-peer        s390x-latest                   cf05de3480f5        About an hour ago   153MB
+ hyperledger/fabric-zookeeper   latest                         5db059b03239        4 months ago        1.42GB
+ hyperledger/fabric-kafka       latest                         3bbd80f55946        4 months ago        1.43GB
+ hyperledger/fabric-couchdb     latest                         7afa6ce179e6        4 months ago        1.55GB
+ hyperledger/fabric-baseimage   s390x-0.4.14                   6e4e09df1428        4 months ago        1.38GB
+ hyperledger/fabric-baseos      s390x-0.4.14                   4834a1e3ce1c        4 months ago        120MB
 
-You may have noticed that for many of the images, the *Image ID* appears twice, once with a tag of *latest*, and once with a tag such as *s390x-1.1.0*. 
-An image can be actually be given any number of tags. 
-Think of these *tags* as nicknames, or aliases.  
-In our case the *make* process first gave the Docker image it created a descriptive tag, *s390x-1.3.0-rc1*, and then it also ‘tagged’ it with a new tag, *latest*.  
-It did that for a reason.  
-When you are working with Docker images, if you specify an image without specifying a tag, the tag defaults to the name *latest*. 
-So, for example, using the above output, you can specify either *hyperledger/fabric-ca*, *hyperledger/fabric-ca:latest*, or *hyperledger/fabric-ca:s390x-1.3.0-rc1*, and in all three cases you are asking for the same image, the image with ID *91082da5dc41*.
+You may have noticed that for many of the images, the *Image ID* appears more than once, e.g., once with a tag of *latest*,  once with a tag such as *s390x-1.4.0-snapshot-d700b43*, and once with a tag of *s390x-latest*. An image can actually be given any number of tags. Think of these *tags* as nicknames, or aliases.  In our case the *make* process first gave the Docker image it created a descriptive tag, *s390x-1.4.0-snapshot-d700b43* in the case of the *fabric* repo, and *s390x-1.4.0* in the case of the *fabric-ca* repo, and then it also ‘tagged’ it with a new tag, *latest*.  It did that for a reason.  When you are working with Docker images, if you specify an image without specifying a tag, the tag defaults to the name *latest*. So, for example, using the above output, you can specify either *hyperledger/fabric-ca*, *hyperledger/fabric-ca:latest*, or *hyperledger/fabric-ca:s390x-1.4.0*, and in all three cases you are asking for the same image, the image with ID *e40a18deb6d6*.
 
 **Recap:** In this section, you downloaded the source code for the Hyperledger Fabric Certificate Authority and built it.  That was easy.
  
@@ -1158,23 +1171,24 @@ Then you will download the Hyperledger Fabric Node.js SDK and install npm packag
 **Step 5.2:** Retrieve the *Node.js* package with this command::
 
  bcuser@ubuntu16045:/tmp$ wget https://nodejs.org/dist/v8.11.3/node-v8.11.3-linux-s390x.tar.xz
- --2018-09-27 15:05:04--  https://nodejs.org/dist/v8.11.3/node-v8.11.3-linux-s390x.tar.xz
- Resolving nodejs.org (nodejs.org)... 104.20.22.46, 104.20.23.46, 2400:cb00:2048:1::6814:172e, ...
+ --2019-03-07 17:58:29--  https://nodejs.org/dist/v8.11.3/node-v8.11.3-linux-s390x.tar.xz
+ Resolving nodejs.org (nodejs.org)... 104.20.22.46, 104.20.23.46, 2606:4700:10::6814:162e, ...
  Connecting to nodejs.org (nodejs.org)|104.20.22.46|:443... connected.
  HTTP request sent, awaiting response... 200 OK
  Length: 10939304 (10M) [application/x-xz]
  Saving to: 'node-v8.11.3-linux-s390x.tar.xz'
 
- node-v8.11.3-linux-s390x.tar.xz            100%[=====================================================================================>]  10.43M  46.9MB/s    in 0.2s    
+ node-v8.11.3-linux-s390x.tar.xz 100%[======================================================>]  10.43M  68.6MB/s    in 0.2s    
 
- 2018-09-27 15:05:04 (46.9 MB/s) - 'node-v8.11.3-linux-s390x.tar.xz' saved [10939304/10939304]
-
+ 2019-03-07 17:58:29 (68.6 MB/s) - 'node-v8.11.3-linux-s390x.tar.xz' saved [10939304/10939304]
 
 **Step 5.3:** Extract the package underneath your home directory, */home/bcuser*. 
 This will cause the executables to wind up in */home/bcuser/bin*, which is in your path::
 
  bcuser@ubuntu16045:/tmp$ cd /home/bcuser && tar --strip-components=1 -xf /tmp/node-v8.11.3-linux-s390x.tar.xz
  bcuser@ubuntu16045:~$ 
+
+*Confession time:* */home/bcuser/bin* is in your path because I snuck that in there in *Step 2.38* while you were setting up *Go* even though that directory has nothing to do with Go!  That's called "killing two birds with one stone", a phrase soon to be made illegal and to be replaced with "feeding two birds with one scone".
 
 **Step 5.4:** Issue this command to see where *node* resides within your path::
 
@@ -1201,16 +1215,17 @@ This will cause the executables to wind up in */home/bcuser/bin*, which is in yo
  bcuser@ubuntu16045:~$ cd ~/git/src/github.com/hyperledger/
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger$
 
-**Step 5.9:** Now you will download the version 1.2.2 release of the Hyperledger Fabric Node SDK source code from its official repository::
+**Step 5.9:** Now you will download the Hyperledger Fabric Node SDK source code from its official repository::
 
- bcuser@ubuntu16045: ~/git/src/github.com/hyperledger $ git clone -b v1.2.2 https://gerrit.hyperledger.org/r/fabric-sdk-node
+ bcuser@ubuntu16045: ~/git/src/github.com/hyperledger $ git clone -b v1.4.0 --depth 1 https://gerrit.hyperledger.org/r/fabric-sdk-node
  Cloning into 'fabric-sdk-node'...
- remote: Counting objects: 21, done
- remote: Total 10603 (delta 0), reused 10603 (delta 0)
- Receiving objects: 100% (10603/10603), 7.49 MiB | 9.48 MiB/s, done.
- Resolving deltas: 100% (5225/5225), done.
+ remote: Counting objects: 711, done
+ remote: Finding sources: 100% (711/711)
+ remote: Total 711 (delta 36), reused 527 (delta 36)
+ Receiving objects: 100% (711/711), 847.68 KiB | 0 bytes/s, done.
+ Resolving deltas: 100% (36/36), done.
  Checking connectivity... done.
- Note: checking out 'f5b275e9e6c78e25f26b431c5314f04b0b234122'.
+ Note: checking out 'a8d4c2bd564d61e94e24d2c422d9d9816ba40ed0'.
 
  You are in 'detached HEAD' state. You can look around, make experimental
  changes and commit them, and you can discard any commits you make in this
@@ -1226,77 +1241,79 @@ This will cause the executables to wind up in */home/bcuser/bin*, which is in yo
  bcuser@ubuntu16045: ~/git/src/github.com/hyperledger $ cd fabric-sdk-node
  bcuser@ubuntu16045: ~/git/src/github.com/hyperledger/fabric-sdk-node$
 
-**Step 5.11:** Run *npm install* to install the required packages that the Hyperledger Fabric Node SDK would like to use.
-This will take a few minutes and will produce a lot of output::
+**Step 5.11:** You are about to install the packages that the Hyperledger Fabric Node SDK would like to use. Before you start, 
+run *npm list* to see that you are starting with a blank slate::
 
- bcuser@ubuntu16044: ~/git/src/github.com/hyperledger/fabric-sdk-node$ npm install
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ npm list
+ fabric-sdk-node@1.4.0 /home/bcuser/git/src/github.com/hyperledger/fabric-sdk-node
+ `-- (empty)
+ 
+ bcuser@ubuntu16045: ~/git/src/github.com/hyperledger/fabric-sdk-node$
+
+**Step 5.12:** Run *npm install* to install the required packages.  This will take a few minutes and will produce a lot of output::
+
+ bcuser@ubuntu16045: ~/git/src/github.com/hyperledger/fabric-sdk-node$ npm install
    .
    . (output not shown here)
    .
- added 1438 packages in 68.335s
- 
-bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$
+ npm notice created a lockfile as package-lock.json. You should commit this file.
+ npm WARN gulp-debug@4.0.0 requires a peer of gulp@>=4 but none is installed. You must install peer dependencies yourself.
+ npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 (node_modules/fsevents):
+ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.7: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"s390x"})
 
-You may ignore the *WARN* messages throughout the output, and there may even be some messages that look like error messages, but the npm installation program may be expecting such conditions and working through it.  
-If there is a serious error, the end of the output will leave little doubt about it.
+ added 1512 packages in 100.572s
 
-**Step 5.12:** Run the *npm list* command.  
-The output, although not shown here, will show a long list of installed packages.  
-This just proves what 
-everyone suspected-  programmers would much rather use other peoples’ code than write their own.  
-Not that there’s anything wrong with that. 
-You can even steal this lab if you want to.
+You may ignore the *WARN* messages throughout the output, and there may even be some messages that look like error messages, but the npm installation program may be expecting such conditions and working through it.  If there is a serious error, the end of the output will leave little doubt about it.
 
-There may be several messages regarding unmet dependencies and missing prerequisites and the like, but you can ignore those for the purposes of this lab
+**Step 5.13:** Repeat the *npm list* command.  The output, although not shown here, will be anything but empty.  This just proves what everyone suspected-  programmers would much rather use other peoples’ code than write their own.  Not that there’s anything wrong with that. You can even steal this lab if you want to.
 ::
-
  bcuser@ubuntu16045: ~/git/src/github.com/hyperledger/fabric-sdk-node$ npm list
    .
-   . (output not shown here)
+   . (output not shown here, but surely you will agree it is not empty)
    .
  bcuser@ubuntu16045: ~/git/src/github.com/hyperledger/fabric-sdk-node$
 
-**Step 5.13:** The tests use an automation tool named *gulp*, but before you install it, 
+**Step 5.14:** The tests use an automation tool named *gulp*, but before you install it, 
 run the *which* command. The silent treatment it gives you confirms it is not available to you::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ which gulp
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ 
 
-**Step 5.14:** Now install *gulp* at a global level, using the *-g* argument to the *npm install*. 
+**Step 5.15:** Now install *gulp* at a global level, using the *-g* argument to the *npm install*. 
 This makes the package  available on a system-wide basis::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ npm install -g gulp
- npm WARN deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
- npm WARN deprecated graceful-fs@3.0.11: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
- npm WARN deprecated minimatch@2.0.10: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
- npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
- npm WARN deprecated graceful-fs@1.2.3: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
- /home/bcuser/bin/gulp -> /home/bcuser/lib/node_modules/gulp/bin/gulp.js
- + gulp@3.9.1
- added 253 packages in 4.726s
+ npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 (node_modules/gulp/node_modules/fsevents):
+ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.7: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"s390x"})
+
+ + gulp@4.0.0
+ added 316 packages in 9.875s
 
 **NOTE:** These warnings can be ignored for the purposes of this lab, but in a production environment you should probably take the warnings more seriously.
  
-**Step 5.15:** Running *which* again shows that *gulp* is available to you now::
+**Step 5.16:** Running *which* again shows that *gulp* is available to you now::
  
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ which gulp
  /home/bcuser/bin/gulp
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$
 
-**Step 5.16:** Next you will install a code coverage testing tool named *istanbul*, also at a global level.  
+**Step 5.17:** Next you will install a code coverage testing tool named *istanbul*, also at a global level.  
 But first, use *which* to prove it isn't there yet::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ which istanbul
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ 
  
-**Step 5.17:** Install it globally::
+**Step 5.18:** Install it globally::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ npm install -g istanbul
+ npm WARN deprecated istanbul@0.4.5: This module is no longer maintained, try this instead:
+ npm WARN deprecated   npm i nyc
+ npm WARN deprecated Visit https://istanbul.js.org/integrations for other alternatives.
  /home/bcuser/bin/istanbul -> /home/bcuser/lib/node_modules/istanbul/lib/cli.js
  + istanbul@0.4.5
- added 48 packages in 1.677s
+ added 48 packages in 1.93s
 
-**Step 5.18:** Prove it worked::
+**Step 5.19:** Prove it worked::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ which istanbul
  /home/bcuser/bin/istanbul
@@ -1307,335 +1324,502 @@ But first, use *which* to prove it isn't there yet::
 *	Installed Node.js and npm
 *	Downloaded the Hyperledger Fabric Node.js SDK
 *	Installed the *npm* packages required by the Hyperledger Fabric Node.js SDK
-*	Installed the *gulp* and *istanbul* packages so that you are ready to run the Hyperledger Fabric Node.js SDK end-to-end test (which you will do in the next section)
- 
+*	Installed the *gulp* and *istanbul* packages so that you are ready to run the Hyperledger Fabric Node.js SDK end-to-end test (which you will do in the next section) 
+
 Section 6: Run the Hyperledger Fabric Node.js SDK end-to-end test
 =================================================================
 In this section, you will run two tests provided by the Hyperledger Fabric Node.js SDK, verify their successful operation, and clean up afterwards.
 
-The first test is a quick test that takes abot a minute, and does not bring up any chaincode containers.  
-The second test is the "end-to-end" test, as it is much more comprehensive and will bring up several chaincode containers and will take several minutes.
+The first test is a quick test that takes about a minute and does not bring up any chaincode containers.  The second test is the "end-to-end" test, as it is much more comprehensive and will bring up several chaincode containers and will take several minutes.
 
-**Step 6.1:** The first test is very simple and can be run simply by running *npm test*::
+**Step 6.1:** The first test is very simple and can be run simply by running *npm test*.
+I am going to show some snippets from the output below- there will be much more output between the snippets I'm showing here.
+You can watch the test progress and then when it ends, see if you can scroll up through the output and find what I'm showing here::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ npm test
+ > fabric-sdk-node@1.4.0 test /home/bcuser/git/src/github.com/hyperledger/fabric-sdk-node
+ > gulp test-headless
+
+
+ ####################################################
+ # debug log: /tmp/hfc/test-log/debug.log
+ ####################################################
+
+ [ 16:28:49] Using gulpfile ~/git/src/github.com/hyperledger/fabric-sdk-node/gulpfile.js
+ [ 16:28:49] Starting 'test-headless'...
+
+ ####################################################
+ # debug log: /tmp/hfc/test-log/debug.log
+ ####################################################
+
+ [16:28:50] Using gulpfile ~/git/src/github.com/hyperledger/fabric-sdk-node/gulpfile.js
+ [16:28:50] Starting 'run-test-headless'...
+ [16:28:50] Starting 'clean-up'...
+ [16:28:50] Finished 'clean-up' after 967 μs
+ [16:28:50] Starting 'pre-test'...
+ [16:28:50] Finished 'pre-test' after 65 ms
+ [16:28:50] Starting 'ca'...
    .
-   . (initial output not shown)
+   . (output not shown)
    .
- 1..1236
- # tests 1236
- # pass  1236
+ 
+  188 passing (487ms)
+
+ [16:29:01] Finished 'mocha-fabric-ca-client' after 2.2 s
+ [16:29:01] Starting 'mocha-fabric-client'...
+
+   .
+   . (output not shown)
+   .
+ 
+  249 passing (2s)
+
+ [16:29:17] Finished 'mocha-fabric-network' after 4.52 s
+ [16:29:17] Finished 'run-test-mocha' after 18 s
+ [16:29:17] Starting 'run-tape-unit'...
+
+   .
+   . (output not shown)
+   .
+
+ 1..685
+ # tests 685
+ # pass  685
 
  # ok
 
- [16:17:49] Finished 'run-test-headless' after 1.1 min
- ---------------------------------|----------|----------|----------|----------|-------------------|
- File                             |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
- ---------------------------------|----------|----------|----------|----------|-------------------|
- All files                        |    64.95 |    57.66 |    66.93 |       65 |                   |
-  fabric-ca-client/lib            |    63.68 |    59.59 |    51.85 |    63.68 |                   |
-   AffiliationService.js          |    66.67 |       70 |      100 |    66.67 |... 82,185,186,189 |
-   FabricCAClientImpl.js          |    62.58 |    59.24 |    44.62 |    62.58 |... 54,955,957,960 |
-   IdentityService.js             |    63.64 |    46.15 |    66.67 |    63.64 |... 46,248,249,252 |
-   helper.js                      |      100 |      100 |      100 |      100 |                   |
-  fabric-client/lib               |    63.95 |    57.49 |    68.25 |       64 |                   |
-   BaseClient.js                  |    93.33 |    91.67 |    92.86 |    93.33 |           119,196 |
-   BlockDecoder.js                |    69.78 |    52.94 |    72.41 |    70.11 |... 1393,1395,1396 |
-   CertificateAuthority.js        |       75 |      100 |       50 |       75 |... 60,167,174,181 |
-   Channel.js                     |    44.59 |    38.13 |     58.4 |    44.53 |... 3379,3381,3384 |
-   ChannelEventHub.js             |    64.35 |    55.83 |    68.75 |    64.72 |... 1317,1318,1320 |
-   Client.js                      |    75.25 |    76.06 |    80.23 |    75.07 |... 1925,1928,1931 |
-   Config.js                      |    91.18 |       75 |      100 |    91.18 |          55,73,90 |
-   Constants.js                   |      100 |      100 |      100 |      100 |                   |
-   EventHub.js                    |    69.18 |    63.78 |    68.75 |     69.3 |... 18,819,824,843 |
-   Orderer.js                     |    24.26 |    17.24 |    31.58 |    24.26 |... 82,283,284,286 |
-   Organization.js                |     97.5 |      100 |    94.12 |      100 |                   |
-   Packager.js                    |    90.91 |    91.67 |      100 |    90.91 |             50,51 |
-   Peer.js                        |    50.67 |    31.25 |    38.46 |    50.67 |... 71,172,174,175 |
-   Policy.js                      |    89.83 |    88.68 |       80 |    89.83 |... 36,237,239,245 |
-   Remote.js                      |    84.85 |    79.69 |       90 |    84.85 |... 82,183,184,234 |
-   SideDB.js                      |    74.14 |    96.15 |       80 |    74.14 |... 19,121,127,129 |
-   TransactionID.js               |    95.83 |    83.33 |      100 |    95.83 |                39 |
-   User.js                        |     82.8 |    64.29 |    78.95 |     82.8 |... 33,235,256,263 |
-   api.js                         |    41.94 |        0 |    13.79 |    41.94 |... 69,401,408,417 |
-   client-utils.js                |    88.79 |    72.97 |    86.67 |    88.79 |... 28,186,199,201 |
-   hash.js                        |      100 |      100 |      100 |      100 |                   |
-   utils.js                       |    75.78 |    72.66 |    75.61 |    75.78 |... 93,595,597,600 |
-  fabric-client/lib/impl          |    68.72 |    61.69 |    70.08 |     68.6 |                   |
-   BasicCommitHandler.js          |    76.47 |       70 |      100 |    76.47 |... 27,128,131,132 |
-   CouchDBKeyValueStore.js        |    76.71 |       60 |    93.33 |    77.46 |... 46,147,160,161 |
-   CryptoKeyStore.js              |      100 |     87.5 |      100 |      100 |             42,76 |
-   CryptoSuite_ECDSA_AES.js       |     84.4 |    71.84 |    78.95 |       85 |... 78,307,324,330 |
-   DiscoveryEndorsementHandler.js |    79.44 |    69.33 |      100 |    79.44 |... 94,296,304,306 |
-   FileKeyValueStore.js           |    91.89 |    83.33 |      100 |    91.89 |          47,48,65 |
-   NetworkConfig_1_0.js           |    98.06 |    85.05 |      100 |    98.03 |... 02,416,449,450 |
-   bccsp_pkcs11.js                |     25.8 |    30.97 |     8.33 |    24.25 |... 1051,1055,1056 |
-  fabric-client/lib/impl/aes      |    11.11 |        0 |        0 |    11.11 |                   |
-   pkcs11_key.js                  |    11.11 |        0 |        0 |    11.11 |... 39,43,47,51,55 |
-  fabric-client/lib/impl/ecdsa    |       50 |    31.25 |       45 |    51.82 |                   |
-   key.js                         |    98.46 |    96.15 |      100 |    98.46 |               182 |
-   pkcs11_key.js                  |     9.09 |        0 |        0 |     9.72 |... 54,158,159,161 |
-  fabric-client/lib/msp           |    75.44 |    60.49 |       70 |    75.74 |                   |
-   identity.js                    |    88.24 |    64.52 |    76.92 |    88.24 |... 86,105,106,214 |
-   msp-manager.js                 |       75 |    72.73 |    85.71 |       76 |... 15,116,117,146 |
-   msp.js                         |    66.18 |    46.43 |       50 |    66.18 |... 38,139,181,182 |
-  fabric-client/lib/packager      |     88.7 |    60.71 |    87.18 |     88.6 |                   |
-   BasePackager.js                |    81.48 |    44.44 |    78.95 |    81.48 |... 30,145,168,186 |
-   Car.js                         |       60 |      100 |        0 |       60 |             16,17 |
-   Golang.js                      |      100 |      100 |      100 |      100 |                   |
-   Node.js                        |    96.43 |       75 |      100 |     96.3 |                75 |
- ---------------------------------|----------|----------|----------|----------|-------------------| 
+ [16:30:00] Finished 'run-tape-unit' after 43 s
+ [16:30:00] Starting 'run-logger-unit'...
+
+ 1..11
+ # tests 11
+ # pass  11
+
+ # ok
+
+ [16:30:01] Finished 'run-logger-unit' after 1.05 s
+ ERROR: Coverage for lines (84.28%) does not meet global threshold (85%)
+ ERROR: Coverage for branches (79.42%) does not meet global threshold (80%)
+ ERROR: Coverage for statements (84.3%) does not meet global threshold (85%)
+ -----------------------------------|----------|----------|----------|----------|-------------------|
+ File                               |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+ -----------------------------------|----------|----------|----------|----------|-------------------|
+ All files                          |     84.3 |    79.42 |    91.11 |    84.28 |                   |
+  fabric-ca-client/lib              |      100 |    99.02 |      100 |      100 |                   |
+   AffiliationService.js            |      100 |      100 |      100 |      100 |                   |
+   IdentityService.js               |      100 |      100 |      100 |      100 |                   |
+   helper.js                        |      100 |       95 |      100 |      100 |                67 |
+  fabric-client/lib                 |    86.26 |    84.58 |    95.98 |    86.25 |                   |
+   BaseClient.js                    |      100 |      100 |      100 |      100 |                   |
+   BlockDecoder.js                  |      100 |      100 |      100 |      100 |                   |
+   CertificateAuthority.js          |      100 |      100 |      100 |      100 |                   |
+   Channel.js                       |    59.34 |    56.19 |    83.33 |    59.31 |... 4043,4045,4047 |
+   ChannelEventHub.js               |    99.18 |       99 |      100 |    99.18 |... 12,413,547,548 |
+   Client.js                        |      100 |    99.75 |      100 |      100 |               162 |
+   Config.js                        |      100 |      100 |      100 |      100 |                   |
+   Constants.js                     |      100 |      100 |      100 |      100 |                   |
+   Orderer.js                       |      100 |      100 |      100 |      100 |                   |
+   Organization.js                  |      100 |      100 |      100 |      100 |                   |
+   Package.js                       |      100 |      100 |      100 |      100 |                   |
+   Packager.js                      |      100 |      100 |      100 |      100 |                   |
+   Peer.js                          |      100 |       95 |      100 |      100 |             74,79 |
+   Policy.js                        |      100 |    93.88 |      100 |      100 |        81,171,191 |
+   ProtoLoader.js                   |      100 |      100 |      100 |      100 |                   |
+   Remote.js                        |      100 |      100 |      100 |      100 |                   |
+   SideDB.js                        |      100 |      100 |      100 |      100 |                   |
+   TransactionID.js                 |      100 |      100 |      100 |      100 |                   |
+   User.js                          |      100 |    98.33 |      100 |      100 |                61 |
+   api.js                           |      100 |      100 |      100 |      100 |                   |
+   client-utils.js                  |      100 |      100 |      100 |      100 |                   |
+   hash.js                          |      100 |      100 |      100 |      100 |                   |
+   utils.js                         |    89.41 |     87.9 |    94.29 |    89.41 |... 59,561,563,566 |
+  fabric-client/lib/impl            |    69.02 |    63.78 |    70.99 |    68.99 |                   |
+   BasicCommitHandler.js            |    73.33 |       70 |      100 |    73.33 |... 19,120,123,124 |
+   CouchDBKeyValueStore.js          |    76.71 |       60 |    93.33 |    76.71 |... 50,152,166,167 |
+   CryptoKeyStore.js                |      100 |     87.5 |      100 |      100 |             43,77 |
+   CryptoSuite_ECDSA_AES.js         |    86.23 |    83.91 |    78.95 |    86.23 |... 78,307,324,330 |
+   DiscoveryEndorsementHandler.js   |    78.68 |    65.85 |      100 |    78.68 |... 42,444,452,454 |
+   FileKeyValueStore.js             |    91.89 |    83.33 |      100 |    91.89 |          47,48,65 |
+   NetworkConfig_1_0.js             |     98.3 |    87.08 |      100 |     98.3 |   381,395,428,429 |
+   bccsp_pkcs11.js                  |    25.88 |    32.41 |     8.33 |    25.88 |... 1075,1079,1080 |
+  fabric-client/lib/impl/aes        |    11.11 |        0 |        0 |    11.11 |                   |
+   pkcs11_key.js                    |    11.11 |        0 |        0 |    11.11 |... 46,50,54,58,62 |
+  fabric-client/lib/impl/ecdsa      |    49.29 |    31.25 |       45 |    49.29 |                   |
+   key.js                           |    98.41 |    96.15 |      100 |    98.41 |               183 |
+   pkcs11_key.js                    |     9.09 |        0 |        0 |     9.09 |... 71,175,176,179 |
+  fabric-client/lib/msp             |    79.65 |    69.62 |    73.33 |    79.65 |                   |
+   identity.js                      |    87.04 |    75.76 |    76.92 |    87.04 |... 97,107,203,230 |
+   msp-manager.js                   |    86.54 |    77.27 |      100 |    86.54 |... 1,82,83,84,155 |
+   msp.js                           |    68.18 |    54.17 |       50 |    68.18 |... 35,137,138,179 |
+  fabric-client/lib/packager        |      100 |      100 |      100 |      100 |                   |
+   BasePackager.js                  |      100 |      100 |      100 |      100 |                   |
+   Car.js                           |      100 |      100 |      100 |      100 |                   |
+   Golang.js                        |      100 |      100 |      100 |      100 |                   |
+   Java.js                          |      100 |      100 |      100 |      100 |                   |
+   Node.js                          |      100 |      100 |      100 |      100 |                   |
+  fabric-client/lib/utils           |      100 |      100 |      100 |      100 |                   |
+   ChannelHelper.js                 |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib                |      100 |      100 |      100 |      100 |                   |
+   contract.js                      |      100 |      100 |      100 |      100 |                   |
+   gateway.js                       |      100 |      100 |      100 |      100 |                   |
+   logger.js                        |      100 |      100 |      100 |      100 |                   |
+   network.js                       |      100 |      100 |      100 |      100 |                   |
+   transaction.js                   |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/api            |      100 |      100 |      100 |      100 |                   |
+   queryhandler.js                  |      100 |      100 |      100 |      100 |                   |
+   wallet.js                        |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/impl/event     |      100 |      100 |      100 |      100 |                   |
+   abstracteventstrategy.js         |      100 |      100 |      100 |      100 |                   |
+   allfortxstrategy.js              |      100 |      100 |      100 |      100 |                   |
+   anyfortxstrategy.js              |      100 |      100 |      100 |      100 |                   |
+   defaulteventhandlerstrategies.js |      100 |      100 |      100 |      100 |                   |
+   eventhubfactory.js               |      100 |      100 |      100 |      100 |                   |
+   transactioneventhandler.js       |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/impl/query     |      100 |      100 |      100 |      100 |                   |
+   defaultqueryhandler.js           |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/impl/wallet    |      100 |      100 |      100 |      100 |                   |
+   basewallet.js                    |      100 |      100 |      100 |      100 |                   |
+   couchdbwallet.js                 |      100 |      100 |      100 |      100 |                   |
+   filesystemwallet.js              |      100 |      100 |      100 |      100 |                   |
+   hsmwalletmixin.js                |      100 |      100 |      100 |      100 |                   |
+   inmemorywallet.js                |      100 |      100 |      100 |      100 |                   |
+   x509walletmixin.js               |      100 |      100 |      100 |      100 |                   |
+ -----------------------------------|----------|----------|----------|----------|-------------------|
 
  =============================== Coverage summary ===============================
- Statements   : 64.95% ( 4369/6727 )
- Branches     : 57.66% ( 1845/3200 )
- Functions    : 66.93% ( 597/892 )
- Lines        : 65% ( 4339/6675 )
+ Statements   : 84.3% ( 6146/7291 )
+ Branches     : 79.42% ( 2501/3149 )
+ Functions    : 91.11% ( 871/956 )
+ Lines        : 84.28% ( 6137/7282 )
  ================================================================================
- [16:17:50] Finished 'test-headless' after 1.2 min
+ [18:35:46] 'test-headless' errored after 1.28 min
+ [18:35:46] Error in plugin "gulp-shell"
+ Message:
+     Command `npx nyc gulp run-test-headless` failed with exit code 1
+ npm ERR! Test failed.  See above for more details. 
 
+Like Tom Brady, I hate to fail. 
+What's going on, here?
+Well the test has some thresholds for how much of the code in various places should be covered by the test. 
+Scroll back up past those crazy columns of numbers and observe these error messages again::
 
-You may have seen some messages scroll by that looked like errors or exceptions, but chances are they were expected to occur within the test cases-  the key indicator of this is that of the 1,236 tests, all of them passed.  
+  ERROR: Coverage for lines (84.36%) does not meet global threshold (85%)
+  ERROR: Coverage for branches (79.52%) does not meet global threshold (80%)
+  ERROR: Coverage for statements (84.38%) does not meet global threshold (85%)
 
+Way back in Hyperledger Fabric 1.3 the coverage for branches was only 77.59% and the Fabric Node.js SDK developers got that coverage all the way up to 79.42%, and instead of being thanked for it, what do they get?
+A big fat ERROR message.
+They do and do and do for us and this is the thanks they get?
+Sort of like your sales quota gets raised every year so you just can't quite reach it, isn't it?
+Gentlemen, it's sorta' like the reaction you get from your wife when you buy her a vacuum cleaner for your anniversary.  
+**ERROR**.  Even if it is a top-of-the-line Dyson.  Don't ask me how I know this.
 
-**Step 6.2:** Run the end-to-end tests with the *gulp test* command.  
-While this command is running, a little bit of the output may look like errors, but some of the tests expect errors, so the real indicator is, again, like the first test, whether or not all tests passed::
+**Step 6.2:** The prior test was quick.  The functionality it exercised did not actually require any chaincode Docker images or containers. This next test does. It sure does. Run this end-to-end test with the *gulp test* command.  While this command is running, a little bit of the output may look like errors, but some of the tests expect errors, so the real indicator is whether or not all tests passed. Enter this command and while you're waiting for the command to complete, scroll down in this lab and read the commentary after the command output. After you've done that and finished your lunch, scroll back up through the output as much as you can or feel like it, and see if you can find the snippets of output I've chosen to show here::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ gulp test
    .
    . (lots of output not shown here)
    . 
  
- 1..2256
- # tests 2256
- # pass  2256
+  188 passing (468ms)
+
+ [18:29:23] Finished 'mocha-fabric-ca-client' after 1.63 s
+ [18:29:23] Starting 'mocha-fabric-client'...
+
+   .
+   . (lots of output not shown here)
+   . 
+ 
+
+  1115 passing (2s)
+
+ [18:29:28] Finished 'mocha-fabric-client' after 4.22 s
+ [18:29:28] Starting 'mocha-fabric-network'...
+
+   .
+   . (lots of output not shown here)
+   . 
+
+  249 passing (2s)
+
+ [18:29:31] Finished 'mocha-fabric-network' after 3.34 s
+ [18:29:31] Finished 'run-test-mocha' after 9.19 s
+ [18:29:31] Starting 'run-tape-unit'...
+
+   .
+   . (lots of output not shown here)
+   . 
+
+ 1..685
+ # tests 685
+ # pass  685
 
  # ok
 
- [16:34:20] Finished 'run-test' after 12 min
- ---------------------------------|----------|----------|----------|----------|-------------------|
- File                             |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
- ---------------------------------|----------|----------|----------|----------|-------------------|
- All files                        |    85.13 |    73.31 |    83.63 |    85.29 |                   |
-  fabric-ca-client/lib            |    94.87 |    89.38 |    93.83 |    94.87 |                   |
-   AffiliationService.js          |    98.33 |       96 |      100 |    98.33 |               186 |
-   FabricCAClientImpl.js          |    95.09 |    89.67 |    93.85 |    95.09 |... 31,949,957,960 |
-   IdentityService.js             |    90.91 |    80.77 |    88.89 |    90.91 |... 37,240,243,249 |
-   helper.js                      |      100 |      100 |      100 |      100 |                   |
-  fabric-client/lib               |    89.05 |    76.96 |    87.44 |    89.16 |                   |
-   BaseClient.js                  |    93.33 |    91.67 |    92.86 |    93.33 |           119,196 |
-   BlockDecoder.js                |    91.37 |    65.69 |    98.28 |    91.85 |... 1377,1392,1393 |
-   CertificateAuthority.js        |    80.56 |      100 |    61.11 |    80.56 |... 60,167,174,181 |
-   Channel.js                     |    87.17 |    71.06 |     90.4 |    87.26 |... 3379,3381,3384 |
-   ChannelEventHub.js             |    88.56 |    82.92 |    89.58 |    88.68 |... 1256,1313,1320 |
-   Client.js                      |    92.91 |    87.09 |    93.02 |    92.86 |... 1925,1928,1931 |
-   Config.js                      |    94.12 |     87.5 |      100 |    94.12 |             73,90 |
-   Constants.js                   |      100 |      100 |      100 |      100 |                   |
-   EventHub.js                    |    91.54 |    81.89 |    96.88 |    91.79 |... 01,602,815,824 |
-   Orderer.js                     |    71.32 |    48.28 |    84.21 |    71.32 |... 82,283,284,286 |
-   Organization.js                |     97.5 |      100 |    94.12 |      100 |                   |
-   Packager.js                    |    90.91 |    91.67 |      100 |    90.91 |             50,51 |
-   Peer.js                        |    89.33 |    78.13 |      100 |    89.33 |... 21,167,174,175 |
-   Policy.js                      |    99.15 |    92.45 |      100 |    99.15 |               149 |
-   Remote.js                      |    90.91 |    90.63 |       90 |    90.91 |... 82,183,184,234 |
-   SideDB.js                      |      100 |      100 |      100 |      100 |                   |
-   TransactionID.js               |    95.83 |    83.33 |      100 |    95.83 |                39 |
-   User.js                        |     91.4 |    73.21 |    89.47 |     91.4 |... 13,218,219,235 |
-   api.js                         |    41.94 |        0 |    13.79 |    41.94 |... 69,401,408,417 |
-   client-utils.js                |    95.33 |    81.08 |      100 |    95.33 |56,128,186,199,201 |
-   hash.js                        |      100 |      100 |      100 |      100 |                   |
-   utils.js                       |    80.47 |    75.78 |    78.05 |    80.47 |... 93,452,531,597 |
-  fabric-client/lib/impl          |    71.62 |    64.35 |    70.08 |    71.56 |                   |
-   BasicCommitHandler.js          |    89.71 |       85 |      100 |    89.71 |... 27,128,131,132 |
-   CouchDBKeyValueStore.js        |    80.82 |    63.33 |    93.33 |    81.69 |... 46,147,160,161 |
-   CryptoKeyStore.js              |      100 |     87.5 |      100 |      100 |             42,76 |
-   CryptoSuite_ECDSA_AES.js       |     84.4 |    71.84 |    78.95 |       85 |... 78,307,324,330 |
-   DiscoveryEndorsementHandler.js |    91.11 |       84 |      100 |    91.11 |... 94,296,304,306 |
-   FileKeyValueStore.js           |    91.89 |    83.33 |      100 |    91.89 |          47,48,65 |
-   NetworkConfig_1_0.js           |    98.06 |     86.6 |      100 |    98.03 |... 02,416,449,450 |
-   bccsp_pkcs11.js                |     25.8 |    30.97 |     8.33 |    24.25 |... 1051,1055,1056 |
-  fabric-client/lib/impl/aes      |    11.11 |        0 |        0 |    11.11 |                   |
-   pkcs11_key.js                  |    11.11 |        0 |        0 |    11.11 |... 39,43,47,51,55 |
-  fabric-client/lib/impl/ecdsa    |       50 |    31.25 |       45 |    51.82 |                   |
-   key.js                         |    98.46 |    96.15 |      100 |    98.46 |               182 |
-   pkcs11_key.js                  |     9.09 |        0 |        0 |     9.72 |... 54,158,159,161 |
-  fabric-client/lib/msp           |    80.12 |    62.96 |    76.67 |    79.88 |                   |
-   identity.js                    |    92.16 |    67.74 |    84.62 |    92.16 |     42,86,105,106 |
-   msp-manager.js                 |    86.54 |    77.27 |      100 |       86 |... 5,76,77,78,146 |
-   msp.js                         |    66.18 |    46.43 |       50 |    66.18 |... 38,139,181,182 |
-  fabric-client/lib/packager      |     88.7 |    60.71 |    87.18 |     88.6 |                   |
-   BasePackager.js                |    81.48 |    44.44 |    78.95 |    81.48 |... 30,145,168,186 |
-   Car.js                         |       60 |      100 |        0 |       60 |             16,17 |
-   Golang.js                      |      100 |      100 |      100 |      100 |                   |
-   Node.js                        |    96.43 |       75 |      100 |     96.3 |                75 |
- ---------------------------------|----------|----------|----------|----------|-------------------|
-
- =============================== Coverage summary ===============================
- Statements   : 85.13% ( 5727/6727 )
- Branches     : 73.31% ( 2346/3200 )
- Functions    : 83.63% ( 746/892 )
- Lines        : 85.29% ( 5693/6675 )
- ================================================================================
- [16:34:31] Finished 'test' after 13 min
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$
-
-**NOTE:** When this lab was first written, this test would use the Docker images that you created in the first sections of this lab.  
-Since then, this test will now retrieve the images you created from the public Docker Hub repository. 
-It would be possible to tailor this test so that it uses the images that you built earlier, but that is an advanced topic beyond the scope of this lab.  
-In fact, as of this update (late September 2018) the most recent tag in the *fabric-node-sdk* repo, *v1.2.2*, is looking for Hyperledger Fabric v1.2 images, whereas in the prior steps I had you build using the most recent tag (again, as of late September 2018) in the *fabric* and *fabric-ca repo*, which was *v1.3.0-rc1* for both.
-
-**Step 6.3:** (Optional) What I really like about the second end-to-end test is that it cleans itself up really well at the beginning- that is, it will remove any artifacts left running at the end of the prior test, so if you wanted to, you could simply enter *gulp test* again if you'd like to see this for yourself and have several minutes to spare.  
-If you're pressed for time, skip this step::
-
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ gulp test
    .
-   . (output not shown here)
+   . (lots of output not shown here)
    . 
 
-**Step 6.4:** Enter this command to see what Docker containers were created as part of the test::
+ 1..1358
+ # tests 1358
+ # pass  1358
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker ps -a
- CONTAINER ID        IMAGE                                                                                                                                        COMMAND                  CREATED             STATUS              PORTS                                            NAMES
- 8bdd2cd86477        dev-peer0.org2.example.com-e2enodecc-v1538081208749-b629728e22b7e99aeaea14164075177fe3ac2625212d91a50145d5707d23fab6                         "/bin/sh -c 'cd /usr…"   12 minutes ago      Up 12 minutes                                                        dev-peer0.org2.example.com-e2enodecc-v1538081208749
- 6b1c612e5adc        dev-peer0.org1.example.com-e2enodecc-v1538081208749-0e76ffce65a1a7f16af8360ed94a6946d0ca855faaf0e031a9c6e2879905ae91                         "/bin/sh -c 'cd /usr…"   12 minutes ago      Up 12 minutes                                                        dev-peer0.org1.example.com-e2enodecc-v1538081208749
- 0e7fcf5dc1d8        dev-peer0.org2.example.com-end2endnodesdk-v1538081208749-4b86007dcf45ab90bdb6c7a12b48fe009ec79091e304e277a819611d421a7547                    "chaincode -peer.add…"   13 minutes ago      Up 13 minutes                                                        dev-peer0.org2.example.com-end2endnodesdk-v1538081208749
- e0a64f787844        dev-peer0.org1.example.com-end2endnodesdk-v1538081208749-6a9f39aaaf432465c015c135a1bee7a9f701c4a220f50912ab51f773e5d41755                    "chaincode -peer.add…"   13 minutes ago      Up 13 minutes                                                        dev-peer0.org1.example.com-end2endnodesdk-v1538081208749
- 1c22fc838156        dev-peer0.org2.example.com-example-v2-90bdd5067516ca8ff658962fb11e84e3894c43f587b7ee58fb3aa67b3f8c1281                                       "chaincode -peer.add…"   14 minutes ago      Up 14 minutes                                                        dev-peer0.org2.example.com-example-v2
- aa7506650662        dev-peer0.org1.example.com-example-v2-2998a364b4084289621eed7b56196ada935299d7a677e7182298a70fac3ae9fc                                       "chaincode -peer.add…"   14 minutes ago      Up 14 minutes                                                        dev-peer0.org1.example.com-example-v2
- ffb90c6a65aa        dev-peer0.org1.example.com-example-v1-23d6c8a7edc0c13919f6ebd42e8bdb11d048860ba202fa89226d0a9b9ab031ec                                       "chaincode -peer.add…"   15 minutes ago      Up 15 minutes                                                        dev-peer0.org1.example.com-example-v1
- eb35065cd232        dev-peer0.org2.example.com-example-v1-5e945f2a4bda672df2b593545e20e6bdcf2e2f196f718358a9a13286857000f7                                       "chaincode -peer.add…"   15 minutes ago      Up 15 minutes                                                        dev-peer0.org2.example.com-example-v1
- a70d3796d5ef        dev-peer0.org1.example.com-end2endnodesdk-v3-78c36fcdd427a2cedc3441743b894733bfd2f1440c7ad6bd8c7b825981f2e5c9                                "chaincode -peer.add…"   16 minutes ago      Up 16 minutes                                                        dev-peer0.org1.example.com-end2endnodesdk-v3
- b898ef4b4344        dev-peer0.org2.example.com-end2endnodesdk-v3-d83d9a69fa471c4cd45b511a29301b5ed30b2a9f07847b9ae5a34f8f99c7f141                                "chaincode -peer.add…"   16 minutes ago      Up 16 minutes                                                        dev-peer0.org2.example.com-end2endnodesdk-v3
- f5563ff7f50a        dev-peer0.org1.example.com-events_unit_test_v1538081016245-v1538081016245-bb9c386389d57c26eea93f05d81e7aaee5898dd832d78a48ddcd88f653145c42   "chaincode -peer.add…"   16 minutes ago      Up 16 minutes                                                        dev-peer0.org1.example.com-events_unit_test_v1538081016245-v1538081016245
- 914b95b8e356        dev-peer0.org1.example.com-events_unit_test1538080641590-v1538080641590-082aadf860511fc1d404ed3f70a7d6878db53bbe8cc8221562255c13ca9751ec     "chaincode -peer.add…"   17 minutes ago      Up 17 minutes                                                        dev-peer0.org1.example.com-events_unit_test1538080641590-v1538080641590
- 3146398ef735        dev-peer0.org2.example.com-end2endnodesdk-v1-28ad5b85f1199c9112eb1ecc700a3d1df6e02826c37d26e0fa4b7435c6970156                                "chaincode -peer.add…"   17 minutes ago      Up 17 minutes                                                        dev-peer0.org2.example.com-end2endnodesdk-v1
- b18f605e4040        dev-peer0.org1.example.com-end2endnodesdk-v1-cb50140fc38a1dbff755119ff4f1af9c21ea51dd33e23af11035622c35921bd4                                "chaincode -peer.add…"   17 minutes ago      Up 17 minutes                                                        dev-peer0.org1.example.com-end2endnodesdk-v1
- 57e4624291fa        dev-peer0.org1.example.com-end2endnodesdk_privatedata-v0-51a96f60e00d7b9f6d88c8707ea5590906fcd18dbbad8b8cb02060d7795f86b2                    "chaincode -peer.add…"   18 minutes ago      Up 18 minutes                                                        dev-peer0.org1.example.com-end2endnodesdk_privatedata-v0
- c8da41505595        dev-peer0.org2.example.com-end2endnodesdk_privatedata-v0-7c0b39eb135217fa341a9bb9f8ec0defd59bfb2cbdf25559bb281fc6d4ad5851                    "chaincode -peer.add…"   18 minutes ago      Up 18 minutes                                                        dev-peer0.org2.example.com-end2endnodesdk_privatedata-v0
- 3e3d05f1b87e        dev-peer0.org2.example.com-end2endnodesdk-v0-cffecf663c4cac97a99d46282042dc47e9b6b306eb3e1e3d271cf3b25f1e9958                                "chaincode -peer.add…"   19 minutes ago      Up 19 minutes                                                        dev-peer0.org2.example.com-end2endnodesdk-v0
- e57f8135cc6a        dev-peer0.org1.example.com-end2endnodesdk-v0-2c1b3eb0a77138303953abb093fcd1df798601e1dc45c1d0d76fd23d671f44ad                                "chaincode -peer.add…"   19 minutes ago      Up 19 minutes                                                        dev-peer0.org1.example.com-end2endnodesdk-v0
- c06865edb826        dev-peer0.org2.example.com-e2enodecc-v1-d8837a85ad58d7fdaaeabc0e9ba1f3afa23697653b401c04755945ca06e8799a                                     "/bin/sh -c 'cd /usr…"   19 minutes ago      Up 19 minutes                                                        dev-peer0.org2.example.com-e2enodecc-v1
- 7a9e40d28823        dev-peer0.org1.example.com-e2enodecc-v1-51c979938c8b1894cd6d7283f286f4e8d7c8459241e8df9db618f7b184a527c7                                     "/bin/sh -c 'cd /usr…"   19 minutes ago      Up 19 minutes                                                        dev-peer0.org1.example.com-e2enodecc-v1
- efa6673912dd        dev-peer0.org2.example.com-e2enodecc-v0-ea065bdcb166a15ec4bc1565e18f5f0361f3f7cae214b1d4447192fd1378bdf6                                     "/bin/sh -c 'cd /usr…"   21 minutes ago      Up 21 minutes                                                        dev-peer0.org2.example.com-e2enodecc-v0
- 9e6e96e173c4        dev-peer0.org1.example.com-e2enodecc-v0-70ad6a959a7accfe9e547d7648e65307b18d05a80f055bf1de425b3b4d61f4b6                                     "/bin/sh -c 'cd /usr…"   21 minutes ago      Up 21 minutes                                                        dev-peer0.org1.example.com-e2enodecc-v0
- 38cc0d007dc3        hyperledger/fabric-peer:s390x-1.2.0                                                                                                          "peer node start"        23 minutes ago      Up 23 minutes       0.0.0.0:8051->8051/tcp, 0.0.0.0:8053->8053/tcp   peer0.org2.example.com
- eec5f98d831e        hyperledger/fabric-peer:s390x-1.2.0                                                                                                          "peer node start"        23 minutes ago      Up 23 minutes       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
- f25bf3b8ea1d        hyperledger/fabric-couchdb:s390x-0.4.10                                                                                                      "tini -- /docker-ent…"   23 minutes ago      Up 23 minutes       4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp       couchdb
- 1c084cb29490        hyperledger/fabric-ca:s390x-1.2.0                                                                                                            "sh -c 'fabric-ca-se…"   23 minutes ago      Up 23 minutes       0.0.0.0:8054->7054/tcp                           ca_peerOrg2
- 95d4c0875c73        hyperledger/fabric-orderer:s390x-1.2.0                                                                                                       "orderer"                23 minutes ago      Up 23 minutes       0.0.0.0:7050->7050/tcp                           orderer.example.com
- 8b4b6ee98e73        hyperledger/fabric-ca:s390x-1.2.0                                                                                                            "sh -c 'fabric-ca-se…"   23 minutes ago      Up 23 minutes       0.0.0.0:7054->7054/tcp                           ca_peerOrg1
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ 
+ # ok
 
-**Step 6.5:** Enter this command to see that several Docker images for chaincode have been created as part of the test.  
+   .
+   . (lots of output not shown here)
+   . 
+
+ 1..17
+ # tests 17
+ # pass  17
+
+ # ok
+
+   .
+   . (lots of output not shown here)
+   . 
+
+
+ 3 scenarios (3 passed)
+ 20 steps (20 passed)
+ 5m34.900s
+ [18:56:30] Finished 'run-test-cucumber' after 5.6 min
+ [18:56:30] Finished 'run-test' after 27 min
+ -----------------------------------|----------|----------|----------|----------|-------------------|
+ File                               |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+ -----------------------------------|----------|----------|----------|----------|-------------------|
+ All files                          |    92.17 |     85.9 |    93.41 |    92.16 |                   |
+  fabric-ca-client/lib              |      100 |    99.02 |      100 |      100 |                   |
+   AffiliationService.js            |      100 |      100 |      100 |      100 |                   |
+   IdentityService.js               |      100 |      100 |      100 |      100 |                   |
+   helper.js                        |      100 |       95 |      100 |      100 |                67 |
+  fabric-client/lib                 |    97.62 |    93.65 |    99.82 |    97.62 |                   |
+   BaseClient.js                    |      100 |      100 |      100 |      100 |                   |
+   BlockDecoder.js                  |      100 |      100 |      100 |      100 |                   |
+   CertificateAuthority.js          |      100 |      100 |      100 |      100 |                   |
+   Channel.js                       |    92.87 |    82.86 |    99.17 |    92.87 |... 4001,4002,4043 |
+   ChannelEventHub.js               |      100 |      100 |      100 |      100 |                   |
+   Client.js                        |      100 |    99.75 |      100 |      100 |               162 |
+   Config.js                        |      100 |      100 |      100 |      100 |                   |
+   Constants.js                     |      100 |      100 |      100 |      100 |                   |
+   Orderer.js                       |      100 |      100 |      100 |      100 |                   |
+   Organization.js                  |      100 |      100 |      100 |      100 |                   |
+   Package.js                       |      100 |      100 |      100 |      100 |                   |
+   Packager.js                      |      100 |      100 |      100 |      100 |                   |
+   Peer.js                          |      100 |       95 |      100 |      100 |             74,79 |
+   Policy.js                        |      100 |    93.88 |      100 |      100 |        81,171,191 |
+   ProtoLoader.js                   |      100 |      100 |      100 |      100 |                   |
+   Remote.js                        |      100 |      100 |      100 |      100 |                   |
+   SideDB.js                        |      100 |      100 |      100 |      100 |                   |
+   TransactionID.js                 |      100 |      100 |      100 |      100 |                   |
+   User.js                          |      100 |    98.33 |      100 |      100 |                61 |
+   api.js                           |      100 |      100 |      100 |      100 |                   |
+   client-utils.js                  |      100 |      100 |      100 |      100 |                   |
+   hash.js                          |      100 |      100 |      100 |      100 |                   |
+   utils.js                         |    98.31 |    92.74 |      100 |    98.31 |   128,174,178,563 |
+  fabric-client/lib/impl            |    72.21 |    67.45 |    70.99 |    72.18 |                   |
+   BasicCommitHandler.js            |    88.33 |       85 |      100 |    88.33 |... 19,120,123,124 |
+   CouchDBKeyValueStore.js          |    80.82 |    63.33 |    93.33 |    80.82 |... 50,152,166,167 |
+   CryptoKeyStore.js                |      100 |     87.5 |      100 |      100 |             43,77 |
+   CryptoSuite_ECDSA_AES.js         |    86.23 |    83.91 |    78.95 |    86.23 |... 78,307,324,330 |
+   DiscoveryEndorsementHandler.js   |    88.24 |    78.05 |      100 |    88.24 |... 42,444,452,454 |
+   FileKeyValueStore.js             |    91.89 |    83.33 |      100 |    91.89 |          47,48,65 |
+   NetworkConfig_1_0.js             |     98.3 |    90.45 |      100 |     98.3 |   381,395,428,429 |
+   bccsp_pkcs11.js                  |    25.88 |    32.41 |     8.33 |    25.88 |... 1075,1079,1080 |
+  fabric-client/lib/impl/aes        |    11.11 |        0 |        0 |    11.11 |                   |
+   pkcs11_key.js                    |    11.11 |        0 |        0 |    11.11 |... 46,50,54,58,62 |
+  fabric-client/lib/impl/ecdsa      |    49.29 |    31.25 |       45 |    49.29 |                   |
+   key.js                           |    98.41 |    96.15 |      100 |    98.41 |               183 |
+   pkcs11_key.js                    |     9.09 |        0 |        0 |     9.09 |... 71,175,176,179 |
+  fabric-client/lib/msp             |    80.81 |    72.15 |    76.67 |    80.81 |                   |
+   identity.js                      |    90.74 |    78.79 |    84.62 |    90.74 |  82,94,97,107,203 |
+   msp-manager.js                   |    86.54 |    81.82 |      100 |    86.54 |... 1,82,83,84,155 |
+   msp.js                           |    68.18 |    54.17 |       50 |    68.18 |... 35,137,138,179 |
+  fabric-client/lib/packager        |      100 |      100 |      100 |      100 |                   |
+   BasePackager.js                  |      100 |      100 |      100 |      100 |                   |
+   Car.js                           |      100 |      100 |      100 |      100 |                   |
+   Golang.js                        |      100 |      100 |      100 |      100 |                   |
+   Java.js                          |      100 |      100 |      100 |      100 |                   |
+   Node.js                          |      100 |      100 |      100 |      100 |                   |
+  fabric-client/lib/utils           |      100 |      100 |      100 |      100 |                   |
+   ChannelHelper.js                 |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib                |      100 |      100 |      100 |      100 |                   |
+   contract.js                      |      100 |      100 |      100 |      100 |                   |
+   gateway.js                       |      100 |      100 |      100 |      100 |                   |
+   logger.js                        |      100 |      100 |      100 |      100 |                   |
+   network.js                       |      100 |      100 |      100 |      100 |                   |
+   transaction.js                   |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/api            |      100 |      100 |      100 |      100 |                   |
+   queryhandler.js                  |      100 |      100 |      100 |      100 |                   |
+   wallet.js                        |      100 |      100 |      100 |      100 |                   | 
+  fabric-network/lib/impl/event     |      100 |      100 |      100 |      100 |                   |
+   abstracteventstrategy.js         |      100 |      100 |      100 |      100 |                   |
+   allfortxstrategy.js              |      100 |      100 |      100 |      100 |                   |
+   anyfortxstrategy.js              |      100 |      100 |      100 |      100 |                   |
+   defaulteventhandlerstrategies.js |      100 |      100 |      100 |      100 |                   |
+   eventhubfactory.js               |      100 |      100 |      100 |      100 |                   |
+   transactioneventhandler.js       |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/impl/query     |      100 |      100 |      100 |      100 |                   |
+   defaultqueryhandler.js           |      100 |      100 |      100 |      100 |                   |
+  fabric-network/lib/impl/wallet    |      100 |      100 |      100 |      100 |                   |
+   basewallet.js                    |      100 |      100 |      100 |      100 |                   |
+   couchdbwallet.js                 |      100 |      100 |      100 |      100 |                   |
+   filesystemwallet.js              |      100 |      100 |      100 |      100 |                   |
+   hsmwalletmixin.js                |      100 |      100 |      100 |      100 |                   |
+   inmemorywallet.js                |      100 |      100 |      100 |      100 |                   |
+   x509walletmixin.js               |      100 |      100 |      100 |      100 |                   |
+ -----------------------------------|----------|----------|----------|----------|-------------------|
+
+ =============================== Coverage summary ===============================
+ Statements   : 92.17% ( 6720/7291 )
+ Branches     : 85.9% ( 2705/3149 )
+ Functions    : 93.41% ( 893/956 )
+ Lines        : 92.16% ( 6711/7282 )
+ ================================================================================
+ [18:56:31] Finished 'test' after 27 min
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$
+
+*The commentary after the command output*: Now that you've read that, read the rest of the paragraph- the Fabric Node.js SDK developers, like all good developers, have been continuously adding functionality, and test cases to the test, throughout the life of the project.  Why, when I was a kid, this test only took eight minutes to run, and we liked it! Then it took about twelve minutes, then eighteen minutes, and now it takes about twenty-eight minutes!  (Your mileage may vary). 
+
+Now is a good time to either go get your lunch, check your e-mail, visit your stockbroker, run to the Department of Motor Vehicles to renew your drivers license, or if you're rather technical, see if you can look into the *~/git/src/github.com/hyperledger/fabric-sdk-node/gulpfile.js* file- you'll have to open up another ssh or PuTTY session and log in, but you are rather technical aren't you- and see if you can figure out what the heck is going on in all these tests.  I can't, but you're smarter than me, right?  I can't prove it but you're sitting comfortably in your chair right now eating your lunch while I'm going around the room trying to help everybody else figure out why their lab is broken, and you took the last bag of chips. What, you didn't get your lunch yet?  You'd better hurry before all the chips are gone.
+
+**STOP HERE AND DON'T READ FURTHER UNTIL THE TEST ENDS OR YOU WILL TURN INTO A PILLAR OF SALT**
+
+You just couldn't resist, could you?  I lied about the pillar of salt bit.  And if I didn't, we'll all think of you fondly whenever we're eating our popcorn at the movies.
+
+Did you notice that this test passed while the previous test didn't?  
+For example in this test the *Branches* test coverage was 85.9% versus a paltry 79.52% in the prior test?  (Did I mention the Blockchain use case where NASA has proposed to use Hyperledger Fabric for air traffic management- I think 85% coverage is good enough for that, don't you, I mean, 85.9% would get you a rock solid B in most leading universities).  You think I'm making this up about the NASA use case but I'm not, I could give you a URL to prove it, but I don't recommend URLs without checking them out first, and I haven't read the paper yet, but I will on my next Greyhound bus trip from Maryland to Oregon. I didn't even know NASA was involved in air traffic management.  I guess they're getting ready for the future when Elon Musk has made rocket ships affordable to the masses-  by then test coverage should be up to 88% or so.
+
+**Step 6.3:** Enter this command to see what Docker containers were created as part of the test::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker ps --all
+
+**Step 5.4:** Enter this command to see that some Docker images for chaincode have been created as part of the test.  
 These are the images that start with *dev-*::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images
- REPOSITORY                                                                                                                                   TAG                                IMAGE ID            CREATED             SIZE
- dev-peer0.org2.example.com-e2enodecc-v1538081208749-b629728e22b7e99aeaea14164075177fe3ac2625212d91a50145d5707d23fab6                         latest                             c96634c914c4        15 minutes ago      1.55GB
- dev-peer0.org1.example.com-e2enodecc-v1538081208749-0e76ffce65a1a7f16af8360ed94a6946d0ca855faaf0e031a9c6e2879905ae91                         latest                             7ad21b78879e        15 minutes ago      1.55GB
- dev-peer0.org1.example.com-end2endnodesdk-v1538081208749-6a9f39aaaf432465c015c135a1bee7a9f701c4a220f50912ab51f773e5d41755                    latest                             37eae1e15067        16 minutes ago      137MB
- dev-peer0.org2.example.com-end2endnodesdk-v1538081208749-4b86007dcf45ab90bdb6c7a12b48fe009ec79091e304e277a819611d421a7547                    latest                             ed5c69e28ebe        16 minutes ago      137MB
- dev-peer0.org1.example.com-example-v2-2998a364b4084289621eed7b56196ada935299d7a677e7182298a70fac3ae9fc                                       latest                             1b6f00e8dbc7        17 minutes ago      137MB
- dev-peer0.org2.example.com-example-v2-90bdd5067516ca8ff658962fb11e84e3894c43f587b7ee58fb3aa67b3f8c1281                                       latest                             8da2381befa5        17 minutes ago      137MB
- dev-peer0.org2.example.com-example-v1-5e945f2a4bda672df2b593545e20e6bdcf2e2f196f718358a9a13286857000f7                                       latest                             df7df00475b1        18 minutes ago      137MB
- dev-peer0.org1.example.com-example-v1-23d6c8a7edc0c13919f6ebd42e8bdb11d048860ba202fa89226d0a9b9ab031ec                                       latest                             7e95cdced795        18 minutes ago      137MB
- dev-peer0.org2.example.com-end2endnodesdk-v3-d83d9a69fa471c4cd45b511a29301b5ed30b2a9f07847b9ae5a34f8f99c7f141                                latest                             dc0a911b4060        19 minutes ago      137MB
- dev-peer0.org1.example.com-end2endnodesdk-v3-78c36fcdd427a2cedc3441743b894733bfd2f1440c7ad6bd8c7b825981f2e5c9                                latest                             20583453f180        19 minutes ago      137MB
- dev-peer0.org1.example.com-events_unit_test_v1538081016245-v1538081016245-bb9c386389d57c26eea93f05d81e7aaee5898dd832d78a48ddcd88f653145c42   latest                             24c01fb00a9c        19 minutes ago      137MB
- dev-peer0.org1.example.com-events_unit_test1538080641590-v1538080641590-082aadf860511fc1d404ed3f70a7d6878db53bbe8cc8221562255c13ca9751ec     latest                             ec8c9a92aa37        20 minutes ago      137MB
- dev-peer0.org1.example.com-end2endnodesdk-v1-cb50140fc38a1dbff755119ff4f1af9c21ea51dd33e23af11035622c35921bd4                                latest                             50638eef91e0        20 minutes ago      137MB
- dev-peer0.org2.example.com-end2endnodesdk-v1-28ad5b85f1199c9112eb1ecc700a3d1df6e02826c37d26e0fa4b7435c6970156                                latest                             6d4d9ad8d043        20 minutes ago      137MB
- dev-peer0.org2.example.com-end2endnodesdk_privatedata-v0-7c0b39eb135217fa341a9bb9f8ec0defd59bfb2cbdf25559bb281fc6d4ad5851                    latest                             672e205e2a5c        21 minutes ago      137MB
- dev-peer0.org1.example.com-end2endnodesdk_privatedata-v0-51a96f60e00d7b9f6d88c8707ea5590906fcd18dbbad8b8cb02060d7795f86b2                    latest                             067be94c6813        21 minutes ago      137MB
- dev-peer0.org2.example.com-end2endnodesdk-v0-cffecf663c4cac97a99d46282042dc47e9b6b306eb3e1e3d271cf3b25f1e9958                                latest                             b2ed753b75c1        21 minutes ago      137MB
- dev-peer0.org1.example.com-end2endnodesdk-v0-2c1b3eb0a77138303953abb093fcd1df798601e1dc45c1d0d76fd23d671f44ad                                latest                             22786db0e0d0        21 minutes ago      137MB
- dev-peer0.org1.example.com-e2enodecc-v1-51c979938c8b1894cd6d7283f286f4e8d7c8459241e8df9db618f7b184a527c7                                     latest                             bb8e1b6d20f5        22 minutes ago      1.55GB
- dev-peer0.org2.example.com-e2enodecc-v1-d8837a85ad58d7fdaaeabc0e9ba1f3afa23697653b401c04755945ca06e8799a                                     latest                             1e3fd93e38d2        22 minutes ago      1.55GB
- dev-peer0.org1.example.com-e2enodecc-v0-70ad6a959a7accfe9e547d7648e65307b18d05a80f055bf1de425b3b4d61f4b6                                     latest                             e21636660582        23 minutes ago      1.55GB
- dev-peer0.org2.example.com-e2enodecc-v0-ea065bdcb166a15ec4bc1565e18f5f0361f3f7cae214b1d4447192fd1378bdf6                                     latest                             86b8c578804a        23 minutes ago      1.55GB
- hyperledger/fabric-ca                                                                                                                        latest                             91082da5dc41        About an hour ago   218MB
- hyperledger/fabric-ca                                                                                                                        s390x-1.3.0-rc1                    91082da5dc41        About an hour ago   218MB
- hyperledger/fabric-tools                                                                                                                     latest                             2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-tools                                                                                                                     s390x-1.3.0-rc1-snapshot-d5c1514   2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-tools                                                                                                                     s390x-latest                       2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-testenv                                                                                                                   latest                             94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-testenv                                                                                                                   s390x-1.3.0-rc1-snapshot-d5c1514   94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-testenv                                                                                                                   s390x-latest                       94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-buildenv                                                                                                                  latest                             811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-buildenv                                                                                                                  s390x-1.3.0-rc1-snapshot-d5c1514   811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-buildenv                                                                                                                  s390x-latest                       811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-ccenv                                                                                                                     latest                             446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-ccenv                                                                                                                     s390x-1.3.0-rc1-snapshot-d5c1514   446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-ccenv                                                                                                                     s390x-latest                       446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-orderer                                                                                                                   latest                             402795f7129d        2 hours ago         142MB
- hyperledger/fabric-orderer                                                                                                                   s390x-1.3.0-rc1-snapshot-d5c1514   402795f7129d        2 hours ago         142MB
- hyperledger/fabric-orderer                                                                                                                   s390x-latest                       402795f7129d        2 hours ago         142MB
- hyperledger/fabric-peer                                                                                                                      latest                             f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-peer                                                                                                                      s390x-1.3.0-rc1-snapshot-d5c1514   f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-peer                                                                                                                      s390x-latest                       f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-zookeeper                                                                                                                 latest                             6a9cfd5ac47a        9 days ago          1.39GB
- hyperledger/fabric-kafka                                                                                                                     latest                             8ce4902cb68e        9 days ago          1.4GB
- hyperledger/fabric-couchdb                                                                                                                   latest                             2bc434828917        9 days ago          1.52GB
- hyperledger/fabric-baseimage                                                                                                                 s390x-0.4.12                       a2d3919231fa        9 days ago          1.35GB
- hyperledger/fabric-baseos                                                                                                                    s390x-0.4.12                       54e371e1a6ee        9 days ago          120MB
- hyperledger/fabric-ca                                                                                                                        s390x-1.2.0                        7a9a8d2589c9        2 months ago        217MB
- hyperledger/fabric-orderer                                                                                                                   s390x-1.2.0                        75b2abac5351        2 months ago        140MB
- hyperledger/fabric-peer                                                                                                                      s390x-1.2.0                        85d0c3e2c248        2 months ago        147MB
- hyperledger/fabric-couchdb                                                                                                                   s390x-0.4.10                       76a35badf382        3 months ago        1.76GB
- hyperledger/fabric-baseimage                                                                                                                 s390x-0.4.10                       33ca13b136f1        3 months ago        1.4GB
- hyperledger/fabric-baseos                                                                                                                    s390x-0.4.10                       4bf08bb910ad        3 months ago        120MB
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images dev-*
+ 
+You may only see two Docker images. This test created a whole lot more but cleaned up most of them.  In earlier releases of Hyperledger Fabric all of the Docker images were left but the test has been modified to clean up most of them during the test.  Who says things aren't getting better?
 
+**Step 5.5:** You will now clean up what little detritus remains. You will do this by running only the parts "hidden" within the *gulp test* command execution that do the initial cleanup::
  
-**Step 6.6:** You will now clean up. 
-You will do this by running only the parts "hidden" within the *gulp test* command execution that do the initial cleanup::
- 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ gulp clean-up pre-test docker-clean
- 
-**Step 6.7:** Now observe that all Docker containers have been stopped and removed by entering this command::
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ gulp clean-up docker-clean pre-test
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker ps -a
+This command will remove the Docker chaincode containers and images but the Docker containers for the Hyperledger Fabric network itself are still running.
+
+**Step 5.6:** This command will show the Docker containers for the Hyperledger Fabric network::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker ps --all
+ CONTAINER ID        IMAGE                                    COMMAND                  CREATED             STATUS              PORTS                                        NAMES
+ eaf59e0106ef        hyperledger/fabric-peer:s390x-1.4.0      "peer node start"        About an hour ago   Up About an hour    0.0.0.0:8051->8051/tcp                       peer0.org2.example.com
+ b45573f6d3d1        hyperledger/fabric-peer:s390x-1.4.0      "peer node start"        About an hour ago   Up About an hour    0.0.0.0:7051->7051/tcp                       peer0.org1.example.com
+ 0af56671c6fd        hyperledger/fabric-couchdb               "tini -- /docker-ent…"   About an hour ago   Up About an hour    4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp   couchdb.org1.example.com
+ 778a70d02db6        hyperledger/fabric-couchdb               "tini -- /docker-ent…"   About an hour ago   Up About an hour    4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp   couchdb.org2.example.com
+ 3da7a81000e7        hyperledger/fabric-orderer:s390x-1.4.0   "orderer"                About an hour ago   Up About an hour    0.0.0.0:7050->7050/tcp                       orderer.example.com
+ 99cfc0980995        hyperledger/fabric-ca:s390x-1.4.0        "sh -c 'fabric-ca-se…"   About an hour ago   Up About an hour    0.0.0.0:7054->7054/tcp                       ca0.example.com
+ 95c793434e52        hyperledger/fabric-ca:s390x-1.4.0        "sh -c 'fabric-ca-se…"   About an hour ago   Up About an hour    0.0.0.0:8054->7054/tcp                       ca1.example.com
+
+**Step 5.7:** Run this set of commands in one fell swoop to stop the Hyperledger Fabric network and remove its containers::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker stop $(docker ps --quiet) && docker rm $(docker ps --all --quiet)
+ eaf59e0106ef
+ b45573f6d3d1
+ 0af56671c6fd
+ 778a70d02db6
+ 3da7a81000e7
+ 99cfc0980995
+ 95c793434e52
+ eaf59e0106ef
+ b45573f6d3d1
+ 0af56671c6fd
+ 778a70d02db6
+ 3da7a81000e7
+ 99cfc0980995
+ 95c793434e52
+
+**Step 5.8:** Run this command to see that all your Docker containers are gone::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker ps --all
  CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
- 
-**Step 6.8:** And enter this comand and see that all chaincode images (those starting with *dev-*) have been removed::
+
+**Step 5.9:** Run this command to see that all your Docker chaincode images are gone::
+
+  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images dev-*
+ REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+
+**Step 5.10:** The Docker chaincode images are gone but the Docker images for the Hyperledger Fabric components themselves still remain.  Prove it with this command::
+
+ REPOSITORY                     TAG                            IMAGE ID            CREATED             SIZE
+ hyperledger/fabric-ca          latest                         fb40d26bc7a1        5 hours ago         317MB
+ hyperledger/fabric-ca          s390x-1.4.0                    fb40d26bc7a1        5 hours ago         317MB
+ hyperledger/fabric-tools       latest                         36d8a7db8056        3 days ago          1.52GB
+ hyperledger/fabric-tools       s390x-1.4.0-snapshot-d700b43   36d8a7db8056        3 days ago          1.52GB
+ hyperledger/fabric-tools       s390x-latest                   36d8a7db8056        3 days ago          1.52GB
+ <none>                         <none>                         10ea31c0bee7        3 days ago          1.58GB
+ hyperledger/fabric-buildenv    latest                         172f9563573f        3 days ago          1.47GB
+ hyperledger/fabric-buildenv    s390x-1.4.0-snapshot-d700b43   172f9563573f        3 days ago          1.47GB
+ hyperledger/fabric-buildenv    s390x-latest                   172f9563573f        3 days ago          1.47GB
+ hyperledger/fabric-ccenv       latest                         602af5999747        3 days ago          1.41GB
+ hyperledger/fabric-ccenv       s390x-1.4.0-snapshot-d700b43   602af5999747        3 days ago          1.41GB
+ hyperledger/fabric-ccenv       s390x-latest                   602af5999747        3 days ago          1.41GB
+ hyperledger/fabric-orderer     latest                         63f428514b07        3 days ago          147MB
+ hyperledger/fabric-orderer     s390x-1.4.0-snapshot-d700b43   63f428514b07        3 days ago          147MB
+ hyperledger/fabric-orderer     s390x-latest                   63f428514b07        3 days ago          147MB
+ hyperledger/fabric-peer        latest                         b415d479b21c        3 days ago          153MB
+ hyperledger/fabric-peer        s390x-1.4.0-snapshot-d700b43   b415d479b21c        3 days ago          153MB
+ hyperledger/fabric-peer        s390x-latest                   b415d479b21c        3 days ago          153MB
+ hyperledger/fabric-orderer     s390x-1.4.0                    a8875e4d43b3        9 days ago          147MB
+ hyperledger/fabric-peer        s390x-1.4.0                    598805b785db        9 days ago          153MB
+ hyperledger/fabric-zookeeper   latest                         5db059b03239        3 months ago        1.42GB
+ hyperledger/fabric-kafka       latest                         3bbd80f55946        3 months ago        1.43GB
+ hyperledger/fabric-couchdb     latest                         7afa6ce179e6        3 months ago        1.55GB
+ hyperledger/fabric-couchdb     s390x-0.4.14                   7afa6ce179e6        3 months ago        1.55GB
+ hyperledger/fabric-baseimage   s390x-0.4.14                   6e4e09df1428        3 months ago        1.38GB
+ hyperledger/fabric-baseos      s390x-0.4.14                   4834a1e3ce1c        3 months ago        120MB
+
+**Step 5.11:** This command will remove all Docker images from your system. Run this if you want to clean up completely, but keep them around if you want to experiment on your own further or if your instructor asks you to stop here to leave these images intact on your system. **CAUTION:** These instructions are written for a lab environment and if you run the below command on a production system or even another development system with lots of other Docker images then you will need to either learn how to find another job or learn how to make withdrawals from your 401k plan in the very near future::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images | awk '{print $1":"$2}' | xargs docker rmi
+
+**Step 5.12:** Run this command again and you will see that this '<none>:<none>' stickler is still hanging around::
 
  bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images
- REPOSITORY                     TAG                                IMAGE ID            CREATED             SIZE
- hyperledger/fabric-ca          latest                             91082da5dc41        About an hour ago   218MB
- hyperledger/fabric-ca          s390x-1.3.0-rc1                    91082da5dc41        About an hour ago   218MB
- hyperledger/fabric-tools       latest                             2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-tools       s390x-1.3.0-rc1-snapshot-d5c1514   2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-tools       s390x-latest                       2f932afc62cf        2 hours ago         1.48GB
- hyperledger/fabric-testenv     latest                             94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-testenv     s390x-1.3.0-rc1-snapshot-d5c1514   94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-testenv     s390x-latest                       94f5cf342fd1        2 hours ago         1.53GB
- hyperledger/fabric-buildenv    latest                             811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-buildenv    s390x-1.3.0-rc1-snapshot-d5c1514   811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-buildenv    s390x-latest                       811f6744c029        2 hours ago         1.44GB
- hyperledger/fabric-ccenv       latest                             446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-ccenv       s390x-1.3.0-rc1-snapshot-d5c1514   446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-ccenv       s390x-latest                       446ba9534733        2 hours ago         1.39GB
- hyperledger/fabric-orderer     latest                             402795f7129d        2 hours ago         142MB
- hyperledger/fabric-orderer     s390x-1.3.0-rc1-snapshot-d5c1514   402795f7129d        2 hours ago         142MB
- hyperledger/fabric-orderer     s390x-latest                       402795f7129d        2 hours ago         142MB
- hyperledger/fabric-peer        latest                             f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-peer        s390x-1.3.0-rc1-snapshot-d5c1514   f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-peer        s390x-latest                       f28d66c114d4        2 hours ago         149MB
- hyperledger/fabric-zookeeper   latest                             6a9cfd5ac47a        9 days ago          1.39GB
- hyperledger/fabric-kafka       latest                             8ce4902cb68e        9 days ago          1.4GB
- hyperledger/fabric-couchdb     latest                             2bc434828917        9 days ago          1.52GB
- hyperledger/fabric-baseimage   s390x-0.4.12                       a2d3919231fa        9 days ago          1.35GB
- hyperledger/fabric-baseos      s390x-0.4.12                       54e371e1a6ee        9 days ago          120MB
- hyperledger/fabric-ca          s390x-1.2.0                        7a9a8d2589c9        2 months ago        217MB
- hyperledger/fabric-orderer     s390x-1.2.0                        75b2abac5351        2 months ago        140MB
- hyperledger/fabric-peer        s390x-1.2.0                        85d0c3e2c248        2 months ago        147MB
- hyperledger/fabric-couchdb     s390x-0.4.10                       76a35badf382        3 months ago        1.76GB
- hyperledger/fabric-baseimage   s390x-0.4.10                       33ca13b136f1        3 months ago        1.4GB
- hyperledger/fabric-baseos      s390x-0.4.10                       4bf08bb910ad        3 months ago        120MB
+ REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ <none>              <none>              10ea31c0bee7        3 days ago          1.58GB
+ 
+That troublesome image is some orphaned artifact that is a remnant of the *make* process from the *fabric* repo that the Fabric developers are too busy to cleanup, but you can do it manually in the next step
 
-**Recap:** In this section, you ran the Hyperledger Fabric Node.js SDK end-to-end tests and then you cleaned up its leftover artifacts afterward.
-This completes this lab.  
-You have downloaded and built a Hyperledger Fabric network and verified that the setup is correct by successfully running two end-to-end tests-  the CLI end-to-end test and the Node.js SDK end-to-end test- and the shorter Node.js SDK test.
+**Step 5.13:** This is the next step::
 
-If you really wanted to dig into the details of how the Hyperledger Fabric works, you could do worse than to drill down into the details of each of these tests.  
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker rmi $(docker images --quiet)
+ Deleted: sha256:10ea31c0bee798091fc311eebcbd2cde7bbd29030c81803dfa5c817ef2c97750
+ Deleted: sha256:37cd100376dec6fee97b3145d36aad8b93f3b79ad23edfc88844dad6d83cc03a
+ Deleted: sha256:ec2a09c857344d9c053346a88d69b9b6bb31b97304cec8fa0c2a830752e0b19f
+ Deleted: sha256:4aae6fae286999b6d3ff0d970f0f0181959bacb8f3f9a2da82681051af6e42f5
+ Deleted: sha256:67326600a867c380ea782ce36cfb13d1acc26d1f0aadf34eed46809e2b775ec2
+ Deleted: sha256:a59823336df743dedd1391e0c33c1fcdafd4cebcdbca21f2a8a9332700ca7173
+ Deleted: sha256:fca0a9f5fcb546e416436f2108e72cb8846b45895423173660b0d7f2659cfb70
+ Deleted: sha256:1befa139c65f7b7491f0f8526c770dd704e98e25b1d90a1ed0ec885506336603
+ Deleted: sha256:58b8d6c5fddfb50c4aa1f3c27e87d84741fc166ef2e23ab3d3f546d5b0ed2aec
+ Deleted: sha256:6e4e09df14286dc6c7148f8e90e5a0c4ddf89e994de2954f07bc2b1ad09aeee8
+ Deleted: sha256:1382bd5bc7bca39119d781098b5c4d0b30f19e72b709ffe1285bc685912e2fc0
+ Deleted: sha256:13e30ed80dc9f7bda2e2854f87b6347e9529d23667ea2a6370966de8164e3bfc
+ Deleted: sha256:8f0f56205c454bee3c78a30930b6e8bf6116efe68bba628c89a67f90a0502487
+ Deleted: sha256:c07b03ff692551cb9124da9c7fd732abf5baecb05cfc4defd56b2957a1add578
+ Deleted: sha256:edb964a46867e04b12fc5b9d2f0856a56cbd89fc2915212e7c46dad319c295c2
+ Deleted: sha256:0ac5920f1daf502602a385b7878b587a9e37d89c2d3706c7e9f96e07849d2830
+ Deleted: sha256:2f643c4c2c261dc7b616bfe820c537e702e7da928c99ade0c8610e9f8e344e5e
+
+**Step 5.14:** Prove to yourself you're all out of Docker images::
+
+ bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ docker images
+ REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ 
+Don't worry, you can make more. But not in this lab.  This is the end.
+
+**Recap:** In this section, you ran the Hyperledger Fabric Node.js SDK end-to-end tests and then you cleaned up its leftover artifacts afterward. This completes this lab.  You have downloaded and run a Hyperledger Fabric network and verified that the setup is correct by successfully running two end-to-end tests-  the *fabric-samples* "first network" test and the Node.js SDK end-to-end test- and the shorter Node.js SDK test.
+
+If you really wanted to dig into the details of how Hyperledger Fabric works, you could do worse than to drill down into the details of each of these tests.  
 
 *** End of Lab! ***

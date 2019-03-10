@@ -323,7 +323,18 @@ Back up to the *~/zmarbles/marblesUI* directory::
  bcuser@ubuntu16045:~/zmarbles/marblesUI/config$ cd ..
  bcuser@ubuntu16045:~/zmarbles/marblesUI$
 
-**Step 3.2:** You will now use *gulp* to start up the server, with this command::
+**Step 3.2:** You are going to use an automation tool named *gulp* to start the marbles UI. Install it now with npm::
+
+ bcuser@ubuntu16045:~/zmarbles/marblesUI$ npm install --global gulp
+ /home/bcuser/bin/gulp -> /home/bcuser/lib/node_modules/gulp/bin/gulp.js
+ npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.7 (node_modules/gulp/node_modules/fsevents):
+ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.7: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"s390x"})
+
+ + gulp@4.0.0
+ added 316 packages in 6.9s
+ bcuser@ubuntu16045:~/zmarbles/marblesUI$ 
+ 
+**Step 3.3:** You will now use *gulp* to start up the server, with this command::
 
  bcuser@ubuntu16045:~/zmarbles/marblesUI$ gulp marbles1
  [12:58:04] Using gulpfile ~/zmarbles/marblesUI/gulpfile.js
@@ -477,14 +488,14 @@ Then witin *utils/connection_profile_lib/index.js* is where all the magic, a.k.a
 
 You did not need to know all this to run the application, but you might need to know where to start looking when your boss asks you to tailor the marbles application because she wants a return on the time and money you spent taking this lab-  assuming you don’t get off the hook when you tell her that nowhere was JavaScript mentioned on the agenda.
 
-**Step 3.3:** Open up a web browser window or tab and point to *http://<your_IP_goes_here>:3001*.
+**Step 3.4:** Open up a web browser window or tab and point to *http://<your_IP_goes_here>:3001*.
 Captain Obvious says to plug in your IP address instead of *<your_IP_goes_here>*. 
 Listen to him. 
 You should see a window pop up that looks like this:
 
 .. image:: images/lab3/2019-01-20_13-13-53_UserChoice.png
 
-**Step 3.4:** You are given a choice between *Express* and *Guided* for setting up the demo. 
+**Step 3.5:** You are given a choice between *Express* and *Guided* for setting up the demo. 
 Don't short-change yourself- pick *Guided*, you'll learn more.
 After you click *Guided*, you will see this:
  
@@ -492,41 +503,41 @@ After you click *Guided*, you will see this:
 
 Read the text in the window to see what's going on.
 
-**Step 3.5:** If you do not see *Step 1 Complete*, ask an instructor for help.  Otherwise, click *Next Step* and you should see this:
+**Step 3.6:** If you do not see *Step 1 Complete*, ask an instructor for help.  Otherwise, click *Next Step* and you should see this:
  
 .. image:: images/lab3/2019-01-20_13-19-49_GuidedStep2.png
 
 Click the '+' sign if you wish to see the settings used to contact the Fabric Certificate Authority.
 
-**Step 3.6:** If you do not see *Step 2 Complete*, ask an instructor for help. Otherwise, click *Next Step* and you should see this:
+**Step 3.7:** If you do not see *Step 2 Complete*, ask an instructor for help. Otherwise, click *Next Step* and you should see this:
 
 .. image:: images/lab3/2019-01-20_13-20-56_GuidedStep3.png
 
 Click the '+' sign to see information about your environment and your marbles chaincode. 
 
-**Step 3.7:** If you do not see *Step 3 Complete*, ask an instructor for help. Otherwise, click *Next Step* and you should see this:
+**Step 3.8:** If you do not see *Step 3 Complete*, ask an instructor for help. Otherwise, click *Next Step* and you should see this:
 
 .. image:: images/lab3/2019-01-20_13-22-12_GuidedStep4-010.png
 
-**Step 3.8:** Unlike the first three steps, which did not require further input from you to complete, this step will not proceed until you click the *Create* button.
+**Step 3.9:** Unlike the first three steps, which did not require further input from you to complete, this step will not proceed until you click the *Create* button.
 Before you do that you have an opportunity to review and change the names that you use for new marbles owners in addition to the owner named 'Barry' that should already exist if you created it in the first part of this lab.
 
 Click the *Create* button when you are ready and after several seconds you should see *Step 4 Complete* on the screen:
 
 .. image:: images/lab3/2019-01-20_13-24-08_GuidedStep4-020.png
 
-**Step 3.9:** If you do not see *Step 4 Complete*, ask an instructor for help. 
+**Step 3.10:** If you do not see *Step 4 Complete*, ask an instructor for help. 
 Otherwise, click *Next Step* and you should see this:
 
 .. image:: images/lab3/2019-01-20_13-25-29_GuidedStep5.png
 
 This should just give you a smiley face and a message saying that setup is complete.
 
-**Step 3.10:** Click *Enter* and you should be returned to a screen that looks similar to this (your names may differ):
+**Step 3.11:** Click *Enter* and you should be returned to a screen that looks similar to this (your names may differ):
 
 .. image:: images/lab3/UnitedMarblesMainPage.png
 
-**Step 3.11:** What about John’s marble for Marbles Inc.?  
+**Step 3.12:** What about John’s marble for Marbles Inc.?  
 You only started up the server for United Marbles, so why does Marbles Inc show up and why is John so lonely?   
 When you did the previous lab, the first two commands I had you do were an *init_owner* for John, 
 tying him to Marbles Inc, and then an *init_marble*, giving him a marble.  
@@ -551,7 +562,7 @@ List the contents of *marbles2.json* file (switch to a free PuTTY session or sta
      "last_startup_hash": ""
  }
 
-**Step 3.12:** Start the second server, the one for Marbles Inc::
+**Step 3.13:** Start the second server, the one for Marbles Inc::
 
  bcuser@ubuntu16045:~/zmarbles/marblesUI$ gulp marbles2
  [13:12:59] Using gulpfile ~/zmarbles/marblesUI/gulpfile.js
@@ -677,20 +688,20 @@ List the contents of *marbles2.json* file (switch to a free PuTTY session or sta
 
 If you peek at your browser session from United Marbles, (port 3001), you will not notice any changes yet.
 
-**Step 3.13:** Open a browser tab or window and navigate to *http://<your_IP_here>:3002*. 
+**Step 3.14:** Open a browser tab or window and navigate to *http://<your_IP_here>:3002*. 
 You will again be given a choice of *Express* or *Guided* and feel free to choose whichever path suits your fancy.
 If you choose *Express*, everything should hopefully sail through until you see a screen with all Marbles Inc. owners and marbles, as well as all United Marbles owners and marbles:
 
 .. image:: images/lab3/MarblesIncUpdatedPage.png
    
-**Step 3.14:** If you go back to your screen for United Marbles (port 3001) you should observe that it has been updated to show the owners and marbles for Marbles Inc. in addition to United Marbles' own owners and marbles:
+**Step 3.15:** If you go back to your screen for United Marbles (port 3001) you should observe that it has been updated to show the owners and marbles for Marbles Inc. in addition to United Marbles' own owners and marbles:
  
 .. image:: images/lab3/UnitedMarblesUpdatedPage.png
     
 Remember, you are looking at the United Marbles session but you see all the new users and marbles created by the Marbles Inc 
 administrator.
      
-**Step 3.15:**  Play with your marbles!!  
+**Step 3.16:**  Play with your marbles!!  
 Here are some things you can do.  
 When you do things as one user, e.g. as the United Marbles admin, go to the other user’s screen to see that the changes one organization makes are visible to the other organization:
 
@@ -699,7 +710,7 @@ When you do things as one user, e.g. as the United Marbles admin, go to the othe
 *	Right click on a marble (Hint: this is the same as using the magnifying glass)
 *	Click on the **Settings** button and **Enable** story mode.  Try an action that is allowed, and try an action that shouldn’t be allowed, such as trying to steal a marble from the other company.  **Disable** story mode when it gets too tedious, which shouldn’t take long.
 
-**Step 3.16:** If you want that extra rush, try these optional advanced assignments:
+**Step 3.17:** If you want that extra rush, try these optional advanced assignments:
 
 *	Break out the previous lab’s material and enter the *cli* container and issue some commands to create, update or delete marbles.  See if the Marbles UI reflects your changes
 *	Look at some of the marbles chaincode container logs while you work with the Marbles UI -	**Hint:**  *docker logs [-f] container_name* will show a container’s log.  Try it without the optional *-f* argument first and then try it with it.   *-f* ties up your terminal session but then shows new log messages as they are created.  Press **Ctrl-c** to get out of it.

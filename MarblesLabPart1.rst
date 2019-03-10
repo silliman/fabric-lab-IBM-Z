@@ -45,27 +45,35 @@ If not, send me your name, address, date of birth, social security number, bank 
 
 Shall we begin?
 
-**Step 3.1:**	Navigate to the home directory by entering *cd ~* (the “tilde” character, i.e., ‘*~*’, represents the user’s home directory in Linux).  
-This directory is also usually set in the $HOME environment variable, so *cd $HOME* will also usually get you to your home directory::
+**Step 3.1:**	Login to your Ubuntu Linux on Z instance using ssh (if your workstation is MacOS or LInux) or PuTTY (if your workstation is Windows). This is sample output for ssh from a Mac::
 
- bcuser@ubuntu16045:~/git/src/github.com/hyperledger/fabric-sdk-node$ cd ~
+ Barrys-MacBook-Pro:notes silliman$ ssh bcuser@192.168.22.119
+ Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-139-generic s390x)
+
+  * Documentation:  https://help.ubuntu.com
+  * Management:     https://landscape.canonical.com
+  * Support:        https://ubuntu.com/advantage
+ New release '18.04.2 LTS' available.
+ Run 'do-release-upgrade' to upgrade to it.
+
+ Last login: Sat Mar  9 18:51:49 2019 from 192.168.215.249
  bcuser@ubuntu16045:~$ 
  
-*Note:* You may already be in your home directory prior to entering *cd ~*, in which case you'll just stay there- not a problem.
-
 **Step 3.2:** Retrieve the zmarbles compressed tarball prepared for this lab with the following command::
 
- bcuser@ubuntu16045:~$ wget https://raw.githubusercontent.com/silliman/2019FastStart/master/zmarbles.tar.gz
- --2019-01-21 07:51:53--  https://raw.githubusercontent.com/silliman/2019FastStart/master/zmarbles.tar.gz
- Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.248.133
- Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.248.133|:443... connected.
+ bcuser@ubuntu16045:~$ wget https://raw.githubusercontent.com/silliman/fabric-lab-IBM-Z/master/zmarbles.tar.gz
+ --2019-03-09 20:52:19--  https://raw.githubusercontent.com/silliman/fabric-lab-IBM-Z/master/zmarbles.tar.gz
+ Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.200.133
+ Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.200.133|:443... connected.
  HTTP request sent, awaiting response... 200 OK
  Length: 12299004 (12M) [application/octet-stream]
  Saving to: 'zmarbles.tar.gz'
 
- zmarbles.tar.gz           100%[=====================================>]  11.73M  --.-KB/s    in 0.1s    
+ zmarbles.tar.gz                     100%[================================================================>]  11.73M  --.-KB/s    in 0.1s    
 
- 2019-01-21 07:51:53 (82.3 MB/s) - 'zmarbles.tar.gz' saved [12299004/12299004]
+ 2019-03-09 20:52:20 (81.4 MB/s) - 'zmarbles.tar.gz' saved [12299004/12299004]
+
+ bcuser@ubuntu16045:~$ 
 
 **Step 3.3:**	The *zmarbles* directory should not yet exist.  Prove it with this *ls* command::
 

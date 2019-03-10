@@ -447,7 +447,7 @@ The decision on how many channels to create and what policies they have will usu
 **Step 5.1:**	Access the *cli* Docker container::
 
  bcuser@ubuntu16045:~/zmarbles$ docker exec --interactive --tty cli bash
- root@acd1f96d8807:/opt/gopath/src/github.com/hyperledger/fabric/peer#ic/peer#
+ root@acd1f96d8807:/opt/gopath/src/github.com/hyperledger/fabric/peer#
 
 Observe that your command prompt changes when you enter the Docker container’s shell.
 

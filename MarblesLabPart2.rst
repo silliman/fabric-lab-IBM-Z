@@ -715,6 +715,6 @@ When you do things as one user, e.g. as the United Marbles admin, go to the othe
 *	Break out the previous lab’s material and enter the *cli* container and issue some commands to create, update or delete marbles.  See if the Marbles UI reflects your changes
 *	Look at some of the marbles chaincode container logs while you work with the Marbles UI -	**Hint:**  *docker logs [-f] container_name* will show a container’s log.  Try it without the optional *-f* argument first and then try it with it.   *-f* ties up your terminal session but then shows new log messages as they are created.  Press **Ctrl-c** to get out of it.
 * Look at the peer or orderer logs while you work with the Marbles UI
-*	Click the **Setup Help** button in the upper left in the Marbles UI and then number *4* in the window that pops up.  Edit the list of names at the bottom and click **Create**.  Do your new users show up in both companies’ sessions?  What happens if you add a name that exists already?
+*	Click the **Start Up Help** button in the upper left in the Marbles UI and then number *4* in the window that pops up.  Edit the list of names at the bottom and click **Create**.  Do your new users show up in both companies’ sessions?  What happens if you add a name that exists already?
  
 **End of lab!**

@@ -851,19 +851,20 @@ This will show only those images that begin with *dev-\**, of which there should
 Hyperledger Fabric processes and CouchDB, but no chaincode-related Docker containers::  
 
  bcuser@ubuntu16045:~$ docker ps --all
- CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                                                       NAMES
- f78c6f5f3c26        hyperledger/fabric-tools                  "bash"                   6 minutes ago       Up 6 minutes                                                                                    cli
- f4cf393f4551        hyperledger/fabric-peer                   "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.marblesinc.com
- 4a476224ddd1        hyperledger/fabric-peer                   "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.unitedmarbles.com
- 37df79435787        hyperledger/fabric-peer                   "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.unitedmarbles.com
- 502c9dd2fa11        hyperledger/fabric-peer                   "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.marblesinc.com
- 6bb22da9c588        hyperledger/fabric-ca                     "sh -c 'fabric-ca-se…"   6 minutes ago       Up 6 minutes        0.0.0.0:7054->7054/tcp                                                      ca_Org0
- e362dce38155        hyperledger/fabric-couchdb:s390x-0.4.13   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp                                  couchdb1
- f15be8759be9        hyperledger/fabric-orderer                "orderer"                6 minutes ago       Up 6 minutes        0.0.0.0:7050->7050/tcp                                                      orderer.blockchain.com
- 7f06745d71f1        hyperledger/fabric-couchdb:s390x-0.4.13   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp                                  couchdb0
- a1bc90cd0186        hyperledger/fabric-couchdb:s390x-0.4.13   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp                                  couchdb3
- 5c91c2280a86        hyperledger/fabric-ca                     "sh -c 'fabric-ca-se…"   6 minutes ago       Up 6 minutes        0.0.0.0:8054->7054/tcp                                                      ca_Org1
- 3a4944e8c58b        hyperledger/fabric-couchdb:s390x-0.4.13   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp                                  couchdb2
+ CONTAINER ID        IMAGE                                     COMMAND                  CREATED             STATUS              PORTS                                                                       NAMES
+ 0c7dc272e957        hyperledger/fabric-tools:1.4.0            "bash"                   6 minutes ago       Up 6 minutes                                                                                    cli
+ a059b6044c2d        hyperledger/fabric-peer:1.4.0             "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:9051->7051/tcp, 0.0.0.0:9052->7052/tcp, 0.0.0.0:9053->7053/tcp      peer0.marblesinc.com
+ 35908e86a8c4        hyperledger/fabric-peer:1.4.0             "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:10051->7051/tcp, 0.0.0.0:10052->7052/tcp, 0.0.0.0:10053->7053/tcp   peer1.marblesinc.com
+ 264a8168a7e4        hyperledger/fabric-peer:1.4.0             "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8052->7052/tcp, 0.0.0.0:8053->7053/tcp      peer1.unitedmarbles.com
+ d997df83254b        hyperledger/fabric-peer:1.4.0             "peer node start"        6 minutes ago       Up 6 minutes        0.0.0.0:7051-7053->7051-7053/tcp                                            peer0.unitedmarbles.com
+ 0a9d250fe7a3        hyperledger/fabric-ca:1.4.0               "sh -c 'fabric-ca-se…"   6 minutes ago       Up 6 minutes        0.0.0.0:8054->7054/tcp                                                      ca_Org1
+ a17bf8c4491f        hyperledger/fabric-couchdb:s390x-0.4.14   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:6984->5984/tcp                                  couchdb1
+ 404d7597ef0b        hyperledger/fabric-couchdb:s390x-0.4.14   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:8984->5984/tcp                                  couchdb3
+ 4d8da45b870c        hyperledger/fabric-orderer:1.4.0          "orderer"                6 minutes ago       Up 6 minutes        0.0.0.0:7050->7050/tcp                                                      orderer.blockchain.com
+ ed6ebaf624f6        hyperledger/fabric-couchdb:s390x-0.4.14   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:7984->5984/tcp                                  couchdb2
+ ee5cab6f0a4c        hyperledger/fabric-couchdb:s390x-0.4.14   "tini -- /docker-ent…"   6 minutes ago       Up 6 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5984->5984/tcp                                  couchdb0
+ ca2711e61171        hyperledger/fabric-ca:1.4.0               "sh -c 'fabric-ca-se…"   6 minutes ago       Up 6 minutes        0.0.0.0:7054->7054/tcp                                                      ca_Org0
+ bcuser@ubuntu16045:~$ 
 
 **Step 9.4:** Entering this will make this fact stand out more as you should only see column headers in your output. 
 (The *--invert-match* argument for *grep* says “do not show me anything that contains the string “hyperledger”)::
